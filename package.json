@@ -1,0 +1,35 @@
+{
+  "name": "HiApp",
+  "description": "A web app made with Framework7.With PhoneGap you can easily convert it to native iOS app.",
+  "version": "2.1.0",
+  "author": "BelinChung",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:BelinChung/HiApp.git"
+  },
+  "scripts": {
+    "clean": "rm -fr ./www",
+    "dev": "webpack --config build/webpack/development.js --progress --watch",
+    "build": "NODE_ENV=production npm run clean && webpack --config build/webpack/production.js --progress",
+    "build_with_source_map": "npm run build --devtool source-map"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.0",
+    "html-webpack-plugin": "^2.7.1",
+    "copy-webpack-plugin": "^1.1.1",
+    "less": "^2.5.3",
+    "less-loader": "^2.2.2",
+    "style-loader": "^0.13.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.11",
+    "browser-sync": "^2.11.1",
+    "browser-sync-webpack-plugin": "^1.0.1"
+  },
+  "dependencies": {
+    "framework7": "~1.4.2"
+  }
+}
