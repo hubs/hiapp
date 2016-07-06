@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 webpackConfig.plugins.push(
   new ExtractTextPlugin('[name].[hash].min.css'),
-  new webpack.optimize.UglifyJsPlugin({
+  new webpack.optimize.UglifyJsPlugin({ //压缩js
     compress: {
       warnings: false
     }

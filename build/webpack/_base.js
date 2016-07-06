@@ -12,6 +12,11 @@ if (mode === 'production') {
 } else {
   lessLoader = 'style!css!less';
 }
+/**
+ * https://segmentfault.com/a/1190000002889630
+ * https://segmentfault.com/a/1190000005106383
+ * http://www.cnblogs.com/vajoy/p/4650467.html
+ */
 
 module.exports = {
   // entry 是页面入口文件配置
@@ -24,9 +29,9 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new HtmlWebpackPlugin({
+    new webpack.optimize.OccurrenceOrderPlugin(),//根据模块调用次数，给模块分配ids，常被调用的ids分配更短的id，使得ids可预测，降低文件大小，该模块推荐使用
+    new webpack.optimize.DedupePlugin(),//打包的时候删除重复或者相似的文件
+    new HtmlWebpackPlugin({     //生成html
       template: './src/index.html',
       filename: 'index.html',
       minify: false,
@@ -38,6 +43,7 @@ module.exports = {
       { from: './src/res', to: 'res' }
     ])
   ],
+  //它告知 webpack 每一种文件都需要使用什么加载器来处理
   module: {
     loaders: [
       { test: /\.less$/, loader: lessLoader },
