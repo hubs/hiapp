@@ -5,6 +5,7 @@ var appFunc = require('../utils/appFunc'),
     contactsView = require('../contacts/contacts'),
     settingView = require('../setting/setting');
 
+//初始化页面
 module.exports = {
     init: function(){
         this.i18next('');
