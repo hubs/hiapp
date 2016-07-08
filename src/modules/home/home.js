@@ -34,7 +34,7 @@ var home = {
 
             setTimeout(function () {
 
-                $$('#homeView .refresh-click').find('i').removeClass('ios7-reloading');
+                $$('#homeView .refresh-click').find('i').removeClass('reloading');
 
                 if(parseInt(newestId) === 48) {
                     home.showLoadResult(i18n.index.nothing_loaded);
@@ -87,7 +87,7 @@ var home = {
     },
     refreshTimelineByClick: function(){
         setTimeout(function(){
-            $$('#homeView .refresh-click').find('i').addClass('ios7-reloading');
+            $$('#homeView .refresh-click').find('i').addClass('reloading');
         },350);
 
         $$('#homeView .pull-to-refresh-content').scrollTop(0,300);

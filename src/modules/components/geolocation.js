@@ -5,7 +5,7 @@ var geolocation = {
     initGeo: function(){
         $$('#geoInfo').removeClass('show').hide();
 
-        $$('#geoInfo .location>i').removeClass('ios7-location-outline').addClass('preloader');
+        $$('#geoInfo .location>i').removeClass('location-outline').addClass('preloader');
         $$('#geoInfo .location>span').html(i18n.geo.loading_geo);
 
         GlobalLat = null;
@@ -25,7 +25,7 @@ var geolocation = {
         var lat = position.coords.latitude;
         var long = position.coords.longitude;
 
-        $$('#geoInfo .location>i').removeClass('preloader').addClass('ios7-location-outline');
+        $$('#geoInfo .location>i').removeClass('preloader').addClass('location-outline');
         $$('#geoInfo .location>span').html(( Math.round(lat * 10000)/10000) + '/' + ( Math.round(long * 10000)/10000) );
 
         GlobalLat = lat;

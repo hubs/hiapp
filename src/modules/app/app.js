@@ -1,6 +1,7 @@
 require('./app.less');
 
 var appFunc = require('../utils/appFunc'),
+    infosView=require('../infos/infos'),
     homeView = require('../home/home'),
     contactsView = require('../contacts/contacts'),
     settingView = require('../setting/setting');
@@ -9,6 +10,7 @@ var appFunc = require('../utils/appFunc'),
 module.exports = {
     init: function(){
         this.i18next('');
+        infosView.init();
         homeView.init();
         contactsView.init();
         settingView.init();
