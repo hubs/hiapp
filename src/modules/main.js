@@ -1,10 +1,12 @@
 require('framework7');
+require('./utils/helper');
 require('../style/less/app.less');
 
 var appFunc = require('./utils/appFunc'),
     appService = require('./services/appService'),
     router = require('./router'),
     index = require('./app/app');
+
 
 var app = {
     initialize: function() {
@@ -52,7 +54,6 @@ var app = {
         Template7.registerHelper('t', function (options){
             var key = options.hash.i18n || '';
             var keys = key.split('.');
-
             var value;
             for (var idx = 0, size = keys.length; idx < size; idx++)
             {
@@ -83,6 +84,12 @@ var app = {
                     comment: i18n.timeline.comment,
                     forward: i18n.timeline.forward
                 },
+                'page:info': {  //新闻资讯
+                    back: i18n.global.back,
+                    title: i18n.item.title,
+                    comment: i18n.timeline.comment,
+                    forward: i18n.timeline.forward
+                },
                 'page:message': {//消息界面
                     chat: i18n.chat.title,
                     chatPlaceholder: i18n.chat.chatPlaceholder,
@@ -103,10 +110,14 @@ var app = {
                 }
             }
         });
+        window.homeF7View =  hiApp.addView('#infosView', {
+            dynamicNavbar: true
+        });
 
-        window.homeF7View = hiApp.addView('#homeView', {
+        hiApp.addView('#homeView', {
             dynamicNavbar: true //IOS only Dynamic Navbar is supported only in iOS Theme
         });
+
 
         hiApp.addView('#contactView', {
             dynamicNavbar: true

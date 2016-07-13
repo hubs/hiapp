@@ -4,7 +4,8 @@ var
     feedbackModule = require('./feedback/feedback'),//反馈
     aboutModule = require('./about/about'),//关于我们
     languageModule = require('./language/language'),//语言选择
-    messageModule = require('./message/message');//聊天消息页
+    messageModule = require('./message/message'),//聊天消息页
+   infoModule    = require('./info/info');//消息
 
 module.exports = {
     init: function() {
@@ -23,7 +24,7 @@ module.exports = {
         var name = page.name;
         var from = page.from;//当前页面从哪个方向加载进来。如果是新加载的页面，则为"right"，如果是返回上一步的页面，则为"left"
 
-        if(name === 'homeView' || name === 'contactView' || name === 'setting' ){
+        if(name === 'homeView' || name === 'contactView' || name === 'setting' ||name==='infosView'){
             if(from === 'left'){
                 appFunc.showToolbar();
             }
@@ -32,7 +33,7 @@ module.exports = {
     pageBeforeInit: function(page) {
         var name = page.name;   //就是 data-page 设定的名称
         var query = page.query;//当前页面的get参数，是一个对象。假设你的页面URL是 "about.html?id=10&count=20&color=blue"，那么query就是：    {id: '10', count: '20', color: 'blue'}
-
+        console.log(query);
         switch (name) {
             case 'about'://关于我们
                 aboutModule.init();
@@ -48,6 +49,9 @@ module.exports = {
                 break;
             case 'language'://语文选择页面
                 languageModule.init();
+                break;
+            case 'info':
+                infoModule.init(query);
                 break;
         }
     }

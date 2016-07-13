@@ -1,12 +1,11 @@
-require('./tweet.less');
+require('./info.less');
 
 var appFunc = require('../utils/appFunc'),
     commentModule = require('../comment/comment'),
-    template = require('./tweet.tpl.html');
+    template = require('./info.tpl.html');
 
 var id;
-
-var tweetModule = {
+var infoModule = {
     init: function(query){
         id = query.id;
         appFunc.hideToolbar();
@@ -14,28 +13,24 @@ var tweetModule = {
         this.bindEvents();
 
         // render tweet card
-        this.getTweet();
+        this.getData();
 
         // init comment module
         commentModule.init();
     },
-    getTweet: function(){
-        var $this = $$('#homeView .home-timeline .card[data-id="'+ id +'"]');
+    getData: function(){
+
 
         var item = {
-            id: $this.data('id'),
-            nickname: $this.find('.ks-facebook-name').html(),
-            avatar: $this.find('.ks-facebook-avatar').data('avatar-id'),
-            time: appFunc.timeFormat($this.find('.ks-facebook-date').data('time')),
-            text: $this.find('.card-content-inner>p').html(),
+            "add_username"  :   "Bob Brown",
+            "content"       :   "Behind every successful man there's a lot u unsuccessful years. http://goo.gl/",
+            "title"         :   "Hello 测试",
+            "filename"      :   "http://img003.21cnimg.com/photos/album/20151103/m600/76948B09AE457B980D25309CB914859E.jpeg",
+            "create_time"   :   "1404709434"
         };
 
-        if($this.find('.item-image>img')[0])
-            item.image = $this.find('.item-image img').attr('src');
-
         var output = appFunc.renderTpl(template, item);
-
-        $$('#itemContent').html(output);
+        $$('#infoContent').html(output);
     },
     bindEvents: function(){
         var bindings = [{
@@ -44,7 +39,7 @@ var tweetModule = {
             event: 'click',
             handler: commentModule.createActionSheet
         },{
-            element: '#homeView .item-comment-btn',
+            element: '#infosView .item-comment-btn',
             event: 'click',
             handler: commentModule.commentPopup
         }];
@@ -53,4 +48,4 @@ var tweetModule = {
     }
 };
 
-module.exports = tweetModule;
+module.exports = infoModule;
