@@ -4,14 +4,13 @@ var appFunc = require('../utils/appFunc'),
     popupTpl = require('./commentPopup.tpl.html');
 
 var commentModule = {
-    init: function(){
+    init: function(id,type){
         this.getComments();
     },
     getComments: function(){
         service.getComments(function(c){
             var random = Math.floor(Math.random()*2);
             if(!random) c = null;
-
             setTimeout(function(){
                 var renderData = {
                     comments: c,

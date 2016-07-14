@@ -3,28 +3,33 @@
     "err_msg": "success",
     "data": [
         {
-            "avatar":"1",
-            "name":"Cory Bergman",
-            "text":"wow that's some serious chat action",
-            "time":"1404705240"
-        },
-        {
-            "avatar":"2",
-            "name":"Rhonda Irvine",
-            "text":"what country is covered by your food app?",
-            "time":"1404705260"
-        },
-        {
-            "avatar":"3",
-            "name":"Nathan Lawson",
-            "text":"much  more interesting than a stupid grumpy cat",
-            "time":"1404705300"
-        },
-        {
-            "avatar":"4",
-            "name":"Vaughn",
-            "text":"Signed the petition. Hope it's not too late.",
-            "time":"1404705400"
+            "id"            :1,
+            "add_username"  : "Cory Bergman",
+            "add_content"   : "wow that's some serious chat action",
+            "create_time"   : "1404705240",
+            "type"          : 1,
+            "avatar"        :"1"
+        },{
+            "id"            : 2,
+            "add_username"  : "Cory Bergman",
+            "add_content"   : "wow that's some serious chat action",
+            "create_time"   : "1404705240",
+            "type"          : 1,
+            "avatar"        : "2"
+        },{
+            "id"            : 3,
+            "add_username"  : "Cory Bergman",
+            "add_content"   : "wow that's some serious chat action",
+            "create_time"   : "1404705240",
+            "type"          : 1,
+            "avatar"        : "3"
+        },{
+            "id"            : 4,
+            "add_username"  : "Cory Bergman",
+            "add_content"   : "wow that's some serious chat action",
+            "create_time"   : "1404705240",
+            "type"          : 1,
+            "avatar"        : "4"
         }
     ]
 }

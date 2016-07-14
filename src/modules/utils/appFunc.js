@@ -71,38 +71,6 @@ module.exports = {
                 return n;
         }
     },
-    timeFormatYmd: function(ms){
-
-        ms = ms * 1000;
-
-        var d_second,d_minutes, d_hours, d_days;
-        var timeNow = new Date().getTime();
-        var d = (timeNow - ms)/1000;
-        d_days = Math.round(d / (24*60*60));
-        d_hours = Math.round(d / (60*60));
-        d_minutes = Math.round(d / 60);
-        d_second = Math.round(d);
-        if (d_days > 0 && d_days < 2) {
-            return d_days + i18n.global.day_ago;
-        } else if (d_days <= 0 && d_hours > 0) {
-            return d_hours + i18n.global.hour_ago;
-        } else if (d_hours <= 0 && d_minutes > 0) {
-            return d_minutes + i18n.global.minute_ago;
-        } else if (d_minutes <= 0 && d_second >= 0) {
-            return i18n.global.just_now;
-        } else {
-            var s = new Date();
-            s.setTime(ms);
-            return (s.getFullYear() + '-' + f(s.getMonth() + 1) + '-' + f(s.getDate()));
-        }
-
-        function f(n){
-            if(n < 10)
-                return '0' + n;
-            else
-                return n;
-        }
-    },
 
     getCharLength: function(str){
         var iLength = 0;
@@ -145,5 +113,60 @@ module.exports = {
                     .on(bindings[i].event, bindings[i].handler);
             }
         }
+    },
+
+    format_ymd: function(ms){
+        ms = ms * 1000;
+        var d_second,d_minutes, d_hours, d_days;
+        var timeNow = new Date().getTime();
+        var d = (timeNow - ms)/1000;
+        d_days = Math.round(d / (24*60*60));
+        d_hours = Math.round(d / (60*60));
+        d_minutes = Math.round(d / 60);
+        d_second = Math.round(d);
+        if (d_days > 0 && d_days < 2) {
+            return d_days + i18n.global.day_ago;
+        } else if (d_days <= 0 && d_hours > 0) {
+            return d_hours + i18n.global.hour_ago;
+        } else if (d_hours <= 0 && d_minutes > 0) {
+            return d_minutes + i18n.global.minute_ago;
+        } else if (d_minutes <= 0 && d_second >= 0) {
+            return i18n.global.just_now;
+        } else {
+            var s = new Date();
+            s.setTime(ms);
+            return (s.getFullYear() + '-' + f(s.getMonth() + 1) + '-' + f(s.getDate()));
+        }
+
+        function f(n){
+            if(n < 10)
+                return '0' + n;
+            else
+                return n;
+        }
+    },
+    //多久前评论
+    format_how_long : function(create_time){
+        var now     =   Date.parse(new Date())/1000;
+        var limit   =   now-create_time;
+        var content =   "";
+        if(limit<60){
+            content="刚刚";
+        }else if(limit>=60 && limit<3600){
+            content=Math.floor(limit/60)+"分钟前";
+        }else if(limit>=3600 && limit<86400){
+            content=Math.floor(limit/3600)+"小时前";
+        }else if(limit>=86400 && limit<2592000){
+            content=Math.floor(limit/86400)+"天前";
+        }else if(limit>=2592000 && limit<31104000){
+            content=Math.floor(limit/2592000)+"个月前";
+        }else if(limit>31104000){
+            content=Math.floor(limit/31104000)+"年前";
+        }else{
+            content="很久前";
+        }
+        return content;
     }
+
+
 };

@@ -17,12 +17,10 @@ var infos = {
 
     renderDatas: function(tl, type){
         var renderData = {
-            datas: tl,
-            time: function(){
-                return appFunc.timeFormatYmd(this.create_time);
-            }
+            datas: tl
         };
         var output = appFunc.renderTpl(template, renderData);
+        //下面是下拉刷新之类的
         if(type === 'prepend'){
             $$('#infosView').find('.home-infos').prepend(output);
         }else if(type === 'append') {
@@ -31,6 +29,7 @@ var infos = {
             $$('#infosView').find('.home-infos').html(output);
         }
     },
+    //查看详情
     openItemPage: function(e){
         if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
             return false;

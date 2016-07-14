@@ -4,14 +4,14 @@
         <img src="http://lorempixel.com/68/68/people/{{avatar}}/" alt="">
     </div>
     <div class="comment-detail">
-        <div class="name">{{name}}</div>
-        <div class="text">{{text}}</div>
-        <div class="time">{{rtime}}</div>
+        <div class="name">{{add_username}}</div>
+        <div class="text">{{add_content}}</div>
+        <div class="time">{{format_how_long create_time}}</div>
     </div>
 </li>
 {{else}}
 <div class="none-comment">
-    <i class="icon chatboxes-outline"></i>
+    <i class="icon icon-ioschatboxesoutline"></i>
     <p>{{t i18n="i18n.comment.empty_comment"}}</p>
 </div>
 {{/each}}
