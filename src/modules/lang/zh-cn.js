@@ -28,6 +28,7 @@ module.exports = {
         sending:'正在发送中...',
         err_text_too_short:'Er,内容有点短哦，再写点吧...',
         infos:'资讯',
+        chat:'聊天'
     },
     setting: {
         feed_back: '意见反馈',
