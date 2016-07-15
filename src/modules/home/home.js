@@ -12,7 +12,7 @@ var home = {
     },
     getTimeline: function(){
         var that = this;
-
+        //获取列表
         service.getTimeline(function(tl){
             that.renderTimeline(tl);
 
@@ -30,12 +30,14 @@ var home = {
 
             home.refreshItemTime();
 
+            //获取最新的ID
             var newestId = $$('#homeView').find('.home-timeline .card'). eq(0).data('id');
 
             setTimeout(function () {
 
                 $$('#homeView .refresh-click').find('i').removeClass('reloading');
 
+                //这里表示最新数据
                 if(parseInt(newestId) === 48) {
                     home.showLoadResult(i18n.index.nothing_loaded);
                     hiApp.pullToRefreshDone();
@@ -124,13 +126,7 @@ var home = {
     },
     renderTimeline: function(tl, type){
         var renderData = {
-            timeline: tl,
-            finalText: function(){
-                return appFunc.matchUrl(this.text);
-            },
-            time: function(){
-                return appFunc.timeFormat(this.created_at);
-            }
+            timeline: tl
         };
         var output = appFunc.renderTpl(template, renderData);
         if(type === 'prepend'){
@@ -149,7 +145,7 @@ var home = {
         homeF7View.router.loadPage('page/tweet.html?id=' + itemId);
     },
     bindEvent: function(){
-
+        //上拉刷新
         var bindings = [{
             element: '#homeView',
             selector: '.pull-to-refresh-content',
@@ -158,28 +154,28 @@ var home = {
         },{
             element: '#homeView',
             selector: '.pull-to-refresh-content',
-            event: 'infinite',
+            event: 'infinite',//下拉
             handler: this.infiniteTimeline
         },{
             element: '#homeView',
             selector: '.refresh-click',
             event: 'click',
-            handler: this.refreshTimelineByClick
+            handler: this.refreshTimelineByClick //点击左上角刷新按钮
         },{
             element: '#homeView',
             selector: 'a.open-send-popup',
             event: 'click',
-            handler: inputModule.openSendPopup
+            handler: inputModule.openSendPopup  //发表新说说
         },{
             element: '#homeView',
             selector: '.home-timeline .ks-facebook-card',
             event: 'click',
-            handler: this.openItemPage
+            handler: this.openItemPage  //点击查看详情
         },{
             element: '#homeView',
             selector:'div.card-content .item-image>img',
             event: 'click',
-            handler: this.photoBrowser
+            handler: this.photoBrowser  //点击图片
         }];
 
         appFunc.bindEvents(bindings);

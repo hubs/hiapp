@@ -1,11 +1,11 @@
 require('./info.less');
-
 var appFunc = require('../utils/appFunc'),
     commentModule = require('../comment/comment'),
     template = require('./info.tpl.html');
 
 var id;
-var infoModule = {
+var type_info   =   1;
+var infoModule  = {
     init: function(query){
         id = query.id;
         appFunc.hideToolbar();
@@ -16,7 +16,7 @@ var infoModule = {
         this.getData();
 
         // init comment module
-        commentModule.init(id,"");
+        commentModule.init({id:id,type:type_info});
     },
     getData: function(){
         var item = {

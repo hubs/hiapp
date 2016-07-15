@@ -55,7 +55,8 @@ module.exports = {
     timeline:{
         forward:'转发',
         comment:'评论',
-        like:'喜欢'
+        like:'喜欢',
+        cool:'赞'
     },
     item:{
         title:'正文'

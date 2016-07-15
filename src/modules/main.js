@@ -110,11 +110,11 @@ var app = {
                 }
             }
         });
-        window.homeF7View =  hiApp.addView('#infosView', {
+        window.infoF7View =  hiApp.addView('#infosView', {
             dynamicNavbar: true
         });
 
-        hiApp.addView('#homeView', {
+        window.homeF7View = hiApp.addView('#homeView', {
             dynamicNavbar: true //IOS only Dynamic Navbar is supported only in iOS Theme
         });
 

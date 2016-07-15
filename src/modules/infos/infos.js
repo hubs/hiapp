@@ -35,7 +35,7 @@ var infos = {
             return false;
         }
         var itemId = $$(this).data('id');
-        homeF7View.router.loadPage('page/info.html?id=' + itemId);
+        infoF7View.router.loadPage('page/info.html?id=' + itemId);
     },
     bindEvent: function(){
         var bindings = [{
