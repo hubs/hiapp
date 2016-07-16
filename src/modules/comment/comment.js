@@ -5,6 +5,7 @@ var appFunc = require('../utils/appFunc'),
 
 var comment_params;
 var commentModule = {
+
     /**
      * @param id : comment 表的mark_id
      * @param type : 1:资讯评论，2:说说评论

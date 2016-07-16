@@ -112,11 +112,13 @@ var home = {
         });
     },
     photoBrowser: function(){
-
-        var url = $$(this).attr('src');
+        var _imgArr =  Array();
+        $$(this).parent(".item-image").find("img").each(function(){
+            _imgArr.push(this.src);
+        });
 
         var myPhotoBrowser = hiApp.photoBrowser({
-            photos: [url],
+            photos: _imgArr,
             toolbar: false,
             backLinkText: i18n.global.close
         });
