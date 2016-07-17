@@ -3,8 +3,9 @@ require('./home.less');
 var service = require('./service'),
     appFunc = require('../utils/appFunc'),
     template = require('./home.tpl.html'),
+    commentModule = require('../comment/comment'),
     inputModule = require('../input/input');
-
+var type_info   =   2;
 var home = {
     init: function(){
         this.getTimeline();
@@ -23,22 +24,23 @@ var home = {
             ptrContent.data('scrollLoading','unloading');
         });
     },
+    //下拉刷新
     refreshTimeline: function(){
+        //获取最新的ID
+        var newestId = $$('#homeView').find('.home-timeline .card').eq(0).data('id');
 
-        service.refreshTimeline(function(tl){
+        service.refreshTimeline(newestId,function(tl){
             // Find newest msg id in ptrContent;
-
-            home.refreshItemTime();
-
-            //获取最新的ID
-            var newestId = $$('#homeView').find('.home-timeline .card'). eq(0).data('id');
+            //刷新时间
+           // home.refreshItemTime();
 
             setTimeout(function () {
-
+                //显示正在加载
                 $$('#homeView .refresh-click').find('i').removeClass('reloading');
 
-                //这里表示最新数据
-                if(parseInt(newestId) === 48) {
+                //这里表示没有加载到最新数据
+
+                if(tl.length === 0) {
                     home.showLoadResult(i18n.index.nothing_loaded);
                     hiApp.pullToRefreshDone();
                     return false;
@@ -47,9 +49,9 @@ var home = {
                 var length = tl.length;
 
                 if(length >= 15){
-                    home.renderTimeline(tl);
+                    home.renderTimeline(tl);//如果数据大于15条，则全部更换
                 }else if(length > 0){
-                    home.renderTimeline(tl, 'prepend');
+                    home.renderTimeline(tl, 'prepend');//在前面加上数据
                 }else{
                     home.showLoadResult(i18n.index.nothing_loaded);
                 }
@@ -60,24 +62,31 @@ var home = {
 
         });
     },
+    //上拉刷新
     infiniteTimeline: function(){
         var $this = $$(this);
-
+        //显示加载条
         hiApp.showIndicator();
-        service.infiniteTimeline(function(tl){
+
+        //获取最后一条数据的ID
+        var items = $this.find('.home-timeline .card');
+        var length = items.length;
+        var lastId = items.eq(length - 1).data('id');
+
+        service.infiniteTimeline(lastId,function(tl){
+            //如果是正在滚动，则直接返回
             var status = $this.data('scrollLoading');
             if (status === 'loading') return;
 
+            //更新状态
             $this.data('scrollLoading','loading');
 
-            var items = $this.find('.home-timeline .card');
-            var length = items.length;
-            var lastId = items.eq(length - 1).data('id');
-            if(parseInt(lastId) === 24){
-                hiApp.detachInfiniteScroll($this);
-                hiApp.hideIndicator();
+            //没有加载到数据
+            if(tl.length === 0){
+                hiApp.detachInfiniteScroll($this);// 从指定的HTML元素容器删除无限滚动事件监听器
+                hiApp.hideIndicator();//隐藏滚动条
             }else{
-
+                //加载到最后
                 setTimeout(function(){
                     $this.data('scrollLoading','unloading');
                     home.renderTimeline(tl, 'append');
@@ -87,15 +96,20 @@ var home = {
             }
         });
     },
+    //点击左上脚刷新
     refreshTimelineByClick: function(){
+        //左边在图标在转动
         setTimeout(function(){
             $$('#homeView .refresh-click').find('i').addClass('reloading');
         },350);
-
+        //下拉300像素
         $$('#homeView .pull-to-refresh-content').scrollTop(0,300);
 
+        //触发下拉刷新
         hiApp.pullToRefreshTrigger('#homeView .pull-to-refresh-content');
     },
+
+    //显示加载结果
     showLoadResult: function(text){
         setTimeout(function(){
             $$('#homeView .load-result').html(text).css('opacity','1').transition(1000);
@@ -105,14 +119,17 @@ var home = {
             },2100);
         },400);
     },
+    //显示刷新时间
     refreshItemTime:function(){
         $$('#homeView').find('.card .ks-facebook-date').each(function(){
             var nowTime = appFunc.timeFormat($$(this).data('time'));
             $$(this).html(nowTime);
         });
     },
+
+    //查看图片
     photoBrowser: function(){
-        var _imgArr =  Array();
+        var _imgArr =  [];
         $$(this).parent(".item-image").find("img").each(function(){
             _imgArr.push(this.src);
         });
@@ -126,6 +143,8 @@ var home = {
         myPhotoBrowser.open();
 
     },
+
+    //渲染数据
     renderTimeline: function(tl, type){
         var renderData = {
             timeline: tl
@@ -139,12 +158,23 @@ var home = {
             $$('#homeView').find('.home-timeline').html(output);
         }
     },
+
+    //查看详情
     openItemPage: function(e){
         if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
             return false;
         }
         var itemId = $$(this).data('id');
         homeF7View.router.loadPage('page/tweet.html?id=' + itemId);
+    },
+
+    //点赞
+    coolItem:function(){
+        console.log($$(this).data('id'));
+    },
+    //评论
+    commentItem:function(){
+        commentModule.commentPopup({id:$$(this).data('id'),type:type_info});
     },
     bindEvent: function(){
         //上拉刷新
@@ -178,6 +208,16 @@ var home = {
             selector:'div.card-content .item-image>img',
             event: 'click',
             handler: this.photoBrowser  //点击图片
+        },{
+            element: '#homeView',
+            selector:'div.card-footer .cool',
+            event: 'click',
+            handler: this.coolItem  //点赞
+        },{
+            element: '#homeView',
+            selector: 'div.card-footer .comment',
+            event: 'click',
+            handler:this.commentItem  //评论
         }];
 
         appFunc.bindEvents(bindings);

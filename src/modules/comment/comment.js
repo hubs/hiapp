@@ -47,7 +47,7 @@ var commentModule = {
             renderData.placeholder = i18n.comment.placeholder;
         }
 
-        renderData.id   = comment_params.id;
+        renderData.id   = params.id||comment_params.id;
         renderData.type = comment_params.type;
 
         var output = appFunc.renderTpl(popupTpl, renderData);

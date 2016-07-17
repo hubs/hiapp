@@ -8,14 +8,15 @@ module.exports = {
             callback(res.data);
         });
     },
-    refreshTimeline: function(callback){
+    //newestId:最新的ID
+    refreshTimeline: function(newestId,callback){
         xhr.simpleCall({
             func:'refresh_timeline'
         },function(res){
             callback(res.data);
         });
     },
-    infiniteTimeline: function(callback){
+    infiniteTimeline: function(lastId,callback){
         xhr.simpleCall({
             func:'more_timeline'
         },function(res){

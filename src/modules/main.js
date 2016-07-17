@@ -82,7 +82,8 @@ var app = {
                     back: i18n.global.back,
                     title: i18n.item.title,
                     comment: i18n.timeline.comment,
-                    forward: i18n.timeline.forward
+                    forward: i18n.timeline.forward,
+                    cool:   i18n.timeline.cool,
                 },
                 'page:info': {  //新闻资讯
                     back: i18n.global.back,
@@ -107,6 +108,14 @@ var app = {
                     back: i18n.global.back,
                     done: i18n.global.done,
                     switchLanguage: i18n.global.switch_language
+                },
+                'page:user_info':{//用户信息
+                    user_info   :   i18n.setting.user_info
+                    
+                },
+                'page:password':{//密码
+                    password_name   :   i18n.password.password_name
+
                 }
             }
         });

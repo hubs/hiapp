@@ -13,9 +13,9 @@ var settingView = {
         hiApp.showIndicator();
 
         var renderData = {
-            avatarUrl: 'http://lorempixel.com/68/68/people/7/',
-            nickName: 'HiApp',
-            points: '100'
+            filename    : 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
+            username    : '王歆',
+            chat_name   : 'guilinxiaomofang'
         };
 
         var output = appFunc.renderTpl(template, renderData);

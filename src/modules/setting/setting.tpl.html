@@ -2,18 +2,34 @@
     <div class="setting-page list-block">
         <ul>
             <li>
-                <div class="item-content">
-                    <div class="item-inner user-info">
-                        <div class="avatar">
-                            <img src="{{avatarUrl}}" alt="">
-                        </div>
-                        <div class="user-detail">
-                            <div class="name">{{t i18n="setting.nickname"}}: {{nickName}}</div>
-                            <div class="point">{{t i18n="setting.points"}}: {{points}}</div>
+                <a href="page/user_info.html" class="item-link">
+                    <div class="item-content">
+                        <div class="item-inner user-info">
+                            <div class="avatar">
+                                <img src="{{filename}}" alt="">
+                            </div>
+                            <div class="user-detail">
+                                <div class="name">{{t i18n="setting.nickname"}}: {{username}}</div>
+                                <div class="point">{{t i18n="setting.chat_name"}}: {{chat_name}}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </li>
+
+            <li>
+                <a href="page/password.html" class="item-link">
+                    <div class="item-content">
+                        <div class="item-media password ">
+                            <i class="icon icon-mima"></i>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">{{t i18n="setting.password_name"}}</div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+
             <li>
                 <a href="page/feedback.html" class="item-link">
                     <div class="item-content">
@@ -24,18 +40,8 @@
                     </div>
                 </a>
             </li>
-            <li>
-                <a href="page/language.html?from=setting" class="item-link">
-                    <div class="item-content">
-                        <div class="item-media language">
-                            <i class="icon world-outline"></i>
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">{{t i18n="global.language"}}</div>
-                        </div>
-                    </div>
-                </a>
-            </li>
+
+
             <li>
                 <a href="page/about.html" class="item-link">
                     <div class="item-content">

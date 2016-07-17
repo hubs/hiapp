@@ -38,9 +38,13 @@ module.exports = {
         about: '关于我们',
         login_out: '登出',
         nickname: '用户名',
-        points: '积分',
         confirm_logout:'你确定要退出登录吗？',
-        current_version:'当前版本为'
+        current_version:'当前版本为',
+        chat_name:"微信号",
+        setting_name:"设置",
+        user_info:"个人信息",
+
+        password_name:"修改密码"
     },
     login: {
         loginname_placeholder: '请输入账号',
@@ -93,5 +97,29 @@ module.exports = {
         unknown_error:'未知错误',
         no_network:'无网络连接',
         phonegap_only:'该模块只支持在PhoneGap中使用'
+    },
+    password:{
+        password_name   :   "修改密码",
+        passwrod_old    :   "原始密码",
+        password_new    :   "新密码",
+        password_new_ag :   "确认新密码",
+        password_place  :   "请输入原始密码",
+        password_new_place: "请输入新密码",
+        old_not_null    :   "原始密码不能空.",
+        new_not_null    :   '新密码不能空.',
+        new_not_eq      :   "二次输入的新密码不一致."
+    },
+    userinfo:{
+        avatar          :   "头像",
+        username        :   "昵称",
+        chat_name       :   "微号",
+        tel             :   "电话",
+        email           :   "e-mail",
+        hobby           :   "爱好",
+        duties          :   "职务",
+        company         :   "公司",
+        sex             :   "性别",
+        address         :   "地址",
+        remark          :   "自我介绍"
     }
 };
