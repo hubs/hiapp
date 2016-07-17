@@ -1,0 +1,114 @@
+<div class="list-block">
+    <ul>
+        <!-- Text inputs -->
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.avatar"}}</div>
+                    <div class="item-input">
+                        <img src="{{obj.filename}}" alt="" id="filename">
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.username"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="username" value="{{obj.username}}" placeholder='{{t i18n="userinfo.username"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.chat_name"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="wei_no" value="{{obj.chat_name}}" placeholder='{{t i18n="userinfo.chat_name"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.tel"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="tel" value="{{obj.tel}}" placeholder='{{t i18n="userinfo.tel"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.email"}}</div>
+                    <div class="item-input">
+                        <input type="email" id="email" value="{{obj.email}}" placeholder='{{t i18n="userinfo.email"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.hobby"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="hobby" value="{{obj.hobby}}" placeholder='{{t i18n="userinfo.hobby"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.duties"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="duties" value="{{obj.duties}}" placeholder='{{t i18n="userinfo.duties"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.company"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="company" value="{{obj.company}}" placeholder='{{t i18n="userinfo.company"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.sex"}}</div>
+                    <div class="item-input">
+                        <select id="sex">
+                            <option value="1"  {{#if obj.sex}}selected{{/if}} >男</option>
+                            <option value="2"  {{#if obj.sex}}selected{{/if}} >女</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.remark"}}</div>
+                    <div class="item-input">
+                        <textarea id="remark">{{obj.remark}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+
+    </ul>
+</div>
