@@ -6,9 +6,9 @@ var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 webpackConfig.plugins.push(
     new ExtractTextPlugin('[name].css'),
     new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: 'development'
-    }
+        'process.env': {
+            'NODE_ENV': "'development'"
+        }
     }),
     new BrowserSyncPlugin({
         host: 'localhost',

@@ -50,7 +50,17 @@ module.exports = {
       { test: /\.html$/, loader: 'html'},
       { test: /.*\.(gif|png|jpe?g|svg)$/i, loader: 'url' },
       { test: /\.(woff|woff2)$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
-      { test: /\.ttf$|\.eot$|\.svg$/, loader: 'file-loader' }
+      { test: /\.ttf$|\.eot$|\.svg$/, loader: 'file-loader' },
+      { test: /\.json/, loader: 'json-loader' }
     ]
+  },
+  //其它解决方案配置
+  resolve: {
+    //查找module的话从这里开始查找
+    root: '/home/hubs/workspace/hiapp/node_modules', //绝对路径
+    //自动扩展文件后缀名，意味着我们require模块可以省略不写后缀名
+    extensions: ['', '.js', '.json', '.scss']
+    //模块别名定义，方便后续直接引用别名，无须多写长长的地址
+
   }
 };
