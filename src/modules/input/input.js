@@ -33,6 +33,7 @@ var inputModule = {
 
         appFunc.bindEvents(bindings);
     },
+    //发表新的说说
     postMessage: function(){
         var text = $$('#messageText').val();
 

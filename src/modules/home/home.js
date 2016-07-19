@@ -174,7 +174,8 @@ var home = {
     },
     //评论
     commentItem:function(){
-        commentModule.commentPopup({id:$$(this).data('id'),type:type_info});
+        console.log($$(this).data("id"));
+        commentModule.commentPopup({id:$$(this).data('id'),comment_type:type_info});
     },
     bindEvent: function(){
         //上拉刷新

@@ -3,9 +3,13 @@
         <div class="page">
             <div class="navbar">
                 <div class="navbar-inner">
-                    <div class="left"><a href="#" class="link close-popup">{{t i18n="global.cancel"}}</a></div>
+                    <div class="left">
+                        <a href="#" class="back link close-popup">
+                            <i class="icon icon-quxiao1"></i>
+                        </a>
+                    </div>
                     <div class="center">{{t i18n="index.sen_tweet"}}</div>
-                    <div class="right"><a id="sendWeiboBtn" href="#" class="link color-orange">{{t i18n="global.send"}}</a></div>
+                    <div class="right"><a id="sendWeiboBtn" href="#" class="link color-orange"><i class="icon icon-save"></i></a></div>
                 </div>
             </div>
             <div class="page-content message-content">
@@ -14,17 +18,24 @@
                     <textarea id="messageText" placeholder="{{send_placeholder}}"></textarea>
                 </div>
 
+
                 <div class="message-tools">
                     <ul>
                         <li class="camera image-upload">
-                            <i class="icon camera-outline"></i>
+                            <i class="icon icon-cameras f23 v_t"></i>
                         </li>
                         <li class="photoalbum image-upload">
-                            <i class="icon pic"></i>
+                            <i class="icon icon-icon f23 v_t"></i>
                         </li>
-                        <li><i class="icon emotion"></i></li>
-                        <li><i class="icon at-outline"></i></li>
-                        <li class="get-position"><i class="icon dingxiang"></i></li>
+                        <li>
+                            <i class="icon icon-emotion f23"></i>
+                        </li>
+                        <li>
+                            <i class="icon icon-at f23 v_t"></i>
+                        </li>
+                        <li class="get-position ">
+                            <i class="icon icon-location f23 v_t"></i>
+                        </li>
                     </ul>
                 </div>
 

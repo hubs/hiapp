@@ -2,6 +2,7 @@ require('./tweet.less');
 
 var appFunc = require('../utils/appFunc'),
     commentModule = require('../comment/comment'),
+    homeModule = require('../home/home'),
     template = require('./tweet.tpl.html');
 
 var id;
@@ -36,6 +37,7 @@ var tweetModule = {
         var output = appFunc.renderTpl(template, item);
 
         $$('#itemContent').html(output);
+        $$('#comment-cool').attr("data-id",22);//点击赞
     },
     bindEvents: function(){
         var bindings = [{
@@ -46,7 +48,11 @@ var tweetModule = {
         },{
             element: '#homeView .item-comment-btn',
             event: 'click',
-            handler: commentModule.commentPopup
+            handler: homeModule.commentItem
+        },{
+            element: '.comment-title .cool',
+            event: 'click',
+            handler: homeModule.coolItem  //点赞
         }];
 
         appFunc.bindEvents(bindings);

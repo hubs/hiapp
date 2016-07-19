@@ -2,6 +2,7 @@ require('framework7');
 require('./utils/helper');
 require('../style/less/app.less');
 
+
 var appFunc = require('./utils/appFunc'),
     appService = require('./services/appService'),
     router = require('./router'),

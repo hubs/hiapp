@@ -3,16 +3,18 @@
     
     <div class="left">
         <a href="#" class="back link text-navbar">
-            {{back}}
+            <i class="icon icon-iosarrowthinleft"></i>
         </a>
+
     </div>
     
     <div class="center sliding">{{title}}</div>
     
     <div class="right">
-        <a href="#" class="link item-comment-btn text-navbar color-orange">
-            {{comment}}
+        <a href="#" class="item-comment-btn link icon-only">
+            <i class="icon icon-pinglun1"></i>
         </a>
+
     </div>
 
   </div>
@@ -26,7 +28,7 @@
       </div>
       <div class="comments-content">
           <div class="comment-title">
-              <span>{{cool}}&nbsp;&nbsp;|&nbsp;&nbsp;{{comment}}</span>
+              <span><a href="#" class="link cool" id="comment-cool" data-id="{{id}}">{{cool}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;{{comment}}</span>
               <span class="tip"></span>
           </div>
           <ul id="commentContent" class="comments-list">

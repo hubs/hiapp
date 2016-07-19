@@ -5,8 +5,8 @@ var
     aboutModule     = require('./about/about'),//关于我们
     languageModule  = require('./language/language'),//语言选择
     messageModule   = require('./message/message'),//聊天消息页
-    //userModule      = require('./user_info/user_info'),//修改个人信息
-    //passwordModule  = require('./password/password'),//密码
+    userModule      = require('./user_info/user_info'),//修改个人信息
+    passwordModule  = require('./password/password'),//密码
     infoModule      = require('./info/info');//消息
 
 
@@ -57,9 +57,9 @@ module.exports = {
                 infoModule.init(query);
                 break;
             case 'user_info'://修改个人信息
-                //userModule.init();
+                userModule.init();
             case 'password':
-                //passwordModule.init();
+                passwordModule.init();
         }
     }
 };
