@@ -1,0 +1,62 @@
+<div class="details-page list-block">
+    <ul>
+        <li>
+            <div class="item-content">
+                <div class="item-inner user-info">
+                    <div class="avatar">
+                        <img src="{{obj.filename}}" alt="">
+                    </div>
+                    <div class="user-detail">
+                        <div class="name">{{t i18n="setting.nickname"}}: {{obj.username}} <i class="icon {{obj.sex}} v_t"></i></div>
+                        <div class="point">{{t i18n="setting.chat_name"}}: {{obj.chat_name}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title"><span class="pr20">{{t i18n="userinfo.tel"}}</span> <span class="pl20">{{obj.tel}}</span></div>
+            </div>
+        </li>
+        <li class="item-content p_5">
+            <div class="item-inner">
+                <div class="item-title"><span class="pr20">{{t i18n="userinfo.email"}}</span> <span class="pl20">{{obj.email}}</span></div>
+            </div>
+        </li>
+
+        <li class="item-content p_5">
+            <div class="item-inner">
+                <div class="item-title"><span class="pr20">{{t i18n="userinfo.hobby"}}</span>
+                    <span class="pl20">{{obj.hobby}}</span></div>
+            </div>
+        </li>
+
+        <li class="item-content p_5">
+            <div class="item-inner">
+                <div class="item-title"><span class="pr20">{{t i18n="userinfo.duties"}}</span> <span class="pl20">{{obj.duties}}</span></div>
+            </div>
+        </li>
+
+        <li class="item-content p_5">
+            <div class="item-inner">
+                <div class="item-title"><span class="pr20">{{t i18n="userinfo.company"}}</span> <span class="pl20">{{obj.company}}</span></div>
+            </div>
+        </li>
+        <li class="item-content p_5">
+            <div class="item-inner">
+                <div class="item-title">{{t i18n="userinfo.remark"}} <span class="pl20">{{obj.remark}}</span></div>
+            </div>
+        </li>
+
+        <a href="page/password.html" class="item-link">
+            <li class="item-content p_5">
+                <div class="item-inner">
+                    <div class="item-title">{{t i18n="userinfo.member_talk"}} <span class="pl20">{{obj.lastTalk}}</span></div>
+                </div>
+            </li>
+        </a>
+    </ul>
+
+    <a href="page/message.html?uid={{obj.uid}}" class="button button-big  button-fill color-green send-info">{{t i18n="userinfo.send_info"}}</a>
+</div>

@@ -71,7 +71,7 @@ var app = {
 
         window.$$ = Dom7;
         window.hiApp = new Framework7({
-            pushState: false,//如果为true,则会显示URL地址
+            pushState: true,//如果为true,则会显示URL地址
             popupCloseByOutside:false,//点击modal(Alert, Confirm, Prompt)外面关闭她。
             animateNavBackIcon: true,//IOS only 当启用这个功能时，动态导航栏中的 back-link 图标的动画会更接近iOS的风格
             modalTitle: i18n.global.modal_title,    //弹出窗标题
@@ -84,7 +84,7 @@ var app = {
                     title: i18n.item.title,
                     comment: i18n.timeline.comment,
                     forward: i18n.timeline.forward,
-                    cool:   i18n.timeline.cool,
+                    cool:   i18n.timeline.cool
                 },
                 'page:info': {  //新闻资讯
                     back: i18n.global.back,
@@ -117,6 +117,9 @@ var app = {
                 'page:password':{//密码
                     password_name   :   i18n.password.password_name
 
+                },
+                'page:contacts_detail':{//用户详情
+                    member_info     :   i18n.userinfo.member_info
                 }
             }
         });
@@ -128,9 +131,14 @@ var app = {
             dynamicNavbar: true //IOS only Dynamic Navbar is supported only in iOS Theme
         });
 
-
-        hiApp.addView('#contactView', {
+        window.chatF7View = hiApp.addView('#chatView', {
             dynamicNavbar: true
+        });
+
+
+        window.contactF7View = hiApp.addView('#contactView', {
+            dynamicNavbar: true,
+            domCache: true //enable inline pages
         });
 
         hiApp.addView('#settingView', {

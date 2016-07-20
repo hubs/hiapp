@@ -1,0 +1,96 @@
+
+
+.details-page{
+  margin: 0 5px 15px;
+
+  .spring {
+    background: url("../../style/img/sprite@2x.png") no-repeat;
+    background-size: 200%;
+  }
+
+  >ul {
+    background-color: transparent;
+
+    .item-link {
+      &:active {
+        .item-content {
+          transition-duration: 0ms;
+          background-color: #e9e9e9 !important;
+        }
+      }
+    }
+    .item-content {
+      margin: 0;
+      margin-top: 10px;
+      background: #ffffff;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, .05);
+      padding: 0;
+      padding-left: 10px;
+      border: 1px solid #EBE9E9;
+      .item-title {
+        font-size: 14px;
+      }
+      .pl20{
+        padding-left: 20px;
+      }
+      .pr20{
+        margin-right: 20px;
+      }
+      .item-inner {
+        border: 0;
+        background-image: none;
+        &:after{
+          background-color: transparent;
+        }
+      }
+    }
+    .p_5{
+      margin-top: 5px;
+    }
+    .item-media {
+      width: 30px;
+      height: 30px;
+      color: #ffffff;
+      font-size: 28px;
+      text-align: center;
+      padding: 0;
+    }
+
+    .update {
+      background-color: #fca405;
+      background-position: 0 -30px;
+    }
+
+    .user-info {
+      padding: 10px 10px 10px 0 !important;
+      position: relative;
+
+      .avatar, .avatar > img {
+        width: 55px;
+        height: 55px;
+      }
+
+      .user-detail {
+        position: absolute;
+        margin-left: 20px;
+        line-height: 26px;
+
+        .name {
+          font-size: 14px;
+        }
+
+        .point {
+          font-size: 13px;
+          color: #818080;
+        }
+
+        .icon{
+          vertical-align: inherit !important;
+        }
+      }
+    }
+  }
+  .send-info {
+    margin-top: 15px;
+  }
+}

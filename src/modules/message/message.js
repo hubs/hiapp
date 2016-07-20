@@ -41,6 +41,7 @@ module.exports = {
                 autoLayout:true
             });
         });
+
     },
     renderMessages: function(message){
         hiApp.showIndicator();

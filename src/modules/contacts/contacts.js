@@ -7,8 +7,10 @@ var appFunc = require('../utils/appFunc'),
 var contacts = {
     init: function(){
         contacts.bindEvents();
+        console.log("init");
     },
     loadContacts: function(){
+        console.log("loadContacts");
         if(contacts.beforeLoadContacts()) {
             hiApp.searchbar('#contactView .searchbar',{
                 searchList: '.contacts-list',
@@ -17,6 +19,15 @@ var contacts = {
 
             service.loadContacts(function(c){
                 setTimeout(function(){
+                    var _spell  =   '';
+                    $$.each(c,function(index,val){
+                        var _val_spell  =   val.spell;
+                        if(_spell!=_val_spell){
+                            _spell  =   _val_spell;
+                        }else{
+                            val.spell='';
+                        }
+                    });
                     var renderData = {
                         contacts: c
                     };

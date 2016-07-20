@@ -114,12 +114,15 @@ module.exports = {
         username        :   "昵称",
         chat_name       :   "微号",
         tel             :   "电话",
-        email           :   "e-mail",
+        email           :   "邮箱",
         hobby           :   "爱好",
         duties          :   "职务",
         company         :   "公司",
         sex             :   "性别",
         address         :   "地址",
-        remark          :   "自我介绍"
+        remark          :   "自我介绍",
+        member_info     :   "会员信息",
+        send_info       :   "发消息",
+        member_talk     :   "个人动态"
     }
 };
