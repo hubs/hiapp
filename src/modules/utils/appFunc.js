@@ -150,8 +150,8 @@ module.exports = {
         var now     =   Date.parse(new Date())/1000;
         var limit   =   now-create_time;
         var content =   "";
-        if(limit<60){
-            content="刚刚";
+        if(limit<60&&limit>0){
+            content=limit+"秒前";
         }else if(limit>=60 && limit<3600){
             content=Math.floor(limit/60)+"分钟前";
         }else if(limit>=3600 && limit<86400){
@@ -166,6 +166,36 @@ module.exports = {
             content="很久前";
         }
         return content;
+    },
+    //聊天时间
+    format_chat_how_long : function(create_time){
+        var date        =   new Date(create_time*1000);
+
+
+        var now         =   new Date();
+        var _nowYear    =   now.getFullYear();
+        var _nowDay     =   now.getDate();
+
+
+        var _createYear    =   date.getFullYear();
+        var _createMonth   =   date.getMonth()+1;
+        var _createDay     =   date.getDate();
+        var _createHour    =   date.getHours();
+        var _createMinu    =   date.getMinutes();
+
+        var _content       =   "";
+        //如果不相等,则写出年份
+        if(_nowYear     !=  _createYear){
+            _content    +=  _createYear+"年" ;
+        }
+
+        if(_nowDay      != _createDay){
+            _content    +=  _createMonth+"月"+_createDay+"日  ";
+        }
+
+        _content        +=  _createHour<12?"上午 ":"下午";
+        _content        +=  _createHour+":"+_createMinu;
+        return _content;
     }
 
 

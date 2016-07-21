@@ -39,11 +39,39 @@ var contacts = {
             return true;
         }
     },
+    showTelAction:function(){
+        var buttons1 = [
+            {
+                text: '操作',
+                label: true
+            },
+            {
+                text: '<a class="external actions-link" href="tel:13788581069">拨打电话</a>',
+                bold: true
+            },
+            {
+                text: '<a class="external actions-link" href="sms:13788581069">发送信息</a>',
+            }
+        ];
+        var buttons2 = [
+            {
+                text: '取消',
+                color: 'red'
+            }
+        ];
+        var groups = [buttons1, buttons2];
+        hiApp.actions(groups);
+    },
     bindEvents: function(){
         var bindings = [{
             element: '#contactView',
             event: 'show',
             handler: contacts.loadContacts
+        },{
+            element: '.detail-tel',
+            event: 'click',
+            handler: this.showTelAction
+
         }];
 
         appFunc.bindEvents(bindings);

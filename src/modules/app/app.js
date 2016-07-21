@@ -4,6 +4,7 @@ var appFunc = require('../utils/appFunc'),
     infosView=require('../infos/infos'),
     homeView = require('../home/home'),
     contactsView = require('../contacts/contacts'),
+    chatView    =  require('../chat/chat'),
     settingView = require('../setting/setting');
 
 //初始化页面
@@ -14,6 +15,7 @@ module.exports = {
         homeView.init();
         contactsView.init();
         settingView.init();
+        chatView.init();
     },
 
     i18next: function(content){

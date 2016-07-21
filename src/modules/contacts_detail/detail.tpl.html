@@ -14,16 +14,18 @@
             </div>
         </li>
 
-        <li class="item-content">
+        <li class="item-content detail-tel">
             <div class="item-inner">
                 <div class="item-title"><span class="pr20">{{t i18n="userinfo.tel"}}</span> <span class="pl20">{{obj.tel}}</span></div>
             </div>
         </li>
-        <li class="item-content p_5">
-            <div class="item-inner">
-                <div class="item-title"><span class="pr20">{{t i18n="userinfo.email"}}</span> <span class="pl20">{{obj.email}}</span></div>
-            </div>
-        </li>
+        <a class="item-link external" href="mailto:{{obj.email}}">
+            <li class="item-content p_5">
+                <div class="item-inner">
+                    <div class="item-title"><span class="pr20">{{t i18n="userinfo.email"}}</span> <span class="pl20">{{obj.email}}</span></div>
+                </div>
+            </li>
+        </a>
 
         <li class="item-content p_5">
             <div class="item-inner">

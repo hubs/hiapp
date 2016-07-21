@@ -3,45 +3,45 @@
     "err_msg": "success",
     "data": [
         {
-          "create_time" :   "1404705240",
+          "create_time" :   "1469072662",
           "msg"         :   "你好",
-          "msg_type"    :   "1", //１：文本，２：图片，３：语音
-          "remark"      :   "", //图片缩略图
+          "msg_type"    :   "1", 
+          "remark"      :   "", 
           "from_uid"    :   "2"
         },
         {
-            "create_time" :   "1404705340",
+            "create_time" :   "1469072762",
             "msg"         :   "什么事?",
-            "msg_type"    :   "1", //１：文本，２：图片，３：语音
-            "remark"      :   "", //图片缩略图
+            "msg_type"    :   "1", 
+            "remark"      :   "", 
             "from_uid"    :   "3"
         },
         {
-            "create_time" :   "1404705540",
+            "create_time" :   "1398250549",
             "msg"         :   "没事,无聊",
-            "msg_type"    :   "1", //１：文本，２：图片，３：语音
-            "remark"      :   "", //图片缩略图
+            "msg_type"    :   "1", 
+            "remark"      :   "", 
             "from_uid"    :   "2"
         },
         {
-            "create_time" :   "1404705640",
+            "create_time" :   "14690721062",
             "msg"         :   "http://lorempixel.com/1000/700/nature/5/",
-            "msg_type"    :   "2", //１：文本，２：图片，３：语音
-            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", //图片缩略图
+            "msg_type"    :   "2", 
+            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", 
             "from_uid"    :   "2"
         },
         {
-            "create_time" :   "1404705740",
+            "create_time" :   "1469073662",
             "msg"         :   "你发的是什么鬼?",
-            "msg_type"    :   "1", //１：文本，２：图片，３：语音
-            "remark"      :   "", //图片缩略图
+            "msg_type"    :   "1", 
+            "remark"      :   "", 
             "from_uid"    :   "3"
         },
         {
-            "create_time" :   "1404705240",
+            "create_time" :   "1469074662",
             "msg"         :   "你好",
-            "msg_type"    :   "2", //１：文本，２：图片，３：语音
-            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", //图片缩略图
+            "msg_type"    :   "2", 
+            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", 
             "from_uid"    :   "3"
         }
     ]

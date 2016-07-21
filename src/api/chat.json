@@ -1,0 +1,60 @@
+{
+    "err_code": 0,
+    "err_msg": "success",
+    "data": [
+        {
+            "id"            :   "1",
+            "name"          :   "张三",
+            "filename"      :   "http://lorempixel.com/68/68/people/1/",
+            "msg"           :   "Hello 测试",
+            "msg_type"      :   1,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        },
+        {
+            "id"            :   "2",
+            "name"          :   "群组",
+            "filename"      :   "http://lorempixel.com/68/68/people/3/",
+            "msg"           :   "System.out.println(Hello);",
+            "msg_type"      :   1,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        },
+        {
+            "id"            :   "3",
+            "name"          :   "五三",
+            "filename"      :   "http://lorempixel.com/68/68/people/4/",
+            "msg"           :   "Hello 测试",
+            "msg_type"      :   2,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        },
+        {
+            "id"            :   "4",
+            "name"          :   "塟三",
+            "filename"      :   "http://lorempixel.com/68/68/people/5/",
+            "msg"           :   "Hello 测试",
+            "msg_type"      :   3,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        },
+        {
+            "id"            :   "5",
+            "name"          :   "我也是群",
+            "filename"      :   "http://lorempixel.com/68/68/people/6/",
+            "msg"           :   "你说什么",
+            "msg_type"      :   1,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        },
+        {
+            "id"            :   "6",
+            "name"          :   "刘三",
+            "filename"      :   "http://lorempixel.com/68/68/people/7/",
+            "msg"           :   "Hello 测试",
+            "msg_type"      :   1,
+            "type"          :   1,
+            "update_time"   :   "1404709434"
+        }
+    ]
+}
