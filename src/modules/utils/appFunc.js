@@ -168,7 +168,8 @@ module.exports = {
         return content;
     },
     //聊天时间
-    format_chat_how_long : function(create_time){
+    format_chat_time : function(create_time,show_time){
+        var show_time   =   show_time==undefined?true:show_time;
         var date        =   new Date(create_time*1000);
 
 
@@ -190,13 +191,22 @@ module.exports = {
         }
 
         if(_nowDay      != _createDay){
-            _content    +=  _createMonth+"月"+_createDay+"日  ";
+            _content    +=  _createMonth+"月"+_createDay+"日 ";
+            if(!show_time){ //如果不显示时间，则只显示年月日
+                return _content;
+            }
         }
 
-        _content        +=  _createHour<12?"上午 ":"下午";
-        _content        +=  _createHour+":"+_createMinu;
+
+        if(show_time){
+            _content        +=  _createHour<12?"上午 ":"下午";
+            _content        +=  _createHour+":"+_createMinu;
+        }else{
+            _content        +=  _createHour+":"+_createMinu;
+        }
         return _content;
     }
+
 
 
 };

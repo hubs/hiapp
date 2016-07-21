@@ -32,6 +32,6 @@ Template7.registerHelper('img_tag', function (imgs){
     return ret;
 });
 
-Template7.registerHelper('format_chat_time', function (create_time){
-    return appFunc.format_chat_how_long(create_time);
+Template7.registerHelper('format_chat_time', function (create_time,options){
+    return appFunc.format_chat_time(create_time,options.hash.show_time);
 });

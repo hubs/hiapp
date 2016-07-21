@@ -4,9 +4,9 @@ var appFunc = require('../utils/appFunc'),
     service = require('./service'),
     template = require('./chat.tpl.html');
 
-var contacts = {
+module.exports = {
     init: function(){
-        contacts.bindEvents();
+        this.bindEvents();
         this.getDatas();
     },
     getDatas: function(){
@@ -33,15 +33,36 @@ var contacts = {
         $$('#chatView').find('.chat-list').html(output);
     },
 
+    chatListClick:function(){
+        console.log("hello click 11");
+        hiApp.modal({
+            verticalButtons: true,
+            buttons: [
+                {
+                    text: '置顶聊天',
+                    onClick: function() {
+                        hiApp.alert('You clicked first button!')
+                    }
+                },
+                {
+                    text: '删除该聊天',
+                    onClick: function() {
+                        hiApp.alert('You clicked second button!')
+                    }
+                }
+            ]
+        })
+    },
+
     bindEvents: function(){
         var bindings = [{
-            element: '#contactView',
-            event: 'show',
-            handler: contacts.loadContacts
+            element: '#chatView',
+            selector: '.chat-list .item-content',
+            event: 'click',
+            handler: this.chatListClick
         }];
 
         appFunc.bindEvents(bindings);
     }
 };
 
-module.exports = contacts;
