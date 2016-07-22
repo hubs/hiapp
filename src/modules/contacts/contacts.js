@@ -36,6 +36,8 @@ var contacts = {
 
                     hiApp.hideIndicator();
 
+                    appFunc.lazyImg();
+
                 },500);
             });
         }

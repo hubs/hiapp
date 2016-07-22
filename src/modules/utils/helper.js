@@ -26,7 +26,7 @@ Template7.registerHelper('img_tag', function (imgs){
     }
     var ret = '<div class="item-image">';
     $$.each(_imgs, function (index, value) {
-        ret+='<img src="'+value+'" width="'+_width+'%" class="">';
+        ret+='<img data-src="'+value+'"  class="lazy lazy-fadeIn"  width="'+_width+'%" >';
     });
     ret+='</div>';
     return ret;

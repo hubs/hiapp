@@ -22,6 +22,8 @@ var home = {
             //Unlock scroll loading status
             var ptrContent = $$('#homeView').find('.pull-to-refresh-content');
             ptrContent.data('scrollLoading','unloading');
+
+            appFunc.lazyImg();
         });
     },
     //下拉刷新
@@ -57,7 +59,7 @@ var home = {
                 }
 
                 hiApp.pullToRefreshDone();
-
+                appFunc.lazyImg();
             },1500);
 
         });
@@ -94,6 +96,7 @@ var home = {
                     hiApp.hideIndicator();
                 },1500);
             }
+            appFunc.lazyImg();
         });
     },
     //点击左上脚刷新
@@ -129,6 +132,7 @@ var home = {
 
     //查看图片
     photoBrowser: function(){
+        console.log("hello");
         var _imgArr =  [];
         $$(this).parent(".item-image").find("img").each(function(){
             _imgArr.push(this.src);

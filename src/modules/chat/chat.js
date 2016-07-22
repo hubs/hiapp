@@ -31,6 +31,8 @@ module.exports = {
         };
         var output = appFunc.renderTpl(template, renderData);
         $$('#chatView').find('.chat-list').html(output);
+
+        appFunc.lazyImg();
     },
 
     chatListClick:function(){
@@ -49,6 +51,11 @@ module.exports = {
                     onClick: function() {
                         hiApp.alert('You clicked second button!')
                     }
+                },
+                {
+                    text: '关闭',
+                    bold: true,
+                    close: true
                 }
             ]
         })
@@ -57,8 +64,8 @@ module.exports = {
     bindEvents: function(){
         var bindings = [{
             element: '#chatView',
-            selector: '.chat-list .item-content',
-            event: 'click',
+            selector: '.item-content',
+            event: 'taphold',
             handler: this.chatListClick
         }];
 

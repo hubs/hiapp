@@ -1,6 +1,6 @@
 {{#datas}}
 <div  data-id="{{id}}" class="card card-header-pic">
-    <div  style="background-image:url({{filename}})" valign="bottom" class="card-header color-white no-border">{{title}}</div>
+    <div data-background="{{filename}}" valign="bottom" class="card-header color-white no-border lazy lazy-fadein">{{title}}</div>
     <div class="card-content">
         <div class="card-content-inner">
             <p class="color-gray"  data-time="{{create_time}}">{{title}} <span class="f_right">{{format_ymd create_time}}</span></p>

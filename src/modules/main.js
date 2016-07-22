@@ -71,6 +71,7 @@ var app = {
 
         window.$$ = Dom7;
         window.hiApp = new Framework7({
+            tapHold: true,
             pushState: true,//如果为true,则会显示URL地址
             popupCloseByOutside:false,//点击modal(Alert, Confirm, Prompt)外面关闭她。
             animateNavBackIcon: true,//IOS only 当启用这个功能时，动态导航栏中的 back-link 图标的动画会更接近iOS的风格
@@ -112,7 +113,7 @@ var app = {
                 },
                 'page:user_info':{//用户信息
                     user_info   :   i18n.setting.user_info
-                    
+
                 },
                 'page:password':{//密码
                     password_name   :   i18n.password.password_name

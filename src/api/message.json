@@ -25,9 +25,9 @@
         },
         {
             "create_time" :   "14690721062",
-            "msg"         :   "http://lorempixel.com/1000/700/nature/5/",
+            "msg"         :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg",
             "msg_type"    :   "2", 
-            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", 
+            "remark"      :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg", 
             "from_uid"    :   "2"
         },
         {
@@ -41,7 +41,7 @@
             "create_time" :   "1469074662",
             "msg"         :   "你好",
             "msg_type"    :   "2", 
-            "remark"      :   "http://lorempixel.com/1000/700/nature/5/", 
+            "remark"      :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg", 
             "from_uid"    :   "3"
         }
     ]

@@ -2,7 +2,9 @@ require('./message.less');
 
 var appFunc = require('../utils/appFunc'),
     service = require('./service'),
-    template = require('./message.tpl.html');
+    template = require('./message.tpl.html'),
+    homeJs = require('../home/home')
+    ;
 
 var conversationStarted = false,
     answers = {},
@@ -38,20 +40,9 @@ module.exports = {
         });
 
         this.bindEvents();
-    },
-    bindEvents: function(){
-        var bindings = [{
-            element: '.ks-messages-form',
-            event: 'submit',
-            handler: this.submitMessage
-        },{
-            element: '.ks-send-message',
-            event: 'click',
-            handler: this.triggerSubmit
-        }];
 
-        appFunc.bindEvents(bindings);
     },
+
 
     //初始化聊天记录
     renderMessages: function(message){
@@ -80,7 +71,9 @@ module.exports = {
                 $$('.page[data-page="message"] .messages').html(output);
 
                 hiApp.hideIndicator();
+                appFunc.lazyImg();
 
+                this.bindEvents();
             },600);
         });
     },
@@ -117,5 +110,24 @@ module.exports = {
     //点击发送触发提交
     triggerSubmit: function(){
         $$('.ks-messages-form').trigger('submit');
+    },
+
+    bindEvents: function(){
+        var bindings = [{
+            element: '.ks-messages-form',
+            event: 'submit',
+            handler: this.submitMessage
+        },{
+            element: '.ks-send-message',
+            event: 'click',
+            handler: this.triggerSubmit
+        },{
+            element: '.messages',
+            selector:'.message-pic>img',
+            event: 'click',
+            handler: homeJs.photoBrowser  //点击图片
+        }];
+
+        appFunc.bindEvents(bindings);
     }
 };

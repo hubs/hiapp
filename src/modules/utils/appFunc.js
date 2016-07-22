@@ -205,7 +205,11 @@ module.exports = {
             _content        +=  _createHour+":"+_createMinu;
         }
         return _content;
+    },
+    lazyImg:function(){
+        hiApp.initImagesLazyLoad('.page');
     }
+
 
 
 

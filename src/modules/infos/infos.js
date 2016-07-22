@@ -28,6 +28,7 @@ var infos = {
         }else {
             $$('#infosView').find('.home-infos').html(output);
         }
+        appFunc.lazyImg();
     },
     //查看详情
     openItemPage: function(e){
