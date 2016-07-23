@@ -14,9 +14,23 @@
 <div class="pages navbar-through">
     <div data-page="message" class="page no-toolbar toolbar-fixed">
         <div class="toolbar">
-            <form class="ks-messages-form">
+            <form class="ks-messages-form form-general">
                 <div class="toolbar-inner">
-                    <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"/><a href="#" class="link ks-send-message">{{send}}</a>
+                    <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
+                    <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"/>
+                    <a href="#" class="link link-smile"><i class="icon icon-jinyanjinliao206"></i></a>
+                    <a href="#" class="button button-send-message  ks-send-message button-green button-fill hidden">{{send}}</a>
+                    <a href="#" class="link link-add"><i class="icon icon-jia"></i></a>
+                </div>
+            </form>
+
+            <form class="ks-messages-form from-speak">
+                <div class="toolbar-inner">
+                    <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
+                    <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"/>
+                    <a href="#" class="link link-smile"><i class="icon icon-jinyanjinliao206"></i></a>
+                    <a href="#" class="button button-send-message  ks-send-message button-green button-fill hidden">{{send}}</a>
+                    <a href="#" class="link link-add"><i class="icon icon-jia"></i></a>
                 </div>
             </form>
         </div>
