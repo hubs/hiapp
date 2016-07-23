@@ -132,9 +132,8 @@ var home = {
 
     //查看图片
     photoBrowser: function(){
-        console.log("hello");
         var _imgArr =  [];
-        $$(this).parent(".item-image").find("img").each(function(){
+        $$(this).parents(".item-image").find("img").each(function(){
             _imgArr.push(this.src);
         });
 

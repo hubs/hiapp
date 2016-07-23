@@ -1,10 +1,9 @@
 {{#each message}}
 <div class="messages-date">{{format_chat_time create_time}}</div>
-
 {{#if image}}
 <div class="message message-with-avatar message-{{from}} message-pic ">
     <div class="message-text"><img  src="{{remark}}"  class="" /></div><!--data lazy lazy-fadeIn-->
-    <div style="background-image:url(http://lorempixel.com/output/people-q-c-100-100-9.jpg)" class="message-avatar"></div>
+<!--    <div style="background-image:url(http://lorempixel.com/output/people-q-c-100-100-9.jpg)" class="message-avatar"></div>-->
 </div>
 {{else}}
 <div class="message  message-with-avatar message-{{from}} message-last">
@@ -13,3 +12,6 @@
 </div>
 {{/if}}
 {{/each}}
+
+
+

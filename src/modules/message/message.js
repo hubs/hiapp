@@ -35,7 +35,7 @@ module.exports = {
         that.renderMessages();
 
         // Init Messages
-        messageLayout = hiApp.messages('#contactView .messages', {
+        messageLayout = hiApp.messages('.messages', {
             autoLayout:true
         });
 
@@ -71,9 +71,9 @@ module.exports = {
                 $$('.page[data-page="message"] .messages').html(output);
 
                 hiApp.hideIndicator();
-                appFunc.lazyImg();
 
-                this.bindEvents();
+              //  appFunc.lazyImg();
+
             },600);
         });
     },
@@ -122,8 +122,8 @@ module.exports = {
             event: 'click',
             handler: this.triggerSubmit
         },{
-            element: '.messages',
-            selector:'.message-pic>img',
+            element: '#chatView',
+            selector:'.message-pic img',
             event: 'click',
             handler: homeJs.photoBrowser  //点击图片
         }];
