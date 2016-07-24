@@ -15,7 +15,8 @@ module.exports = {
         day_ago:'天前',
         just_now:'刚刚',
         language:'切换语言',
-        switch_language:'切换语言'
+        switch_language:'切换语言',
+        vodieSend:"按住 说话"
     },
     index: {
         nothing_found: '未有匹配结果',

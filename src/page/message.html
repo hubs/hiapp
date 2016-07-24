@@ -12,27 +12,42 @@
     </div>
 </div>
 <div class="pages navbar-through">
-    <div data-page="message" class="page no-toolbar toolbar-fixed">
-        <div class="toolbar">
+    <div data-page="message" class="page no-toolbar toolbar-fixed message-body">
+        <div class="toolbar message-toolbar">
             <form class="ks-messages-form form-general">
                 <div class="toolbar-inner">
                     <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
                     <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"/>
                     <a href="#" class="link link-smile"><i class="icon icon-jinyanjinliao206"></i></a>
                     <a href="#" class="button button-send-message  ks-send-message button-green button-fill hidden">{{send}}</a>
-                    <a href="#" class="link link-add"><i class="icon icon-jia"></i></a>
+                    <a href="#" class="link link-more"><i class="icon icon-jia"></i></a>
                 </div>
             </form>
 
-            <form class="ks-messages-form from-speak">
+            <form class="ks-messages-form form-speak" style="display: none;">
                 <div class="toolbar-inner">
-                    <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
-                    <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"/>
-                    <a href="#" class="link link-smile"><i class="icon icon-jinyanjinliao206"></i></a>
-                    <a href="#" class="button button-send-message  ks-send-message button-green button-fill hidden">{{send}}</a>
-                    <a href="#" class="link link-add"><i class="icon icon-jia"></i></a>
+                    <a href="#" class="link link-keyboard"><i class="icon icon-jianpan"></i></a>
+                    <a href="#" class="button link-keydown ">{{vodieSend}}</a>
+                    <a href="#" class="link link-more"><i class="icon icon-jia"></i></a>
                 </div>
             </form>
+
+            <div class="bar-actions bar-main">
+                <div class="bar-action bar-camera">
+                    <div class="action-icon icon icon-cameras"></div>
+                    <div class="action-text">拍照</div>
+                </div>
+                <div class="bar-action bar-pic">
+                    <div class="action-icon icon icon-icon"></div>
+                    <div class="action-text">相册</div>
+                </div>
+                <div class="bar-action bar-map" >
+                    <div class="action-icon icon icon-iconfontdingxiang"></div>
+                    <div class="action-text">位置</div>
+                </div>
+            </div>
+
+
         </div>
         <div class="page-content messages-content">
             <div class="messages item-image">

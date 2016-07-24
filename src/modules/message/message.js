@@ -3,17 +3,21 @@ require('./message.less');
 var appFunc = require('../utils/appFunc'),
     service = require('./service'),
     template = require('./message.tpl.html'),
-    homeJs = require('../home/home')
+    homeJs = require('../home/home'),
+    camera = require('../components/camera'),
+    geo = require('../components/geolocation');
     ;
 
 var conversationStarted = false,
     answers = {},
     answerTimeout,
+    _that   = null,
     messageLayout;
+
 var uid   = 3;
 module.exports = {
     init: function(query){
-        var that = this;
+         _that = this;
 
         appFunc.hideToolbar();
 
@@ -32,7 +36,7 @@ module.exports = {
         $$('.chat-name').html(name);
 
         // render messages
-        that.renderMessages();
+        _that.renderMessages();
 
         // Init Messages
         messageLayout = hiApp.messages('.messages', {
@@ -61,8 +65,6 @@ module.exports = {
                 });
 
                 console.table(m);
-
-
 
                 var renderData = {
                     message: m
@@ -112,6 +114,42 @@ module.exports = {
         $$('.ks-messages-form').trigger('submit');
     },
 
+    //点击语音图标
+    showVoiceForm: function(){
+        $$(".form-speak").show();
+        $$(".form-general").hide();
+        _that.hideBarMain();
+    },
+    //显示正常Form
+    showKeyboard: function(){
+        $$(".form-speak").hide();
+        $$(".form-general").show();
+        _that.hideBarMain();
+    },
+
+    //显示笑脸
+    showSmile:function(){
+
+        _that.hideBarMain();
+    },
+    //显示更多
+    showMore: function(){
+        $$(".form-speak").hide();
+        $$(".form-general").show();
+        _that.showBarMain();
+    },
+
+    showBarMain:function(){
+        $$(".bar-main").show();
+        $$(".message-body").css("padding-bottom","100px");
+        $$(".message-toolbar").css("bottom","100px");
+    },
+    hideBarMain:function(){
+        $$(".bar-main").hide();
+        $$(".message-body").css("padding-bottom","0");
+        $$(".message-toolbar").css("bottom","0");
+    },
+
     bindEvents: function(){
         var bindings = [{
             element: '.ks-messages-form',
@@ -126,6 +164,34 @@ module.exports = {
             selector:'.message-pic img',
             event: 'click',
             handler: homeJs.photoBrowser  //点击图片
+        },{
+            element: '.link-voice',
+            event: 'click',
+            handler: this.showVoiceForm //语音
+        },{
+            element: '.link-smile',
+            event: 'click',
+            handler: this.showSmile //笑脸
+        },{
+            element: '.link-keyboard',
+            event: 'click',
+            handler:this.showKeyboard //文字输入
+        },{
+            element: '.link-more',
+            event: 'click',
+            handler:this.showMore //显示更多
+        },{
+            element: '.bar-camera',
+            event: 'click',
+            handler:camera.getPicture //拍照
+        },{
+            element: '.bar-pic',
+            event: 'click',
+            handler:camera.getPicture //相册
+        },{
+            element: '.bar-map',
+            event: 'click',
+            handler:geo.cleanGeo //坐标
         }];
 
         appFunc.bindEvents(bindings);

@@ -96,7 +96,8 @@ var app = {
                 'page:message': {//消息界面
                     chat: i18n.chat.title,
                     chatPlaceholder: i18n.chat.chatPlaceholder,
-                    send: i18n.global.send
+                    send: i18n.global.send,
+                    vodieSend: i18n.global.vodieSend
                 },
                 'page:feedback': {//反馈
                     feedBack: i18n.setting.feed_back,
