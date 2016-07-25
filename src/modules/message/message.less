@@ -69,7 +69,6 @@
   {
     float        : left;
     width        : 50px;
-    margin-right : 15px;
     color        : #636669;
     .action-icon,
     .action-text
@@ -95,6 +94,10 @@
     }
   }
 
+  .bar-aface{
+    height: 50px;
+  }
+
   .toolbar-inner{
     a{
       color:#636669 ;
@@ -103,5 +106,43 @@
   .button {
     border: 1px solid #636669;
   }
+
+
+  .swiper-wrapper {
+    margin-bottom: 20px;
+  }
+
+
+  //iPhone 5 竖屏
+  @media only screen
+  and (min-device-width : 320px)
+  and (max-device-width : 568px)
+  and (orientation : portrait) {
+    .bar-action{
+      margin-right : 0px;
+    }
+  }
+  //ipone 6
+  @media only screen
+  and (min-device-width : 375px)
+  and (max-device-width : 627px)
+  and (orientation : portrait) {
+    .bar-action{
+      margin-right : 8px;
+    }
+  }
+
+  //iphone 6s
+  @media only screen
+  and (min-device-width : 412px)
+  and (max-device-width : 736px)
+  and (orientation : portrait) {
+    .bar-action{
+      margin-right : 15px;
+    }
+  }
+
+
+
 
 }

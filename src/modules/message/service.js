@@ -14,5 +14,12 @@ module.exports = {
         },function(res) {
             callback(res.data);
         });
+    },
+    getFaces:function(callback){
+        var _faces  =   [];
+        for(var i=1;i<76;i++){
+            _faces.push({img:"/img/face/"+i+".gif",name:'[em_'+i+']'});
+        }
+        callback(_faces)
     }
 };

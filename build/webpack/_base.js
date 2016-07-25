@@ -40,7 +40,9 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: './src/api', to: 'api' },
       { from: './src/page', to: 'page' },
-      { from: './src/res', to: 'res' }
+      { from: './src/res', to: 'res' },
+      { from: './src/style/img',to: 'img'},
+      { from: './src/style/js',to:'js'}
     ])
   ],
   //它告知 webpack 每一种文件都需要使用什么加载器来处理

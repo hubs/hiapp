@@ -35,3 +35,6 @@ Template7.registerHelper('img_tag', function (imgs){
 Template7.registerHelper('format_chat_time', function (create_time,options){
     return appFunc.format_chat_time(create_time,options.hash.show_time);
 });
+Template7.registerHelper('face_text', function (text){
+   return appFunc.replace_smile(text);
+});

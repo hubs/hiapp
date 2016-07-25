@@ -3,6 +3,7 @@ require('./message.less');
 var appFunc = require('../utils/appFunc'),
     service = require('./service'),
     template = require('./message.tpl.html'),
+    faceTemplate    =   require("./face.tpl.html"),
     homeJs = require('../home/home'),
     camera = require('../components/camera'),
     geo = require('../components/geolocation');
@@ -45,8 +46,38 @@ module.exports = {
 
         this.bindEvents();
 
+        _that.renderFaces();
     },
+    renderFaces:function(){
+        service.getFaces(function(res){
+            var _width  =   $$(".theme-cyan").width();
+            var _chunk  =   0;
+            if(_width>600){
+                _chunk  =   42;
+            }else{
+                _chunk  =   18;
+            }
+            var i,j,temparray=[];
+            for (i=0,j=res.length; i<j; i+=_chunk) {
+                temparray.push(res.slice(i,i+_chunk));
+            }
 
+            var renderData = {
+                faces: temparray
+            };
+            var output = appFunc.renderTpl(faceTemplate, renderData);
+            $$('.swiper-container').html(output);
+
+            //笑脸切换
+            hiApp.swiper('.swiper', {
+                pagination:'.swiper .swiper-pagination',
+                spaceBetween: 5
+            });
+        });
+
+
+
+    },
 
     //初始化聊天记录
     renderMessages: function(message){
@@ -93,7 +124,7 @@ module.exports = {
 
         // Add Message
         messageLayout.addMessage({
-            text: messageText,
+            text: appFunc.replace_smile(messageText),
             type: 'sent',
             day: !conversationStarted ? 'Today' : false,
             time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
@@ -118,36 +149,58 @@ module.exports = {
     showVoiceForm: function(){
         $$(".form-speak").show();
         $$(".form-general").hide();
+        _that.hideSmile();
         _that.hideBarMain();
+
     },
     //显示正常Form
     showKeyboard: function(){
         $$(".form-speak").hide();
         $$(".form-general").show();
+        _that.hideSmile();
         _that.hideBarMain();
     },
 
     //显示笑脸
     showSmile:function(){
-
+        console.log("showSmile");
+        $$(".form-speak").hide();
+        $$(".form-general").show();
         _that.hideBarMain();
+        $$(".bar-face").show();
+        $$(".message-toolbar").css("bottom","170px");
+        $$(".message-body").css("padding-bottom","170px");
+        $$(".message-body").scrollTop($$(".messages-content").offset().top + 170);
+    },
+
+    hideSmile:function(){
+        $$(".bar-face").hide();
+        $$(".message-toolbar").css("bottom","0");
+        $$(".message-body").css("padding-bottom","0");
     },
     //显示更多
     showMore: function(){
         $$(".form-speak").hide();
         $$(".form-general").show();
+        _that.hideSmile();
         _that.showBarMain();
     },
 
     showBarMain:function(){
         $$(".bar-main").show();
-        $$(".message-body").css("padding-bottom","100px");
         $$(".message-toolbar").css("bottom","100px");
+        $$(".message-body").css("padding-bottom","100px");
+        $$(".message-body").scrollTop($$(".messages-content").offset().top + 100);
     },
     hideBarMain:function(){
         $$(".bar-main").hide();
-        $$(".message-body").css("padding-bottom","0");
         $$(".message-toolbar").css("bottom","0");
+        $$(".message-body").css("padding-bottom","0");
+    },
+    //增加笑脸图片
+    addImgFace: function(){
+        console.log("add Img Face = "+$$(this).data("name"));
+        appFunc.insertText(document.getElementById('ks-messages-input'),$$(this).data("name"));
     },
 
     bindEvents: function(){
@@ -192,6 +245,11 @@ module.exports = {
             element: '.bar-map',
             event: 'click',
             handler:geo.cleanGeo //坐标
+        },{
+            element: '#chatView',
+            selector: '.bar-aface img',
+            event:'click',
+            handler:this.addImgFace
         }];
 
         appFunc.bindEvents(bindings);

@@ -125,5 +125,10 @@ module.exports = {
         member_info     :   "会员信息",
         send_info       :   "发消息",
         member_talk     :   "个人动态"
-    }
+    },
+    message:{
+        camera          :   '拍照',
+        pic             :   '相册',
+        geo             :   '位置'
+    },
 };
