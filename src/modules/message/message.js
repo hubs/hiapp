@@ -16,6 +16,7 @@ var conversationStarted = false,
     messageLayout;
 
 var uid   = 3;
+var _chat_type  =   1;//类型:1:个人，２：群
 module.exports = {
     init: function(query){
          _that = this;
@@ -29,11 +30,17 @@ module.exports = {
 
         var user = {
             id          : uid,
-            username    : '王歆'
+            username    : '王歆',
+            type        : _chat_type,
+            chat_type   : _chat_type==1?"icon-person":"icon-people"
         };
 
         var name = user.username;
         $$('.chat-name').html(name);
+        $$('.chat-person').data("type",user.type);
+        $$('.chat-person').data("id",user.id);
+        $$('.chat-person i').addClass(user.chat_type);
+
 
         // render messages
         _that.renderMessages();
@@ -237,6 +244,11 @@ module.exports = {
         $$(".link-more").hide();
         $$("#ks-send-message").show();
     },
+
+    //点击右上角小人图
+    jumpChatSetting:function(){
+      console.log($$(this).data("type")+" ok=>and "+$$(this).data("id"));
+    },
     bindEvents: function(){
         var bindings = [{
             element: '.ks-messages-form',
@@ -288,6 +300,10 @@ module.exports = {
             element: '#ks-messages-input',
             event: 'keyup',
             handler:this.changeText //文字改变则显示提交按钮
+        },{
+            element: '.chat-person',
+            event: 'click',
+            handler:this.jumpChatSetting //点击右上角的小人图
         }];
 
         appFunc.bindEvents(bindings);

@@ -17,7 +17,7 @@
             "filename"      :   "http://lorempixel.com/68/68/people/3/",
             "msg"           :   "System.out.println(Hello);",
             "msg_type"      :   1,
-            "type"          :   1,
+            "type"          :   2,
             "update_time"   :   "1469026271"
         },
         {
@@ -44,7 +44,7 @@
             "filename"      :   "http://lorempixel.com/68/68/people/6/",
             "msg"           :   "你说什么",
             "msg_type"      :   1,
-            "type"          :   1,
+            "type"          :   2,
             "update_time"   :   "1469112821"
         },
         {
