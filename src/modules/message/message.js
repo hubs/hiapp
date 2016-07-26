@@ -27,7 +27,6 @@ module.exports = {
             answers = a;
         });
 
-
         var user = {
             id          : uid,
             username    : '王歆'
@@ -47,6 +46,7 @@ module.exports = {
         this.bindEvents();
 
         _that.renderFaces();
+
     },
     renderFaces:function(){
         service.getFaces(function(res){
@@ -115,19 +115,28 @@ module.exports = {
     submitMessage: function(e){
 
         e.preventDefault();
-        var input = $$(this).find('.ks-messages-input');
+        var input = $$("#ks-messages-input");
         var messageText = input.val();
         if (messageText.length === 0) return;
 
         // Empty input
         input.val('');
 
+        /**
+         *   text	string		消息文本，也可以使用HTML字符串，如果你想要添加图片消息，则应该传递<img src="...">。必选
+         *   name	string		发送者名称。可选
+         *   avatar	string		发送者头像url。可选
+         *   type	string	'sent'	消息类型，'sent'或'received'。可选
+         *   label	string		Message label. Optional
+         *   day	string		日期，例如 - 'Today', 'Monday', 'Yesterday', 'Fri', '22.05.2014'。可选
+         *   time	string		Time string, for example - '22:45', '10:30 AM'. Optional
+         */
         // Add Message
         messageLayout.addMessage({
-            text: appFunc.replace_smile(messageText),
-            type: 'sent',
-            day: !conversationStarted ? 'Today' : false,
-            time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
+            text        : appFunc.replace_smile(messageText),
+            avatar      : 'http://lorempixel.com/output/people-q-c-100-100-9.jpg',
+            type        : "sent",
+            time        : appFunc.now_time_hm(),
         });
         conversationStarted = true;
 
@@ -135,10 +144,15 @@ module.exports = {
         if (answerTimeout) clearTimeout(answerTimeout);
         answerTimeout = setTimeout(function () {
             messageLayout.addMessage({
-                text: answers[Math.floor(Math.random() * answers.length)],
-                type: 'received'
+                time        : appFunc.now_time_hm(),
+                type        : "received",
+                text        : answers[Math.floor(Math.random() * answers.length)],
+                avatar      : 'http://lorempixel.com/output/people-q-c-100-100-9.jpg',
             });
         }, 1000);
+
+        //隐藏提交按钮
+        _that._submitHide();
     },
     //点击发送触发提交
     triggerSubmit: function(){
@@ -201,8 +215,28 @@ module.exports = {
     addImgFace: function(){
         console.log("add Img Face = "+$$(this).data("name"));
         appFunc.insertText(document.getElementById('ks-messages-input'),$$(this).data("name"));
+        _that._submitShow();
     },
 
+    changeText:function(){
+        var _val    =   $$(this).val();
+        console.log("val = "+_val+" and len = "+_val.length);
+        if(_val.length>0){
+            _that._submitShow();
+        }else{
+            _that._submitHide();
+        }
+    },
+    //隐藏提交按钮
+    _submitHide:function(){
+        $$(".link-more").removeAttr("style");
+        $$("#ks-send-message").hide();
+    },
+    //显示提交按钮
+    _submitShow:function(){
+        $$(".link-more").hide();
+        $$("#ks-send-message").show();
+    },
     bindEvents: function(){
         var bindings = [{
             element: '.ks-messages-form',
@@ -250,6 +284,10 @@ module.exports = {
             selector: '.bar-aface img',
             event:'click',
             handler:this.addImgFace
+        },{
+            element: '#ks-messages-input',
+            event: 'keyup',
+            handler:this.changeText //文字改变则显示提交按钮
         }];
 
         appFunc.bindEvents(bindings);

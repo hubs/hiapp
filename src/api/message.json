@@ -7,42 +7,48 @@
           "msg"         :   "你好",
           "msg_type"    :   "1", 
           "remark"      :   "", 
-          "from_uid"    :   "2"
+          "from_uid"    :   "2",
+          "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         },
         {
             "create_time" :   "1469072762",
             "msg"         :   "什么事?",
             "msg_type"    :   "1", 
             "remark"      :   "", 
-            "from_uid"    :   "3"
+            "from_uid"    :   "3",
+            "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         },
         {
             "create_time" :   "1398250549",
             "msg"         :   "没事,无聊",
             "msg_type"    :   "1", 
             "remark"      :   "", 
-            "from_uid"    :   "2"
+            "from_uid"    :   "2",
+            "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         },
         {
             "create_time" :   "14690721062",
             "msg"         :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg",
             "msg_type"    :   "2", 
             "remark"      :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg", 
-            "from_uid"    :   "2"
+            "from_uid"    :   "2",
+            "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         },
         {
             "create_time" :   "1469073662",
             "msg"         :   "你发的是什么鬼?",
             "msg_type"    :   "1", 
             "remark"      :   "", 
-            "from_uid"    :   "3"
+            "from_uid"    :   "3",
+            "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         },
         {
             "create_time" :   "1469074662",
             "msg"         :   "你好",
             "msg_type"    :   "2", 
             "remark"      :   "http://scimg.jb51.net/allimg/160618/77-16061Q44U6444.jpg", 
-            "from_uid"    :   "3"
+            "from_uid"    :   "3",
+            "filename"    :   "http://lorempixel.com/output/people-q-c-100-100-9.jpg"
         }
     ]
 }

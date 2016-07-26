@@ -8,7 +8,6 @@
         </div>
 
         <div class="center chat-name sliding">{{chat}}</div>
-
     </div>
 </div>
 <div class="pages navbar-through">
@@ -17,10 +16,13 @@
             <form class="ks-messages-form form-general">
                 <div class="toolbar-inner">
                     <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
+
+                   <!-- <textarea placeholder="{{chatPlaceholder}}" class="ks-messages-input" id="ks-messages-input"></textarea>-->
+
                     <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"
                            id="ks-messages-input"/>
                     <a href="#" class="link link-smile"><i class="icon icon-jinyanjinliao206"></i></a>
-                    <a href="#" class="button button-send-message  ks-send-message button-green button-fill hidden">{{send}}</a>
+                    <a href="#" id="ks-send-message" class="button button-send-message  ks-send-message color-green button-fill" style="display: none;color:#FFF;border: 1px solid #fff;">{{send}}</a>
                     <a href="#" class="link link-more"><i class="icon icon-jia"></i></a>
                 </div>
             </form>
@@ -34,15 +36,15 @@
             </form>
 
             <div class="bar-actions bar-main "  style="display: none;">
-                <div class="bar-action bar-camera">
+                <div class="bar-action bar-camera mr-20">
                     <div class="action-icon icon icon-cameras"></div>
                     <div class="action-text">{{t i18n="message.camera"}}</div>
                 </div>
-                <div class="bar-action bar-pic">
+                <div class="bar-action bar-pic mr-20">
                     <div class="action-icon icon icon-icon"></div>
                     <div class="action-text">{{t i18n="message.pic"}}</div>
                 </div>
-                <div class="bar-action bar-map">
+                <div class="bar-action bar-map mr-20">
                     <div class="action-icon icon icon-iconfontdingxiang"></div>
                     <div class="action-text">{{t i18n="message.geo"}}</div>
                 </div>

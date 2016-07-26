@@ -231,8 +231,16 @@ module.exports = {
         str = str.replace(/\</g, '&lt;');
         str = str.replace(/\>/g, '&gt;');
         str = str.replace(/\n/g, '<br/>');
-        str = str.replace(/\[em_([0-9]*)\]/g, '<img src="/img/face/$1.gif" border="0" />');
+        str = str.replace(/\[:([\u4e00-\u9fa5]*)\]/g, '<img src="/img/face/$1.gif" border="0" width="24px" height="24px" style="display: inline;"/>');
         return str;
+    },
+
+    now_time    : function(){
+        return new Date().getTime();
+    },
+    now_time_hm : function(){
+        var _date   =   new Date();
+        return _date.getHours()+_date.getMinutes();
     }
 
 };
