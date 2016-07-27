@@ -32,12 +32,13 @@ module.exports = {
         console.log("pageAfterAnimation = "+name+" = "+from);
         if(name === 'homeView' || name === 'contactView' || name === 'setting' ||name==='infosView'||"chatView"){
             if(from === 'left'){
-                if(name!=='message'){
-                    if(name==='chatView'){
-                        chatView.init();
-                    }
-                    appFunc.showToolbar();
+                if(name==='message') {  //chat->message 从message界面返回时,不显示showToolBar
+                    return;
                 }
+                if(name==='chatView'){
+                    chatView.init();
+                }
+                appFunc.showToolbar();
             }
         }
     },
