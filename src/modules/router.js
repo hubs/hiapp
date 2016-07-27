@@ -8,6 +8,8 @@ var
     userModule      = require('./user_info/user_info'),//修改个人信息
     passwordModule  = require('./password/password'),//密码
     contactsDetailModule    =   require('./contacts_detail/detail'),//点击查看用户详情
+    chatDetailModule=   require("./chat_detail/chat_detail"),//聊天操作界面
+    chatView    =  require('./chat/chat'),
     infoModule      = require('./info/info');//消息
 
 
@@ -27,10 +29,15 @@ module.exports = {
     pageAfterAnimation: function(page){
         var name = page.name;
         var from = page.from;//当前页面从哪个方向加载进来。如果是新加载的页面，则为"right"，如果是返回上一步的页面，则为"left"
-
+        console.log("pageAfterAnimation = "+name+" = "+from);
         if(name === 'homeView' || name === 'contactView' || name === 'setting' ||name==='infosView'||"chatView"){
             if(from === 'left'){
-                appFunc.showToolbar();
+                if(name!=='message'){
+                    if(name==='chatView'){
+                        chatView.init();
+                    }
+                    appFunc.showToolbar();
+                }
             }
         }
     },
@@ -38,7 +45,7 @@ module.exports = {
         var name = page.name;   //就是 data-page 设定的名称
         var query = page.query;//当前页面的get参数，是一个对象。假设你的页面URL是 "about.html?id=10&count=20&color=blue"，那么query就是：    {id: '10', count: '20', color: 'blue'}
         console.log(query);
-        console.log(name);
+        console.log("name = "+name);
         switch (name) {
             case 'about'://关于我们
                 aboutModule.init();
@@ -66,6 +73,9 @@ module.exports = {
                 break;
             case 'contacts_detail':
                 contactsDetailModule.init();
+                break;
+            case 'chat_detail':
+                chatDetailModule.init(query);
                 break;
         }
     }

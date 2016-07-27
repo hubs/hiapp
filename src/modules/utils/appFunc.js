@@ -241,6 +241,26 @@ module.exports = {
     now_time_hm : function(){
         var _date   =   new Date();
         return _date.getHours()+_date.getMinutes();
+    },
+    prompt  :   function (text, title,default_val, callbackOk, callbackCancel) {
+        return hiApp.modal({
+            text: text || '',
+            title: typeof title === 'undefined' ? hiApp.params.modalTitle : title,
+            afterText: '<div class="input-field"><input type="text" class="modal-text-input" style=" height: 32px;border-radius: 5px;" onclick="javascript:$$(this).focus().val($$(this).val())" value='+default_val+'></div>',
+            buttons: [
+                {
+                    text: hiApp.params.modalButtonCancel
+                },
+                {
+                    text: hiApp.params.modalButtonOk,
+                    bold: true
+                }
+            ],
+            onClick: function (modal, index) {
+                if (index === 0 && callbackCancel) callbackCancel($$(modal).find('.modal-text-input').val());
+                if (index === 1 && callbackOk) callbackOk($$(modal).find('.modal-text-input').val());
+            }
+        });
     }
 
 };

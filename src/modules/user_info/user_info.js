@@ -1,3 +1,4 @@
+require('./user_info.less');
 var appFunc = require('../utils/appFunc'),
     template = require('./user_info.tpl.html');
 

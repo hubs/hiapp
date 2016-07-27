@@ -16,7 +16,7 @@ var conversationStarted = false,
     messageLayout;
 
 var uid   = 3;
-var _chat_type  =   1;//类型:1:个人，２：群
+var _chat_type  =   2;//类型:1:个人，２：群
 module.exports = {
     init: function(query){
          _that = this;
@@ -248,6 +248,8 @@ module.exports = {
     //点击右上角小人图
     jumpChatSetting:function(){
       console.log($$(this).data("type")+" ok=>and "+$$(this).data("id"));
+
+      chatF7View.router.loadPage('page/chat_detail.html?id=' + $$(this).data("id")+"&type="+$$(this).data("type"));
     },
     bindEvents: function(){
         var bindings = [{

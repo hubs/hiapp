@@ -1,0 +1,42 @@
+<div class="list-block mt-10">
+    <ul>
+        <li>
+            <div class="item-content h80">
+                <div class="item-inner">
+                    <a href="page/contacts_detail.html?uid={{obj.id}}" class="item-link">
+                        <div class="item-input">
+                            <img src="{{obj.filename}}" alt="">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="list-block">
+    <ul>
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title label">{{t i18n="message.switch_info"}}</div>
+                <div class="item-input tr">
+                    <label class="label-switch ">
+                        <input type="checkbox" {{obj.switch_info}} class="switch-info">
+                        <div class="checkbox"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title label">{{t i18n="message.switch_top"}}</div>
+                <div class="item-input tr">
+                    <label class="label-switch ">
+                        <input type="checkbox" {{obj.switch_top}} class="switch-top">
+                        <div class="checkbox"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </ul>
+</div>

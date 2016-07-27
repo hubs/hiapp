@@ -129,6 +129,16 @@ module.exports = {
     message:{
         camera          :   '拍照',
         pic             :   '相册',
-        geo             :   '位置'
-    },
+        geo             :   '位置',
+        chat_detail     :   "聊天信息",
+
+        group_nums      :   "全部群员",
+        group_name      :   "群名",
+        group_info      :   "公告",
+
+        switch_info     :   "消息免打扰",
+        switch_top      :   "置顶聊天",
+        group_my_name   :   "我在本群昵称",
+        del_and_exit    :   "删除并退出",
+    }
 };

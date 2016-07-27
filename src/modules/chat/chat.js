@@ -3,9 +3,9 @@ require('./chat.less');
 var appFunc = require('../utils/appFunc'),
     service = require('./service'),
     template = require('./chat.tpl.html');
-
 module.exports = {
     init: function(){
+        console.log("chat module init");
         this.bindEvents();
         this.getDatas();
     },
@@ -67,6 +67,10 @@ module.exports = {
             selector: '.item-content',
             event: 'taphold',
             handler: this.chatListClick
+        },{
+            element: '#chatView',
+            event: 'show',
+            handler: this.init
         }];
 
         appFunc.bindEvents(bindings);

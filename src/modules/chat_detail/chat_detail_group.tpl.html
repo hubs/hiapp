@@ -1,0 +1,99 @@
+<div class="list-block mt-10">
+    <ul>
+        <li>
+            <div class="content-block">
+                <div class="row item-inner">
+                    {{#each filenames}}
+                        <div class="col-25">
+                            <img data-src="{{filename}}" class="lazy chat-to-member" data-id="{{uid}}">
+                            <span class="badge-seat" data-id="{{uid}}"></span>
+                            <div class="item-text ng-binding">{{username}}</div>
+                        </div>
+                    {{/each}}
+                    {{#if group_admin}}
+                        <div class="col-25 col-jia"> <i class="icon icon-jia1 chat-icon-f45"></i></div>
+                        <div class="col-25 col-subtract"> <i class="icon icon-jianqu chat-icon-f45"></i></div>
+                    {{/if}}
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="message.group_nums"}}({{group_nums}})</div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="list-block">
+    <ul>
+        <!--群信息开始-->
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="message.group_name"}}</div>
+                    <div class="item-input tr">
+                        {{group_name}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="message.group_info"}}</div>
+                    <div class="item-input margin-10">
+                        {{group_info}}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="list-block">
+    <ul>
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title label">{{t i18n="message.switch_info"}}</div>
+                <div class="item-input tr">
+                    <label class="label-switch ">
+                        <input type="checkbox" {{switch_info}} class="switch-info">
+                        <div class="checkbox"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title label">{{t i18n="message.switch_top"}}</div>
+                <div class="item-input tr">
+                    <label class="label-switch ">
+                        <input type="checkbox" {{switch_top}} class="switch-top" >
+                        <div class="checkbox"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </ul>
+</div>
+<div class="list-block">
+    <ul>
+        <li>
+            <div class="item-content">
+                <div class="item-inner ">
+                    <div class="item-title label">{{t i18n="message.group_my_name"}}</div>
+                    <div class="item-input group-my-name tr" data-name="{{group_username}}">
+                        {{group_username}}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!--群信息结束-->
+
+</div>
+
+<a href="#" class="button button-big  button-fill color-red btn-exit">{{t i18n="message.del_and_exit"}}</a>

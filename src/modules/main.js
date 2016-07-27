@@ -121,6 +121,9 @@ var app = {
                 },
                 'page:contacts_detail':{//用户详情
                     member_info     :   i18n.userinfo.member_info
+                },
+                'page:chat_detail':{
+                    chat_detail :   i18n.message.chat_detail
                 }
             }
         });
