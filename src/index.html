@@ -82,6 +82,13 @@
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="center sliding i18n" data-i18n="index.contacts">联系人</div>
+                <div class="right">
+                    <a href="#" data-popover=".popover-links" class="open-popover">
+                        <div class="icon-only link contact-add-group">
+                            <i class="icon icon-add font-20 color-black mr-5"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
         <!--导航结束-->
@@ -220,7 +227,17 @@
 
 <!-- Please ignore the 404 error when you are not running under PhoneGap environment or delete it. -->
 <!--<script type="text/javascript" src="cordova.js"></script>-->
-
+<!-- Links popover -->
+<div class="popover popover-links">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+        <div class="list-block">
+            <ul>
+                <li><a href="#" class="list-button item-link contact-group-add color-black"><i class="icon icon-ioschatbubbleoutline mr-20 font-25"></i>发起群聊</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

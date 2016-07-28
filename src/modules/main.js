@@ -124,6 +124,9 @@ var app = {
                 },
                 'page:chat_detail':{
                     chat_detail :   i18n.message.chat_detail
+                },
+                'page:contacts_group':{
+                    contact_group   :   i18n.message.contact_group
                 }
             }
         });

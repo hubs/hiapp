@@ -1,16 +1,18 @@
 var
-    appFunc         = require('./utils/appFunc'),
-    tweetModule     = require('./tweet/tweet'),//动态
-    feedbackModule  = require('./feedback/feedback'),//反馈
-    aboutModule     = require('./about/about'),//关于我们
-    languageModule  = require('./language/language'),//语言选择
-    messageModule   = require('./message/message'),//聊天消息页
-    userModule      = require('./user_info/user_info'),//修改个人信息
-    passwordModule  = require('./password/password'),//密码
-    contactsDetailModule    =   require('./contacts_detail/detail'),//点击查看用户详情
-    chatDetailModule=   require("./chat_detail/chat_detail"),//聊天操作界面
-    chatView    =  require('./chat/chat'),
-    infoModule      = require('./info/info');//消息
+    appFunc                 = require('./utils/appFunc'),
+    tweetModule             = require('./tweet/tweet'),//动态
+    feedbackModule          = require('./feedback/feedback'),//反馈
+    aboutModule             = require('./about/about'),//关于我们
+    languageModule          = require('./language/language'),//语言选择
+    messageModule           = require('./message/message'),//聊天消息页
+    userModule              = require('./user_info/user_info'),//修改个人信息
+    passwordModule          = require('./password/password'),//密码
+    contactsDetailModule    = require('./contacts_detail/detail'),//点击查看用户详情
+    chatDetailModule        = require("./chat_detail/chat_detail"),//聊天操作界面
+    chatView                = require('./chat/chat'),
+    infoModule              = require('./info/info'),
+    contactGroupModule      = require('./contacts_group/contacts_group')//创建群
+    ;//消息
 
 
 module.exports = {
@@ -77,6 +79,9 @@ module.exports = {
                 break;
             case 'chat_detail':
                 chatDetailModule.init(query);
+                break;
+            case 'contacts_group':
+                contactGroupModule.init(query);
                 break;
         }
     }

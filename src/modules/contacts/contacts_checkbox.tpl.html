@@ -1,0 +1,16 @@
+{{#contacts}}
+{{#if spell}}
+<li class="list-group-title">{{spell}}</li>
+{{/if}}
+<li class="contact-item">
+    <div class="item-content label-checkbox">
+        <div class="item-media"><img data-src="{{filename}}"  class="lazy lazy-fadeIn" width="44"></div>
+        <div class="item-inner">
+            <div class="item-title-row">
+                <div class="item-title">{{username}}</div>
+            </div>
+        </div>
+        <input type="checkbox" name="member-checkbox" value="{{uid}}">
+    </div>
+</li>
+{{/contacts}}

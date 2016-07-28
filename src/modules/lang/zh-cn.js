@@ -140,5 +140,7 @@ module.exports = {
         switch_top      :   "置顶聊天",
         group_my_name   :   "我在本群昵称",
         del_and_exit    :   "删除并退出",
+
+        contact_group   :   "发起群聊"
     }
 };

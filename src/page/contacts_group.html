@@ -1,0 +1,42 @@
+<div class="navbar">
+    <div class="navbar-inner">
+
+        <div class="left">
+            <a href="#" class="back link text-navbar">
+                <i class="icon icon-iosarrowthinleft"></i>
+            </a>
+        </div>
+
+        <div class="center chat-name sliding">{{contact_group}}</div>
+
+        <div class="right">
+            <a href="#" class="button button-small button-fill color-green btn-load-member-to-group" disabled="">确定</a>
+        </div>
+    </div>
+</div>
+<div class="pages navbar-through">
+    <div data-page="contacts_group" class="page no-toolbar toolbar-fixed contacts-group-cls">
+
+        <!-- Search bar -->
+        <form class="searchbar">
+            <div class="searchbar-input">
+                <input type="search" class="i18n" data-i18n="[placeholder]global.search">
+                <a href="#" class="searchbar-clear"></a>
+            </div>
+            <a href="#" class="searchbar-cancel i18n" data-i18n="global.cancel"></a>
+        </form>
+
+        <!-- Search bar overlay-->
+        <div class="searchbar-overlay"></div>
+
+        <div class="page-content">
+            <div class="list-block contacts-list searchbar-found">
+                <div class="list-group">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="content-block searchbar-not-found i18n" data-i18n="index.nothing_found" >
+            </div>
+        </div>
+    </div>
+</div>

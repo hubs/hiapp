@@ -50,11 +50,21 @@ var contacts = {
             return true;
         }
     },
+
+    addMemberToGroup:function(){
+        console.log("addMemberToGroup");
+        contactF7View.router.loadPage('page/contacts_group.html?group_id=0');
+        hiApp.closeModal()
+    },
     bindEvents: function(){
         var bindings = [{
             element: '#contactView',
             event: 'show',
             handler: contacts.loadContacts
+        },{
+            element: ".contact-group-add",
+            event: 'click',
+            handler: this.addMemberToGroup
         }];
 
         appFunc.bindEvents(bindings);

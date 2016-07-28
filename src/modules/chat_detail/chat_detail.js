@@ -125,6 +125,12 @@ module.exports = {
         console.log("jumpToMemberByUid = "+$$(this).data("id"));
         chatF7View.router.loadPage('page/contacts_detail.html?uid=' + $$(this).data("id"));
     },
+
+    //增加会员进群
+    addGroupMember:function(){
+        var _group_id   =   $$(this).data("id");
+        chatF7View.router.loadPage('page/contacts_group.html?group_id='+_group_id);
+    },
     bindEvents: function(){
         var bindings = [{
             element: '.switch-info',
@@ -154,6 +160,10 @@ module.exports = {
             element:'.chat-to-member',
             event:'click',
             handler:this.jumpToMemberByUid  //点击图片跳转到会员界面
+        },{
+            element: '.col-jia',
+            event:'click',
+            handler:this.addGroupMember //增加会员
         }];
 
         appFunc.bindEvents(bindings);
