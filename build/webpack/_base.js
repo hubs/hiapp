@@ -28,6 +28,11 @@ module.exports = {
     path: './www',
     filename: '[name].js'
   },
+  externals: {
+    //"sequelize":"sequelize",
+    //'sqlite3':"require('sqlite3')",
+   // "sequelize":"require('sequelize')",
+  },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),//根据模块调用次数，给模块分配ids，常被调用的ids分配更短的id，使得ids可预测，降低文件大小，该模块推荐使用
     new webpack.optimize.DedupePlugin(),//打包的时候删除重复或者相似的文件
@@ -53,16 +58,31 @@ module.exports = {
       { test: /.*\.(gif|png|jpe?g|svg)$/i, loader: 'url' },
       { test: /\.(woff|woff2)$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf$|\.eot$|\.svg$/, loader: 'file-loader' },
-      { test: /\.json/, loader: 'json-loader' }
+      { test: /\.json/, loader: 'json-loader' },
+      { test: /\.node/, loader: 'ignore-styles' },
+      { test: /aws-sdk/, loaders: ["transform?brfs"]},
+    ],
+    noParse: [
+      /aws/
     ]
   },
   //其它解决方案配置
   resolve: {
     //查找module的话从这里开始查找
-    root: '/home/hubs/workspace/hiapp', //绝对路径
-    //自动扩展文件后缀名，意味着我们require模块可以省略不写后缀名
+    root: '/home/hubs/workspace/hiapp/node_modules', //绝对路径
+    //自动扩展文件后缀名，意味着我们re`quire模块可以省略不写后缀名
     extensions: ['', '.js', '.json', '.scss']
     //模块别名定义，方便后续直接引用别名，无须多写长长的地址
+  },
+  resolveLoader: {
+    modulesDirectories: ['node_modules']
+  },
 
+  //http://webpack.github.io/docs/configuration.html#node
+  node: {
+    fs: "empty",
+    net: "empty",
+    tls: "empty",
+    child_process: 'empty'
   }
 };

@@ -12,10 +12,10 @@
     "clean": "rm -fr ./www",
     "dev": "webpack --config build/webpack/development.js --progress --watch",
     "build": "NODE_ENV=production npm run clean && webpack --config build/webpack/production.js --progress",
-    "build_with_source_map": "npm run build --devtool source-map",
-    "start": "http-server www && webpack --config build/webpack/development.js --progress --watch && www"
+    "build_with_source_map": "npm run build --devtool source-map"
   },
   "devDependencies": {
+    "brfs": "^1.4.3",
     "browser-sync": "^2.11.1",
     "browser-sync-webpack-plugin": "^1.0.1",
     "copy-webpack-plugin": "^1.1.1",
@@ -26,16 +26,18 @@
     "gulp-server-livereload": "^1.8.1",
     "html-loader": "^0.4.0",
     "html-webpack-plugin": "^2.7.1",
+    "ignore-styles": "^4.0.0",
+    "json-loader": "^0.5.4",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
     "style-loader": "^0.13.0",
+    "transform-loader": "^0.2.3",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.11",
-    "json-loader": "^0.5.4"
+    "webpack": "^1.12.11"
   },
   "dependencies": {
     "framework7": "~1.4.2",
-    "sequelize": "^3.23.4",
+    "sequelize": "^3.23.6",
     "sqlite3": "^3.1.4"
   }
 }
