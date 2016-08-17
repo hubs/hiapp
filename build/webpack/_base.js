@@ -63,7 +63,7 @@ module.exports = {
       { test: /aws-sdk/, loaders: ["transform?brfs"]},
     ],
     noParse: [
-      /aws/
+      /sqlite3/,/pg/,/pg-hstore/
     ]
   },
   //其它解决方案配置
