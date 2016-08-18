@@ -7,21 +7,8 @@ var appFunc = require('./utils/appFunc'),
     router = require('./router'),
     index = require('./app/app');
 
-/*//require('../../node_modules/sqlite3/sqlite3');
-var Sequelize = require('sequelize');
-var db = new Sequelize('database', '', '', {
-    host: 'localhost',
-    dialect: '',
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-    },
 
-    // SQLite only
-   // storage: '../../database.sqlite'
-});*/
-require("./dbtest");
+require("./db/db");
 var app = {
     initialize: function() {
         this.bindEvents();

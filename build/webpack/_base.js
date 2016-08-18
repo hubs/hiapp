@@ -62,8 +62,10 @@ module.exports = {
       { test: /\.node/, loader: 'ignore-styles' },
       { test: /aws-sdk/, loaders: ["transform?brfs"]},
     ],
+
     noParse: [
-      /sqlite3/,/pg/,/pg-hstore/
+        /localforage/
+      // /nedb
     ]
   },
   //其它解决方案配置

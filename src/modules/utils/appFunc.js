@@ -261,6 +261,12 @@ module.exports = {
                 if (index === 1 && callbackOk) callbackOk($$(modal).find('.modal-text-input').val());
             }
         });
+    },
+    success:function(msg){
+        return {status:1,msg:msg};
+    },
+    error:function(msg){
+        return {status:0,msg:msg};
     }
 
 };
