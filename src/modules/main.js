@@ -8,7 +8,7 @@ var appFunc = require('./utils/appFunc'),
     index = require('./app/app');
 
 
-require("./db/db");
+require("./db/demo");
 var app = {
     initialize: function() {
         this.bindEvents();

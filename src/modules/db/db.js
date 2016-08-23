@@ -1,5 +1,7 @@
 var Datastore   = require('nedb');
 var appFunc     = require('../utils/appFunc');
+
+//NND web sql默认路径:/home/hubs/.config/chromium/Default/databases/http_localhost_3000
 db = {};
 var _baseDir  = '';
 var nedbDb={
@@ -20,6 +22,7 @@ var nedbDb={
         db.vote                 = new Datastore({filename : _baseDir+'vote'});//投票表
         db.vote_details         = new Datastore({filename : _baseDir+'vote_details'});//投票详细表
         db.vote_member          = new Datastore({filename : _baseDir+'vote_member'});//投票人员统计表
+        db.demo                 = new Datastore({filename : _baseDir+'demo'});//CURD测试表
 
         db.activity.loadDatabase();
         db.activity_details.loadDatabase();
@@ -37,21 +40,20 @@ var nedbDb={
         db.vote.loadDatabase();
         db.vote_details.loadDatabase();
         db.vote_member.loadDatabase();
+        db.demo.loadDatabase();
     },
     _getDbTable:function(table){
         return eval("db."+table);
     },
-    _returnComm:function(err,docs){
+    returnComm:function(err,docs){
         if(err){
             return appFunc.error(err);
         }
         return appFunc.success(docs);
     },
 
-    dbInsert:function(table,data){
-        return this._getDbTable(table).insert(data,function(err,docs){
-             this._returnComm(err,docs);
-        });
+    dbInsert:function(table,data,fn){
+        return this._getDbTable(table).insert(data,fn);
     },
     /**
      * where eg:
@@ -88,27 +90,26 @@ var nedbDb={
      *      注意这里如果where={a:1},则field不能设置 {a:0}
      *
      */
-    dbFind:function(table,where,field,sort,skip,limit){
-        field   =   field||"{_id:0}";
-        sort    =   sort||"{_id:-1}";
+    dbFind:function(table,where,fn,field,sort,skip,limit){
+        field   =   field||{_id: 0};
+        sort    =   sort||{id:-1};
         limit   =   limit||20;
         skip    =   skip||0;
-        return this._getDbTable(table).find(where,field).sort(sort).skip(skip).limit(limit).exec(function(err,docs){
-            this._returnComm(err,docs);
-        });
+        return this._getDbTable(table).find(where,field).sort(sort).skip(skip).limit(limit).exec(fn);
     },
 
-    dfFindOne:function(table,where){
-        return this._getDbTable(table).findOne(where,function(err,doc){
-           this._returnComm(err,doc);
-        });
+    dfFindOne:function(table,where,fn){
+        return this._getDbTable(table).findOne(where,fn);
     },
 
-
-    dbCount:function(table,where){
-        return this._getDbTable(table).count(where,function(err,count){
-            this._returnComm(err,count);
-        });
+    /**
+     * EG
+     *  db.dbCountFn(TABLE_DEMO,{key:"hello 2"},function(err,count){
+     *    console.log(db._returnComm(err,count));
+     *  });
+     */
+    dbCount:function(table,where,fn){
+        return this._getDbTable(table).count(where,fn);
     },
 
     /**
@@ -125,19 +126,15 @@ var nedbDb={
      *  upsert (false):如果设置为true,当query没有查询到数据时则写入
      *  returnUpdatedDocs:如果设置为true,则返回修改好的文档
      */
-    dbUpdate:function(table,where,update){
-        return this._getDbTable(table).update(where,{$set:update},{multi:true},function(err,updateCount){
-            this._returnComm(err,updateCount);
-        });
+    dbUpdate:function(table,where,update,fn){
+        return this._getDbTable(table).update(where,{$set:update},{multi:true},fn);
     },
 
     /**
      * db.remove(query, options, callback)
      */
-    dbDel:function(table,where){
-        return this._getDbTable(table).remove(where,{multi:true},function(err,numRemoved){
-            this._returnComm(err,numRemoved);
-        });
+    dbDel:function(table,where,fn){
+        return this._getDbTable(table).remove(where,{multi:true},fn);
     }
 
 };
