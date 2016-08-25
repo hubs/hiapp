@@ -82,5 +82,57 @@ module.exports = {
             }
         });
 
+    },
+
+    //异步访问服务器
+    ajaxCall: function(options,successCallback,failCallback){
+
+        options = options || {};
+        options.data = options.data ? options.data : '';
+
+        //If you access your server api ,please user `post` method.
+        options.method = options.method || 'GET';
+
+        options.headers = options.headers || {};
+
+
+        if(appFunc.isPhonegap()){
+            //Check network connection
+            var network = networkStatus.checkConnection();
+            if(network === 'NoNetwork'){
+
+                hiApp.alert(i18n.error.no_network,function(){
+                    hiApp.hideIndicator();
+                    hiApp.hidePreloader();
+                });
+
+                return false;
+            }
+        }
+
+        $$.ajax({
+            url: options.url ,
+            method: options.method,
+            data: options.data,
+            headers:options.headers,
+            beforeSend:function(xhr){
+                /**
+                 * 这里需要进行判断
+                 * 1,用户是滞登录
+                 */
+
+
+
+            },
+            success:function(data){
+                data = data ? JSON.parse(data) : '';
+                if(data.status==0){
+                    (typeof(failCallback) === 'function') ? failCallback(data) : '';
+                }else{
+                    (typeof(successCallback) === 'function') ? successCallback(data) : '';
+                }
+            }
+        });
+
     }
 };

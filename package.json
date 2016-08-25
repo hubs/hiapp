@@ -11,6 +11,7 @@
   "scripts": {
     "clean": "rm -fr ./www",
     "dev": "webpack --config build/webpack/development.js --progress --watch",
+    "devPro": "webpack-dashboard -- webpack --config build/webpack/development.js --progress --watch",
     "build": "NODE_ENV=production npm run clean && webpack --config build/webpack/production.js --progress",
     "build_with_source_map": "npm run build --devtool source-map"
   },
@@ -33,10 +34,12 @@
     "style-loader": "^0.13.0",
     "transform-loader": "^0.2.3",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.1",
+    "webpack-dashboard": "^0.1.8"
   },
   "dependencies": {
     "framework7": "~1.4.2",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "socket.io-client": "^1.4.8"
   }
 }

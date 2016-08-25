@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 var mode = process.env.NODE_ENV;
 var lessLoader;
@@ -48,7 +49,8 @@ module.exports = {
       { from: './src/res', to: 'res' },
       { from: './src/style/img',to: 'img'},
       { from: './src/style/js',to:'js'}
-    ])
+    ]),
+    new DashboardPlugin()
   ],
   //它告知 webpack 每一种文件都需要使用什么加载器来处理
   module: {

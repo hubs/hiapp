@@ -267,6 +267,42 @@ module.exports = {
     },
     error:function(msg){
         return {status:0,msg:msg};
-    }
+    },
+
+
+    //2016-8-25:每个api都要增加头部去验证
+    _getParamsHeaderContentType:function(contentType) {
+        return {//增加头部信息
+            'Content-Type': contentType || undefined,
+            'Uid': localStorage.id,
+            'Token': localStorage.token
+        }
+    },
+    getParamsHeader:function(){
+        return this._getParamsHeaderContentType("application/json")
+    },
+
+    hiAlert :function(message){
+        hiApp.alert(message,function(){
+            hiApp.hideIndicator();
+            hiApp.hidePreloader();
+        });
+    },
+
+    //2016-8-25:判断对象的是否有空值
+    checkParamsHasNull:function(params){
+        if(params instanceof  Object){
+            for(var _param in params){
+                if(!params[_param]){//只要有空值,则返回false
+                    return false;
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+    },
+
+
 
 };
