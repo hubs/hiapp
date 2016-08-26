@@ -98,9 +98,17 @@ var nedbDb={
         return this._getDbTable(table).find(where,field).sort(sort).skip(skip).limit(limit).exec(fn);
     },
 
-    dfFindOne:function(table,where,fn){
+    dbFindOne:function(table,where,fn){
         return this._getDbTable(table).findOne(where,fn);
     },
+
+    /**
+     * 获取最后一条数据
+     */
+    dbGetLastDoc:function(table,where,fn){
+        return this.dbFind(table,where,fn,'','',0,1);
+    },
+
 
     /**
      * EG

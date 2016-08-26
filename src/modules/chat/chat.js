@@ -3,11 +3,11 @@ require('./chat.less');
 var appFunc = require('../utils/appFunc'),
     service = require('./service'),
     template = require('./chat.tpl.html');
-module.exports = {
+var pack = {
     init: function(){
         console.log("chat module init");
-        this.bindEvents();
-        this.getDatas();
+        pack.bindEvents();
+        pack.getDatas();
     },
     getDatas: function(){
         var that = this;
@@ -76,4 +76,4 @@ module.exports = {
         appFunc.bindEvents(bindings);
     }
 };
-
+module.exports  = pack;

@@ -1,12 +1,13 @@
 require('./app.less');
 
-var appFunc = require('../utils/appFunc'),
-    infosView=require('../infos/infos'),
-    homeView = require('../home/home'),
-    contactsView = require('../contacts/contacts'),
-    chatView    =  require('../chat/chat'),
-    settingView = require('../setting/setting'),
-    db = require("../db/db");
+var appFunc         = require('../utils/appFunc'),
+    infosView       = require('../infos/infos'),
+    homeView        = require('../home/home'),
+    contactsView    = require('../contacts/contacts'),
+    chatView        = require('../chat/chat'),
+    settingView     = require('../setting/setting'),
+    loginView       = require("../login/login")
+    ;
 
 
 //初始化页面
@@ -18,7 +19,7 @@ module.exports = {
         contactsView.init();
         settingView.init();
         chatView.init();
-        db.init();
+        loginView.init();
     },
 
     i18next: function(content){

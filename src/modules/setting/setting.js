@@ -1,7 +1,9 @@
 require('./setting.less');
 
-var appFunc = require('../utils/appFunc'),
-    template = require('./setting.tpl.html');
+var appFunc     = require('../utils/appFunc'),
+    template    = require('./setting.tpl.html'),
+    socket      = require('../socket/socket')
+    ;
 
 var settingView = {
     init: function(){
@@ -25,8 +27,8 @@ var settingView = {
     },
     logOut: function(){
         hiApp.confirm(i18n.setting.confirm_logout,function(){
-            //mainView.router.loadPage('page/login.html');
-            //hiApp.showTab('#ourView');
+            appFunc.showLogin(true);
+            socket.setLoginStatus(false);
         });
     },
     bindEvents: function(){

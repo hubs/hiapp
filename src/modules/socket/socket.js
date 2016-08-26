@@ -7,18 +7,43 @@ var Content     = require("../app/content");
 var db          = require("../db/db");
 var table       = require("../db/table");
 var socket_io   = require("socket.io-client");
-var socketPack = {
+var pack = {
 
     init:function(){
-        this._isLogin   = false;
         this._isLogging = false;
-        this._isConnect = false;
         this.socket     = socket_io(Content.SERVER_URL);
         this.setLogging(true);
         this._init();
+        this._checkIsLogin();
     },
     setLogging : function(record) {
         this._isLogging = record? true : false;
+    },
+
+    _checkIsLogin:function(){
+        if(!pack.getLoginStatus()){
+            var _username = store.getValue("tel");
+            var _password = store.getValue("password");
+            if(!_username&&!_password){
+                pack.setLoginStatus(false);
+                appFunc.showLogin();
+            }
+        }
+
+    },
+    //设置登录状态
+    setLoginStatus:function(bool){
+      store.setValue("is_login",bool);
+    },
+    getLoginStatus:function(){
+      return store.getValue("is_login")=='true';
+    },
+
+    setConnectStatus:function(bool){
+      store.setValue("is_connect",bool);
+    },
+    getConnectStatus:function(){
+      return store.getValue("is_connect")=='true';
     },
     //打印信息
     print : function(res,tag){
@@ -26,7 +51,7 @@ var socketPack = {
             if(tag){
                 console.log(tag+" -> ");
             }
-            console.table(res);
+            console.log(res);
         }
     },
     //连接,断开,错误信息
@@ -34,13 +59,14 @@ var socketPack = {
         //连接
         this.socket.on("connect",function(){
             console.log("connect!");
-            socketPack._isConnect = true;
+            pack.setConnectStatus(true);
+            pack.base_login();//每次连接都自动登录一下
         });
         //断掉
         this.socket.on("disconnect",function(){
             console.log("disconnect!");
-            socketPack._isConnect  = false;
-            socketPack._isLogin    = false;
+            pack.setConnectStatus(false);
+            pack.setLoginStatus(false);
         });
         //错误
         this.socket.on("error",function(res){
@@ -50,49 +76,52 @@ var socketPack = {
 
         //客户端接收消息
         this.socket.on(Content.EVENT_BASE_CLIENT_RECEIVE,function(type,res){
-            this.print(type,"type");
-            this.print(res,"客户端接收消息 ["+Content.EVENT_BASE_CLIENT_RECEIVE+"]");
+            pack.print(type,"type");
+            pack.print(res,"客户端接收消息 ["+Content.EVENT_BASE_CLIENT_RECEIVE+"]");
         });
 
         //A->B,这里是推荐给B,B收到后返回一个ack
         this.socket.on(Content.EVENT_CHAT_USER,function(type,res){
-            this.print(type,"type");
-            this.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_USER+"]");
+            pack.print(type,"type");
+            pack.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_USER+"]");
         });
 
         //A->G(群),推荐给所有在线的群友
         this.socket.on(Content.EVENT_CHAT_GROUP,function(type,res){
-            this.print(type,"type");
-            this.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_GROUP+"]");
+            pack.print(type,"type");
+            pack.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_GROUP+"]");
         });
 
     },
 
-    _checkIsNotConnect:function(){
-        return this._isConnect;
-    },
 
-    _checkIsPassNoLogin:function(params){
-        return socketPack._checkIsPassComm(params,true);
+    _checkIsPassNoLogin:function(params,showMsg){
+        return pack._checkIsPassComm(params,showMsg,true);
     },
-    _checkIsPassOkLogin:function(params){
-        return socketPack._checkIsPassComm(params,false);
+    _checkIsPassOkLogin:function(params,showMsg){
+        return pack._checkIsPassComm(params,showMsg,false);
     },
-    _checkIsPassComm:function(params,checkIsLogin){
+    _checkIsPassComm:function(params,showMsg,checkIsLogin){
         checkIsLogin = checkIsLogin||true;
         if(checkIsLogin){
-            if (this._isLogin ) {
-                appFunc.hiAlert('帐号是已登录状态,不能进行操作.' );
+            console.log("login status = "+pack.getLoginStatus());
+            if (pack.getLoginStatus()) {
+                showMsg = showMsg===false?false:true;
+                if(showMsg){
+                    appFunc.hiAlert('帐号是已登录状态,不能进行操作.' );
+                }
+                console.log("帐号是已登录状态,不能进行操作.");
                 return false;
             }
         }else{
-            if (!this._isLogin ) {
+            if (!pack.getLoginStatus() ) {
                 appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
                 return false;
             }
         }
 
-        if(this._checkIsNotConnect()){
+        if(!pack.getConnectStatus()){
+            console.log(params);
             appFunc.hiAlert('当前未连接到服务器.' );
             return false;
         }
@@ -111,6 +140,9 @@ var socketPack = {
         params.token    =   store.getValue("token");
         params.fromUid  =   store.getValue("uid");
 
+        if(this._isLogging){
+            console.log(params);
+        }
         //发送给服务器
         this.socket.emit(event_name,params,function(status,info){
             if(status==Content.SEND_ERROR){
@@ -119,7 +151,7 @@ var socketPack = {
                 if(info instanceof String){
                     appFunc.hiAlert(info);
                 }
-                this.print(info,"成功【"+event_name+"】。");
+                pack.print(info,"成功【"+event_name+"】。");
 
                 (typeof(callback) === 'function') ? callback(info) : '';
             }else if(status==Content.SEND_INFO){
@@ -133,18 +165,22 @@ var socketPack = {
      *  登录
      *  params = {username:'',password:''}
      */
-    base_login:function(params){
+    base_login:function(params,fn){
+        if(!this._checkIsPassNoLogin(params,false)){
+            return;
+        }
+        params  =   params||{username:store.getValue("tel"),password:appFunc.decrypt(store.getValue("password"))};
+        var _username = params.username;
+        var _password = params.password;
 
-        if(!this._checkIsPassNoLogin()){
+        if(!_username||!_password){
+            pack.setLoginStatus(false);
+            appFunc.showLogin();
             return;
         }
 
-        params  =   params||{username:store.getValue("username"),password:store.getValue("password")};
-
-        var _username = params.username;
-        var _password = params.password;
-        if(!_username&&!_password){
-            return;
+        if(this._isLogging){
+            console.log(params);
         }
 
         //发送给服务器
@@ -156,18 +192,26 @@ var socketPack = {
 
         //从服务器接收数据
         this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
-            this.print(res,"登录成功");
+            pack.print(res,"登录成功");
             store.setValue("username",res.username);
-            store.setValue("password",res.password);
+            store.setValue("tel",res.tel);
+            store.setValue("password",appFunc.encrypt(res.password));
             store.setValue("uid",res.id);
             store.setValue("token",res.token);
-            socketPack._isLogin =   true;
+            store.setValue("update_time",res.update_time);
+            pack.setLoginStatus(true);
             db.dbInsert(table.T_MEMBER,res,function(err,docs){
-                socketPack.print(err,"err");
-                socketPack.print(docs,"写入成功");
+                if(err){
+                    pack.print(err,"err");
+                }else{
+                    pack.print(docs,"写入成功");
+                }
             });
 
-            socketPack.base_get_offline_msg();//获取离线消息
+            pack.base_get_offline_msg();//获取离线消息
+            appFunc.hideLogin();
+            (typeof(fn) === 'function') ? fn() : '';
+
         });
     },
 
@@ -175,35 +219,26 @@ var socketPack = {
      * 登录成功后,同步消息
      */
     base_get_offline_msg:function(){
-        if(this._checkIsNotConnect()){
-            appFunc.hiAlert('当前未连接到服务器.' );
-            return;
-        }
-        if(!store.getValue("token")){
-            appFunc.hiAlert('当前未登录,请登录.' );
-            socketPack.base_login();
-            return;
-        }
         var params  =   {
-            last_article_id     :   '',//最后资讯ID
-            last_vote_id        :   '',//最后投票ID
-            last_activity_id    :   '',//最后活动ID
-            last_talk_id        :   '',//最后说说ID
-            last_comment_id     :   '',//最后评论ID
-            last_member_id      :   '',//最后会员ID
-            last_chat_id        :   '',//最后聊天ID
-            last_chat_group_id  :   '',//群组ID
-            last_update_time    :   '',//最后更改个人信息时间
+            last_article_id     :   store.getValue("article_id"),//最后资讯ID
+            last_vote_id        :   store.getValue("vote_id"),//最后投票ID
+            last_activity_id    :   store.getValue("activity_id"),//最后活动ID
+            last_talk_id        :   store.getValue("talk_id"),//最后说说ID
+            last_comment_id     :   store.getValue("comment_id"),//最后评论ID
+            last_member_id      :   store.getValue("member_id"),//最后会员ID
+            last_chat_id        :   store.getValue("chat_id"),//最后聊天ID
+            last_chat_group_id  :   store.getValue("chat_group_id"),//群组ID
+            last_update_time    :   store.getValue("update_time"),//最后更改个人信息时间
             token               :   store.getValue("token"),
-            fromUid             :   store.getValue("uid"),
+            fromUid             :   store.getValue("uid")
         };
 
         //发送给服务器
         this.socket.emit(Content.EVENT_BASE_OFFLINE_MSG,params,function(status,res){
             if(status==Content.SEND_REPLY){
-                socketPack.base_login();
+                pack.base_login();
             }else if(status==Content.SEND_SUCCESS){
-                this.print(res,"获取离线信息成功");
+                pack.print(res,"获取离线信息成功");
             }
         });
     },
@@ -216,19 +251,23 @@ var socketPack = {
      *   email:''
      * }
      */
-    base_register:function(params){
+    base_register:function(params,fn){
 
         if(!this._checkIsPassNoLogin(params)){
             return;
         }
 
+        if(this._isLogging){
+            console.log(params);
+        }
         //发送给服务器
         this.socket.emit(Content.EVENT_BASE_REGISTER,params,function(status,info){
             if(status==Content.SEND_ERROR){
                 appFunc.hiAlert(info);
             }else if(status==Content.SEND_SUCCESS){
                 appFunc.hiAlert(info);
-                this.print(info,"注册成功");
+                pack.print(info,"注册成功");
+                (typeof(fn) === 'function') ? fn(info) : '';
             }
         });
     },
@@ -239,18 +278,22 @@ var socketPack = {
      *  tel:''
      * }
      */
-    base_get_pass:function(params){
+    base_get_pass:function(params,fn){
         if(!this._checkIsPassNoLogin(params)){
             return;
         }
 
+        if(this._isLogging){
+            console.log(params);
+        }
         //发送给服务器
         this.socket.emit(Content.EVENT_BASE_GET_PASS,params,function(status,info){
             if(status==Content.SEND_ERROR){
                 appFunc.hiAlert(info);
             }else if(status==Content.SEND_SUCCESS){
                 appFunc.hiAlert(info);
-                this.print(info,"获取成功");
+                pack.print(info,"获取成功");
+                (typeof(fn) === 'function') ? fn(info) : '';
             }
         });
     },
@@ -267,7 +310,7 @@ var socketPack = {
      *
      */
     base_edit_password:function(params){
-        socketPack._get_comm(params,Content.EVENT_BASE_EDIT_PASSWORD);
+        pack._get_comm(params,Content.EVENT_BASE_EDIT_PASSWORD);
     },
     //---------------------------------------------------------------------基础模块结束
 
@@ -284,7 +327,7 @@ var socketPack = {
      * }
      */
     info_get_info:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_GET_INFO);
+        pack._get_comm(params,Content.EVENT_INFO_GET_INFO);
     },
 
     /**
@@ -299,7 +342,7 @@ var socketPack = {
      * }
      */
     info_get_comment:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_COMMENT);
+        pack._get_comm(params,Content.EVENT_INFO_COMMENT);
     },
 
     /**
@@ -312,7 +355,7 @@ var socketPack = {
      * }
      */
     info_collect:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_COLLECT);
+        pack._get_comm(params,Content.EVENT_INFO_COLLECT);
     },
 
     /**
@@ -325,7 +368,7 @@ var socketPack = {
      * }
      */
     info_vote:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_VOTE);
+        pack._get_comm(params,Content.EVENT_INFO_VOTE);
     },
 
     /**
@@ -339,7 +382,7 @@ var socketPack = {
      * }
      */
     info_get_vote:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_GET_VOTE);
+        pack._get_comm(params,Content.EVENT_INFO_GET_VOTE);
     },
 
 
@@ -354,7 +397,7 @@ var socketPack = {
      * }
      */
     info_activity:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_ACTIVITY);
+        pack._get_comm(params,Content.EVENT_INFO_ACTIVITY);
     },
 
     /**
@@ -368,7 +411,7 @@ var socketPack = {
      * }
      */
     info_get_activity:function(params){
-        socketPack._get_comm(params,Content.EVENT_INFO_GET_ACTIVITY);
+        pack._get_comm(params,Content.EVENT_INFO_GET_ACTIVITY);
     },
 
 
@@ -387,7 +430,7 @@ var socketPack = {
      * }
      */
     chat_create_group:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT_CREATE_GROUP);
+        pack._get_comm(params,Content.EVENT_CHAT_CREATE_GROUP);
     },
 
     /**
@@ -400,7 +443,7 @@ var socketPack = {
      * }
      */
     chat_group_invite:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT_GROUP_INVITE);
+        pack._get_comm(params,Content.EVENT_CHAT_GROUP_INVITE);
     },
 
     /**
@@ -413,7 +456,7 @@ var socketPack = {
      * }
      */
     chat_group_rename:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT_GROUP_RENAME);
+        pack._get_comm(params,Content.EVENT_CHAT_GROUP_RENAME);
     },
 
     /**
@@ -426,7 +469,7 @@ var socketPack = {
      * }
      */
     chat_group_ingore:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT_GROUP_INGORE);
+        pack._get_comm(params,Content.EVENT_CHAT_GROUP_INGORE);
     },
 
     /**
@@ -443,7 +486,7 @@ var socketPack = {
      * }
      */
     chat:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT);
+        pack._get_comm(params,Content.EVENT_CHAT);
     },
 
     /**
@@ -456,7 +499,7 @@ var socketPack = {
      * }
      */
     chat_get_member:function(params){
-        socketPack._get_comm(params,Content.EVENT_CHAT_GET_MEMBER);
+        pack._get_comm(params,Content.EVENT_CHAT_GET_MEMBER);
     },
 
 
@@ -474,7 +517,7 @@ var socketPack = {
      * }
      */
     talk:function(params){
-        socketPack._get_comm(params,Content.EVENT_TALK);
+        pack._get_comm(params,Content.EVENT_TALK);
     },
     //---------------------------------------------------------------------说说模块结束
 
@@ -489,7 +532,7 @@ var socketPack = {
      * }
      */
     sys_feedback:function(params){
-        socketPack._get_comm(params,Content.EVENT_SYS_FEEDBACK);
+        pack._get_comm(params,Content.EVENT_SYS_FEEDBACK);
     },
     //---------------------------------------------------------------------系统模块结束
 
@@ -513,7 +556,7 @@ var socketPack = {
      * }
      */
     sys_edit_member:function(params){
-        socketPack._get_comm(params,Content.EVENT_SYS_EDIT_MEMBER);
+        pack._get_comm(params,Content.EVENT_SYS_EDIT_MEMBER);
     },
 
     /**
@@ -527,9 +570,9 @@ var socketPack = {
      * }
      */
     sys_edit_img:function(params){
-        socketPack._get_comm(params,Content.EVENT_SYS_EDIT_IMG);
+        pack._get_comm(params,Content.EVENT_SYS_EDIT_IMG);
     },
     //---------------------------------------------------------------------个人信息模块结束
 };
 
-module.exports = socketPack;
+module.exports = pack;

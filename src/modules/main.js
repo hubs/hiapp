@@ -2,11 +2,11 @@ require('framework7');
 require('./utils/helper');
 require('../style/less/app.less');
 
-var appFunc = require('./utils/appFunc'),
-    appService = require('./services/appService'),
-    router = require('./router'),
-    index = require('./app/app');
-
+var appFunc     = require('./utils/appFunc'),
+    appService  = require('./services/appService'),
+    router      = require('./router'),
+    index       = require('./app/app'),
+    init        = require("./init");
 
 require("./db/demo");
 var app = {
@@ -128,6 +128,9 @@ var app = {
                 },
                 'page:contacts_group':{
                     contact_group   :   i18n.message.contact_group
+                },
+                'page:register':{
+                    name    : '注册',
                 }
             }
         });
@@ -154,8 +157,10 @@ var app = {
         });
 
         // init app
+        init.init();
         router.init();
         index.init();
+
     }
 };
 app.initialize();

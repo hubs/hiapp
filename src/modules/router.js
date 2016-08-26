@@ -11,8 +11,9 @@ var
     chatDetailModule        = require("./chat_detail/chat_detail"),//聊天操作界面
     chatView                = require('./chat/chat'),
     infoModule              = require('./info/info'),
-    contactGroupModule      = require('./contacts_group/contacts_group')//创建群
-    ;//消息
+    contactGroupModule      = require('./contacts_group/contacts_group'),//创建群
+    socket                  = require("./socket/socket")
+    ;
 
 
 module.exports = {

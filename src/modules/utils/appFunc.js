@@ -1,5 +1,6 @@
 require('framework7');
-
+var store       = require("../utils/localStore");
+var CryptoJS    = require("crypto-js");
 module.exports = {
 
     isPhonegap: function() {
@@ -13,6 +14,10 @@ module.exports = {
 
     isEmail: function(str){
         var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        return reg.test(str);
+    },
+    isMobile:function(str){
+        var reg = /^1[3458][\d]{9}/;
         return reg.test(str);
     },
 
@@ -302,6 +307,33 @@ module.exports = {
             return false;
         }
     },
+
+    //2016-8-26:操作登录界面的显示
+    showLogin:function(clear){
+        $$("#loginView").addClass("modal-in");
+        clear = clear || false;
+        if(clear){
+            store.setValue("password","");
+            store.setValue("uid","");
+            store.setValue("token","");
+        }
+    },
+    //隐藏登录界面
+    hideLogin:function(){
+        $$("#loginView").removeClass("modal-in");
+    },
+
+    //加密解密
+    encrypt:function(str){
+        return CryptoJS.AES.encrypt(str, 'Hello F7');
+    },
+    decrypt:function(str){
+        if(!str){
+            return '';
+        }
+        var bytes  = CryptoJS.AES.decrypt(str.toString(), 'Hello F7');
+        return bytes.toString(CryptoJS.enc.Utf8);
+    }
 
 
 

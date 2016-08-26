@@ -38,6 +38,7 @@
     "webpack-dashboard": "^0.1.8"
   },
   "dependencies": {
+    "crypto-js": "^3.1.6",
     "framework7": "~1.4.2",
     "nedb": "^1.8.0",
     "socket.io-client": "^1.4.8"

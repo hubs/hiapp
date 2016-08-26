@@ -1,6 +1,7 @@
 var db  =   require("./db");
 const TABLE_DEMO    =   "demo";
 db.init();
+
 /*
 db.dbCount(TABLE_DEMO,{key:"hello 2"},function(err,count){
     console.log("dbCount ");
