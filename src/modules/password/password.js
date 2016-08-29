@@ -1,4 +1,7 @@
-var appFunc = require('../utils/appFunc');
+var appFunc = require('../utils/appFunc'),
+    socket  = require('../socket/socket'),
+    store   = require("../utils/localStore")
+    ;
 
 module.exports = {
     init: function(){
@@ -26,12 +29,19 @@ module.exports = {
             return false;
         }
 
-
-       /* hiApp.showPreloader(i18n.index.sending);
-        setTimeout(function(){
+        hiApp.showPreloader(i18n.index.sending);
+        socket.base_edit_password({
+                oldPass     :_old_pass,
+                newPass     :_new_pass,
+                newPassAgain:_new_ag_pass
+        },function(info){
             hiApp.hidePreloader();
-            hiApp.alert(i18n.setting.feed_back_result);
-        },1000);*/
+            appFunc.hiAlert(info);
+            $$("#old-password").val("");
+            $$("#new-password").val("");
+            $$("#new-ag-password").val("");
+            store.setValue("password",appFunc.encrypt(_new_pass));
+        });
     },
     bindEvents: function(){
         var bindings = [{

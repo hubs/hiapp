@@ -102,7 +102,6 @@ var pack = {
         return pack._checkIsPassComm(params,showMsg,false);
     },
     _checkIsPassComm:function(params,showMsg,checkIsLogin){
-        checkIsLogin = checkIsLogin||true;
         if(checkIsLogin){
             console.log("login status = "+pack.getLoginStatus());
             if (pack.getLoginStatus()) {
@@ -145,6 +144,8 @@ var pack = {
         }
         //发送给服务器
         this.socket.emit(event_name,params,function(status,info){
+            pack.print(info,"返回信息【"+event_name+"】+ status = "+status);
+            hiApp.hidePreloader();
             if(status==Content.SEND_ERROR){
                 appFunc.hiAlert(info);
             }else if(status==Content.SEND_SUCCESS){
@@ -152,10 +153,12 @@ var pack = {
                     appFunc.hiAlert(info);
                 }
                 pack.print(info,"成功【"+event_name+"】。");
-
                 (typeof(callback) === 'function') ? callback(info) : '';
             }else if(status==Content.SEND_INFO){
                 appFunc.hiAlert(info);
+            }else if(status==Content.SEND_REPLY){
+                pack.setLoginStatus(false);
+                pack.base_login();
             }
         });
     },
@@ -185,6 +188,7 @@ var pack = {
 
         //发送给服务器
         this.socket.emit(Content.EVENT_BASE_LOGIN,params,function(status,info){
+            pack.print(info,"返回信息【登录】+ status = "+status);
             if(status==Content.SEND_ERROR){
                 appFunc.hiAlert(info);
             }
@@ -208,9 +212,9 @@ var pack = {
                 }
             });
 
-            pack.base_get_offline_msg();//获取离线消息
+           // pack.base_get_offline_msg();//获取离线消息
             appFunc.hideLogin();
-            (typeof(fn) === 'function') ? fn() : '';
+            (typeof(fn) === 'function') ? fn(res) : '';
 
         });
     },
@@ -309,8 +313,8 @@ var pack = {
      * }
      *
      */
-    base_edit_password:function(params){
-        pack._get_comm(params,Content.EVENT_BASE_EDIT_PASSWORD);
+    base_edit_password:function(params,fn){
+        pack._get_comm(params,Content.EVENT_BASE_EDIT_PASSWORD,fn);
     },
     //---------------------------------------------------------------------基础模块结束
 
@@ -525,39 +529,20 @@ var pack = {
     /**
      *反馈(未实现)
      * @param params = {
-     *   msg                : '',//
-     *   reMsg              : '',//
-     *   token              : ''
-     *   fromUid            : '',
+     *   add_username    : ""
+     *   content         : ""
+     *   token           : ''
+     *   fromUid         : '',
      * }
      */
-    sys_feedback:function(params){
-        pack._get_comm(params,Content.EVENT_SYS_FEEDBACK);
+    sys_feedBack:function(params,fn){
+        pack._get_comm(params,Content.EVENT_SYS_FEEDBACK,fn);
     },
     //---------------------------------------------------------------------系统模块结束
 
 
     //---------------------------------------------------------------------个人信息模块开始
-    /**
-     *反馈(未实现)
-     * @param params = {
-     *   filename        :""
-     *   password        :""
-     *   tel             :""
-     *   email           :"",
-     *   hobby           :"",
-     *   duties          :"",
-     *   company         :"",
-     *   sex             :"",
-     *   address         ：""
-     *   bg_filname      : ""（暂时没用）
-     *   token           : ''
-     *   fromUid         : '',
-     * }
-     */
-    sys_edit_member:function(params){
-        pack._get_comm(params,Content.EVENT_SYS_EDIT_MEMBER);
-    },
+
 
     /**
      *上传头像或背影
@@ -572,6 +557,39 @@ var pack = {
     sys_edit_img:function(params){
         pack._get_comm(params,Content.EVENT_SYS_EDIT_IMG);
     },
+
+
+    /**
+     *修改会员信息
+     * @param params = {
+     *   email:  :""
+     *   hobby:  :""//爱好
+     *   duties  :""//职位
+     *   company :""
+     *   sex     :""
+     *   remark  : ""
+     *   token           : ''
+     *   fromUid         : '',
+     * }
+     */
+    sys_edit_member:function(params,fn){
+        pack._get_comm(params,Content.EVENT_SYS_EDIT_MEMBER,fn);
+
+        //从服务器接收数据
+        this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
+            pack.print(res,"更新成功");
+            store.setValue("username",res.username);
+            store.setValue("tel",res.tel);
+            res.password="";
+            db.dbUpdate(table.T_MEMBER,{id:store.getIntValue("uid")},res,function(err,docs){
+                if(err){
+                    pack.print(err,"err");
+                }else{
+                    pack.print(docs,"更新成功");
+                }
+            });
+        });
+    }
     //---------------------------------------------------------------------个人信息模块结束
 };
 

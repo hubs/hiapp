@@ -2,7 +2,8 @@ require('./setting.less');
 
 var appFunc     = require('../utils/appFunc'),
     template    = require('./setting.tpl.html'),
-    socket      = require('../socket/socket')
+    socket      = require('../socket/socket'),
+    store       = require("../utils/localStore")
     ;
 
 var settingView = {
@@ -16,8 +17,8 @@ var settingView = {
 
         var renderData = {
             filename    : 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-            username    : '王歆',
-            chat_name   : 'guilinxiaomofang'
+            username    : store.getValue("username"),
+            chat_name   : store.getValue("tel")
         };
 
         var output = appFunc.renderTpl(template, renderData);

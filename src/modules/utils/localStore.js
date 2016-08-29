@@ -8,6 +8,14 @@ var localStore = {
 
     getValue:function(key){
         return localStorage.getItem(key);
+    },
+
+    getIntValue:function(key){
+        var val = localStore.getValue(key);
+        if(val){
+            return parseInt(val);
+        }
+        return val;
     }
 };
 

@@ -36,9 +36,9 @@ var loginPack = {
           appFunc.hiAlert("登录密码不能空.");
           return false;
       }
-      $$(this).text("正在登录...");
+        hiApp.showPreloader(i18n.login.login);
       socket.base_login({username:_tel,password:_password},function(){
-          $$(this).text("登录");
+        hiApp.hidePreloader();
       });
     },
 

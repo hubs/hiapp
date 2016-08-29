@@ -1,37 +1,43 @@
 require('./user_info.less');
-var appFunc = require('../utils/appFunc'),
-    template = require('./user_info.tpl.html');
+var appFunc     = require('../utils/appFunc'),
+    template    = require('./user_info.tpl.html'),
+    socket      = require('../socket/socket'),
+    db          = require("../db/db"),
+    table       = require("../db/table"),
+    store       = require("../utils/localStore")
+    ;
 
 module.exports = {
     init: function(){
         appFunc.hideToolbar();
-        var renderData = {obj:{
-                filename    : 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                username    : '王歆',
-                chat_name   : 'guilinxiaomofang',
-                tel         :  '13788581069',
-                email       :  "273579540@qq.com",
-                hobby       :  "唱歌,打球,无聊",
-                duties      :  "技术员",
-                company     :  "桂林唐朝国旅有限公司",
-                sex         :  1==1?true:false,//1：男 ==1?true:false
-                remark      :  "天下乌鸦一般黑."
-             }
-        };
 
-        var output = appFunc.renderTpl(template, renderData);
-        $$('#user-info-content').html(output);
+        db.dbFindOne(table.T_MEMBER,{id:store.getIntValue("uid")},function(err,doc){
+           if(err){
+               appFunc.hiAlert(err);
+               return;
+           }
+            console.log(doc);
+            var output = appFunc.renderTpl(template, {obj:doc});
+            $$('#user-info-content').html(output);
 
+        });
         this.bindEvents();
     },
     //更新
     updateUser: function(){
-        console.log("YES");
-        hiApp.showPreloader(i18n.index.sending);
-        setTimeout(function(){
+       // hiApp.showPreloader(i18n.index.sending);
+        socket.sys_edit_member({
+            username    : $$("#input_username").val(),
+            email       : $$("#email").val(),
+            hobby       : $$("#hobby").val(),
+            duties      : $$("#duties").val(),
+            company     : $$("#company").val(),
+            sex         : $$("#sex").val(),
+            remark      : $$("#remark").val()
+        },function(info){
             hiApp.hidePreloader();
-            hiApp.alert(i18n.setting.feed_back_result);
-        },1000);
+            appFunc.hiAlert(info);
+        });
     },
 
     //默认选中

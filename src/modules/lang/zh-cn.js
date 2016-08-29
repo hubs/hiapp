@@ -37,11 +37,11 @@ module.exports = {
         feed_back_result:'感谢您的反馈，我们将尽快与您联系！',
         check_update: '检测更新',
         about: '关于我们',
-        login_out: '登出',
+        login_out: '退出',
         nickname: '用户名',
         confirm_logout:'你确定要退出登录吗？',
         current_version:'当前版本为',
-        chat_name:"微信号",
+        chat_name:"手机号",
         setting_name:"设置",
         user_info:"个人信息",
 

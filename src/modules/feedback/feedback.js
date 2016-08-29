@@ -1,4 +1,7 @@
-var appFunc = require('../utils/appFunc');
+var appFunc = require('../utils/appFunc'),
+    socket  = require('../socket/socket'),
+    store   = require("../utils/localStore")
+    ;
 
 module.exports = {
     init: function(){
@@ -8,10 +11,15 @@ module.exports = {
     },
     sendFeedback: function(){
         hiApp.showPreloader(i18n.index.sending);
-        setTimeout(function(){
+        socket.sys_feedBack({
+            username        : store.getValue("username"),
+            content         : $$("#feedbackMessageText").val()
+        },function(info){
             hiApp.hidePreloader();
-            hiApp.alert(i18n.setting.feed_back_result);
-        },1000);
+            appFunc.hiAlert(info);
+            $$("#feedbackMessageText").val("");
+        });
+
     },
     bindEvents: function(){
         var bindings = [{

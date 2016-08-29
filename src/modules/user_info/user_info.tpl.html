@@ -18,14 +18,25 @@
         <li>
             <div class="item-content">
                 <div class="item-inner">
-                    <div class="item-title label">{{t i18n="userinfo.username"}}</div>
-                    <div class="item-input">
-                        <input type="text" id="username" value="{{obj.username}}" placeholder='{{t i18n="userinfo.username"}}'>
+                    <div class="item-title label">{{t i18n="userinfo.tel"}}</div>
+                    <div class="item-input readonly">
+                        {{obj.tel}}
                     </div>
                 </div>
             </div>
         </li>
+
         <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">{{t i18n="userinfo.username"}}</div>
+                    <div class="item-input">
+                        <input type="text" id="input_username" value="{{obj.username}}" placeholder='{{t i18n="userinfo.username"}}'>
+                    </div>
+                </div>
+            </div>
+        </li>
+      <!--  <li>
             <div class="item-content">
                 <div class="item-inner">
                     <div class="item-title label">{{t i18n="userinfo.chat_name"}}</div>
@@ -34,17 +45,7 @@
                     </div>
                 </div>
             </div>
-        </li>
-        <li>
-            <div class="item-content">
-                <div class="item-inner">
-                    <div class="item-title label">{{t i18n="userinfo.tel"}}</div>
-                    <div class="item-input">
-                        <input type="text" id="tel" value="{{obj.tel}}" placeholder='{{t i18n="userinfo.tel"}}'>
-                    </div>
-                </div>
-            </div>
-        </li>
+        </li>-->
         <li>
             <div class="item-content">
                 <div class="item-inner">
