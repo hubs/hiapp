@@ -176,9 +176,14 @@ var pack = {
         var _username = params.username;
         var _password = params.password;
 
-        if(!_username||!_password){
+        if(!_username||!_password||_username=='undefined'){
             pack.setLoginStatus(false);
             appFunc.showLogin();
+            return;
+        }
+        if(!appFunc.isMobile(_username)){
+            hiApp.hidePreloader();
+            appFunc.hiAlert("手机号格式不正确.");
             return;
         }
 
@@ -190,11 +195,13 @@ var pack = {
         this.socket.emit(Content.EVENT_BASE_LOGIN,params,function(status,info){
             pack.print(info,"返回信息【登录】+ status = "+status);
             if(status==Content.SEND_ERROR){
+                hiApp.hidePreloader();
                 appFunc.hiAlert(info);
             }
         });
 
         //从服务器接收数据
+
         this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
             pack.print(res,"登录成功");
             store.setValue("username",res.username);
@@ -203,14 +210,22 @@ var pack = {
             store.setValue("uid",res.id);
             store.setValue("token",res.token);
             store.setValue("update_time",res.update_time);
+            store.setValue("filename",Content.IMAGE_URL+res.filename);
             pack.setLoginStatus(true);
-            db.dbInsert(table.T_MEMBER,res,function(err,docs){
-                if(err){
-                    pack.print(err,"err");
-                }else{
-                    pack.print(docs,"写入成功");
-                }
+
+            db.dbUpdate(table.T_MEMBER,{id:store.getIntValue("uid")},res,function(err,doc){
+                console.log("doc = "+doc);
+               if(doc==0){
+                   console.log("HAHHA");
+                   db.dbInsert(table.T_MEMBER,res,function(err,docs){
+                       pack.print(docs,"写入用户成功");
+                   });
+               }else{
+                   pack.print("更新用户成功.");
+               }
             });
+
+
 
            // pack.base_get_offline_msg();//获取离线消息
             appFunc.hideLogin();
@@ -554,8 +569,8 @@ var pack = {
      *   fromUid         : '',
      * }
      */
-    sys_edit_img:function(params){
-        pack._get_comm(params,Content.EVENT_SYS_EDIT_IMG);
+    sys_edit_img:function(params,fn){
+        pack._get_comm(params,Content.EVENT_SYS_EDIT_IMG,fn);
     },
 
 
@@ -577,7 +592,7 @@ var pack = {
 
         //从服务器接收数据
         this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
-            pack.print(res,"更新成功");
+            pack.print(res,"sys_edit_member　更新成功");
             store.setValue("username",res.username);
             store.setValue("tel",res.tel);
             res.password="";

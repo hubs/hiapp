@@ -1,6 +1,8 @@
 var CONTENT = {
     SERVER_URL      :   'ws://localhost:9998',//连接的服务器地址
 
+    IMAGE_URL       :   "http://7xvucw.com1.z0.glb.clouddn.com/",
+
     //methods
     METHOD_POST     :   'post',
     METHOD_GET      :   'get',

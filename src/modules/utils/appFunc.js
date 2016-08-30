@@ -17,7 +17,7 @@ module.exports = {
         return reg.test(str);
     },
     isMobile:function(str){
-        var reg = /^1[3458][\d]{9}/;
+        var reg = /^1[3458][\d]{9}$/;
         return reg.test(str);
     },
 
@@ -333,6 +333,11 @@ module.exports = {
         }
         var bytes  = CryptoJS.AES.decrypt(str.toString(), 'Hello F7');
         return bytes.toString(CryptoJS.enc.Utf8);
+    },
+
+    //获取文件后辍
+    fileExt:function(str){
+        return str.substring(str.lastIndexOf('.') + 1);
     }
 
 
