@@ -1,20 +1,16 @@
 var db  =   require("./db");
-const TABLE_DEMO    =   "demo";
+const TABLE_DEMO    =   "chat";
 db.init();
 
-db.dbCount("member",'',function(err,res){
+db.dbCount(TABLE_DEMO,'',function(err,res){
     console.log("dbCount ");
     console.log(res);
 });
-db.dbFind("member",{id:1},function(err,res){
+db.dbFind(TABLE_DEMO,{},function(err,res){
     console.log("dbFind ");
     console.log(res);
 });
 
-db.dbUpdate("member",{id:1},{area_id:1},function(err,res){
-    console.log("dbUpdate ");
-    console.log(res);
-});
 /*
 db.dbCount(TABLE_DEMO,{key:"hello 2"},function(err,count){
     console.log("dbCount ");

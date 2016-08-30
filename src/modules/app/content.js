@@ -11,6 +11,7 @@ var CONTENT = {
     //base
     EVENT_BASE_REGISTER          :   "base_register",        //注册
     EVENT_BASE_LOGIN             :   "base_login",           //登录
+    EVENT_BASE_LOGOUT            :   "base_logout",         //退出
     EVENT_BASE_OFFLINE_MSG       :   "base_getOfflineMsg",  //获取离线消息
     EVENT_BASE_CLIENT_RECEIVE    :   "base_receive",         //客户端接收消息
     EVENT_BASE_GET_PASS          :   "base_password",        //找回密码
@@ -52,6 +53,15 @@ var CONTENT = {
     SEND_INFO       :  2 ,//消息
     SEND_DENY       :  3 ,//被限定
     SEND_REPLY      :  4 ,//需要重新登录
+
+
+    //客户端接收服务端的信息
+    EVENT_TYPE_GROUP            :   1,//创建群消息
+    EVENT_TYPE_TALK             :   2,//创建了新的说说
+    EVENT_TYPE_NEW_COMMENT      :   3,//有新的评论，通知发布者
+    EVENT_TYPE_NEW_COOL         :   4,//有新的赞
+    EVENT_TYPE_GROUP_INVATE     :   5,//群邀请
+    EVENT_TYPE_GROUP_ADD_INFO   :   6//群邀请发送 xx邀请xx
 
 
 };

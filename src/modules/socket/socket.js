@@ -76,6 +76,23 @@ var pack = {
 
         //客户端接收消息
         this.socket.on(Content.EVENT_BASE_CLIENT_RECEIVE,function(type,res){
+            console.log("GO EVENT_BASE_CLIENT_RECEIVE");
+            switch (type){
+                case Content.EVENT_TYPE_GROUP:  //创建群消息
+                    break;
+                case Content.EVENT_TYPE_TALK:   //创建了新的说说
+                    db.dbInsert(table.T_CHAT,res);
+                    break;
+                case Content.EVENT_TYPE_NEW_COMMENT://有新的评论，通知发布者
+                    break;
+                case Content.EVENT_TYPE_NEW_COOL:   //有新的赞
+                    break;
+                case Content.EVENT_TYPE_GROUP_INVATE://群邀请
+                    break;
+                case Content.EVENT_TYPE_GROUP_ADD_INFO://群邀请发送 xx邀请xx
+                    break;
+
+            }
             pack.print(type,"type");
             pack.print(res,"客户端接收消息 ["+Content.EVENT_BASE_CLIENT_RECEIVE+"]");
         });
@@ -163,6 +180,7 @@ var pack = {
         });
     },
 
+
     //---------------------------------------------------------------------基础模块开始
     /**
      *  登录
@@ -233,7 +251,13 @@ var pack = {
 
         });
     },
+    base_logut:function(){
+        //发送给服务器
+        pack.socket.emit(Content.EVENT_BASE_LOGOUT);
+        appFunc.showLogin(true);
+        pack.setLoginStatus(false);
 
+    },
     /**
      * 登录成功后,同步消息
      */
@@ -535,8 +559,8 @@ var pack = {
      *   fromUid             : '',
      * }
      */
-    talk:function(params){
-        pack._get_comm(params,Content.EVENT_TALK);
+    talk:function(params,fn){
+        pack._get_comm(params,Content.EVENT_TALK,fn);
     },
     //---------------------------------------------------------------------说说模块结束
 

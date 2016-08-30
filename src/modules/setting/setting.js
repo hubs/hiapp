@@ -28,8 +28,7 @@ var settingView = {
     },
     logOut: function(){
         hiApp.confirm(i18n.setting.confirm_logout,function(){
-            appFunc.showLogin(true);
-            socket.setLoginStatus(false);
+            socket.base_logut();
         });
     },
     bindEvents: function(){

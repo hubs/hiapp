@@ -1,12 +1,13 @@
 require('./home.less');
 
-var service = require('./service'),
-    appFunc = require('../utils/appFunc'),
-    template = require('./home.tpl.html'),
-    commentModule = require('../comment/comment'),
-    inputModule = require('../input/input');
-var type_info   =   2;
-var home = {
+var service         = require('./service'),
+    appFunc         = require('../utils/appFunc'),
+    template        = require('./home.tpl.html'),
+    commentModule   = require('../comment/comment'),
+    inputModule     = require('../input/input');
+var type_info       =   2;
+
+var pack = {
     init: function(){
         this.getTimeline();
         this.bindEvent();
@@ -34,7 +35,7 @@ var home = {
         service.refreshTimeline(newestId,function(tl){
             // Find newest msg id in ptrContent;
             //刷新时间
-           // home.refreshItemTime();
+           // pack.refreshItemTime();
 
             setTimeout(function () {
                 //显示正在加载
@@ -43,7 +44,7 @@ var home = {
                 //这里表示没有加载到最新数据
 
                 if(tl.length === 0) {
-                    home.showLoadResult(i18n.index.nothing_loaded);
+                    pack.showLoadResult(i18n.index.nothing_loaded);
                     hiApp.pullToRefreshDone();
                     return false;
                 }
@@ -51,11 +52,11 @@ var home = {
                 var length = tl.length;
 
                 if(length >= 15){
-                    home.renderTimeline(tl);//如果数据大于15条，则全部更换
+                    pack.renderTimeline(tl);//如果数据大于15条，则全部更换
                 }else if(length > 0){
-                    home.renderTimeline(tl, 'prepend');//在前面加上数据
+                    pack.renderTimeline(tl, 'prepend');//在前面加上数据
                 }else{
-                    home.showLoadResult(i18n.index.nothing_loaded);
+                    pack.showLoadResult(i18n.index.nothing_loaded);
                 }
 
                 hiApp.pullToRefreshDone();
@@ -91,7 +92,7 @@ var home = {
                 //加载到最后
                 setTimeout(function(){
                     $this.data('scrollLoading','unloading');
-                    home.renderTimeline(tl, 'append');
+                    pack.renderTimeline(tl, 'append');
 
                     hiApp.hideIndicator();
                 },1500);
@@ -228,4 +229,4 @@ var home = {
     }
 };
 
-module.exports = home;
+module.exports = pack;

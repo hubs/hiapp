@@ -1,9 +1,12 @@
 require('./input.less');
 
-var appFunc = require('../utils/appFunc'),
-    template = require('./input.tpl.html'),
-    camera = require('../components/camera'),
-    geo = require('../components/geolocation');
+var appFunc     = require('../utils/appFunc'),
+    template    = require('./input.tpl.html'),
+    camera      = require('../components/camera'),
+    geo         = require('../components/geolocation'),
+    socket      = require("../socket/socket"),
+    store       = require("../utils/localStore")
+    ;
 
 var inputModule = {
     openSendPopup: function(){
@@ -51,11 +54,15 @@ var inputModule = {
         }else {
             hiApp.showPreloader(i18n.index.sending);
 
-            setTimeout(function () {
+            //imgs              :  "" //这里以后应该需要单图片上传后获取URL返回的地址，然后再提交到服务器
+            socket.talk({
+                add_username      :  store.getValue("username"),
+                content           :  text,
+            },function(data){
                 hiApp.hidePreloader();
                 hiApp.closeModal('.send-popup');
-                //Refresh Timeline
-            }, 1300);
+                console.log(data);
+            });
         }
     }
 };
