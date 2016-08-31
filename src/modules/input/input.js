@@ -37,11 +37,11 @@ var pack = {
             event: 'click',
             handler: camera.getPicture
         },{
-            element: '.icon-emotion',
+            element: '.message-tools .icon-emotion',
             event: 'click',
             handler: face.renderFace
         },{
-            element:'.icon-at',
+            element:'.message-tools .icon-at',
             event:'click',
             handler:pack.openAtPopup
         }];
@@ -49,70 +49,6 @@ var pack = {
         appFunc.bindEvents(bindings);
     },
 
-    //@别人
-    openAtPopup: function(){
-        if(pack.beforeLoadContacts()) {
-            atService.loadContacts(function(c){
-                var _spell  =   '';
-                $$.each(c,function(index,val){
-                    var _val_spell  =   val.spell;
-                    if(_spell!=_val_spell){
-                        _spell      =   _val_spell;
-                    }else{
-                        val.spell='';
-                    }
-                });
-                var renderData = {
-                    contacts: c,
-                    contact_group:"提醒谁看"
-                };
-                var output = appFunc.renderTpl(atTemplate, renderData);
-                hiApp.popup(output);
-
-                hiApp.searchbar('.searchbar',{
-                    searchList: '.contacts-list',
-                    searchIn: '.item-title'
-                });
-
-                var bindings = [{
-                    element: '.list-group',
-                    selector: 'li.contact-item',
-                    event:'change',
-                    handler:contacts.checkBoxSelect
-                },{
-                    element: '.btn-load-member-to-group',
-                    event:'click',
-                    handler:pack.onSelectAt
-                },{
-                    element:'.back-link',
-                    event:'click',
-                    handler:pack.onCloseModel
-                }];
-
-                appFunc.bindEvents(bindings);
-
-                hiApp.hideIndicator();
-
-                appFunc.lazyImg();
-            });
-        }
-    },
-    onSelectAt:function(){
-        console.log("tset");
-    },
-    onCloseModel:function(popup){
-        console.log("close!");
-        $$(".popupAt").hide();
-    },
-
-    beforeLoadContacts: function(){
-        if($$('.contacts-group-cls .contacts-list .list-group .contact-item').length > 0) {
-            return false;
-        }else {
-            hiApp.showIndicator();
-            return true;
-        }
-    },
 
     //发表新的说说
     postMessage: function(){
@@ -146,7 +82,99 @@ var pack = {
             hiApp.closeModal('.send-popup');
             console.log(data);
         });
-    }
+    },
+
+
+
+
+    //-------------------暂时放弃@别人的方法，因为后台还没写
+    //@别人
+    openAtPopup: function(){
+        if(pack.beforeLoadContacts()) {
+            atService.loadContacts(function(c){
+                var _spell  =   '';
+                $$.each(c,function(index,val){
+                    var _val_spell  =   val.spell;
+                    if(_spell!=_val_spell){
+                        _spell      =   _val_spell;
+                    }else{
+                        val.spell='';
+                    }
+                });
+
+                var renderData = {
+                    contacts: c,
+                    contact_group:"提醒谁看"
+                };
+                var output = appFunc.renderTpl(atTemplate, renderData);
+                hiApp.popup(output);
+
+                hiApp.searchbar('.searchbarAt .searchbar',{
+                    searchList: '.contacts-list',
+                    searchIn: '.item-title'
+                });
+
+                var bindings = [{
+                    element: '.list-group',
+                    selector: 'li.contact-item',
+                    event:'change',
+                    handler:contacts.checkBoxSelect
+                },{
+                    element: '.btn-load-member-to-group',
+                    event:'click',
+                    handler:pack.onSelectAt
+                },{
+                    element:'.back-link',
+                    event:'click',
+                    handler:pack.onCloseModel
+                }];
+
+                appFunc.bindEvents(bindings);
+
+                hiApp.hideIndicator();
+
+                appFunc.lazyImg();
+            });
+
+
+        }
+    },
+    onSelectAt:function(){
+        var _len = $$("input[type=checkbox]:checked").length;
+        if(_len<1){
+            hiApp.alert("请选择提醒的人.");
+            return false;
+        }
+        if(_len>9){
+            appFunc.hiAlert("最多可提醒9人");
+            return false;
+        }
+        var _re =   [];
+        $$("input[type=checkbox]:checked").each(function(index,val){
+            _re.push({uid:val.value,image:val.getAttribute("data-img")});
+        });
+
+        if(!_re){
+            hiApp.alert("请提醒的人不能空.");
+            return false;
+        }
+
+
+    },
+    onCloseModel:function(){
+        console.log("close!");
+        $$(".popupAt").hide();
+    },
+    beforeLoadContacts: function(){
+        if($$('.popupAt').length > 0) {
+            $$(".popupAt").show();
+            return false;
+        }else {
+            hiApp.showIndicator();
+            return true;
+        }
+    },
+    //-------------------暂时放弃@别人的方法，因为后台还没写
 };
 
 module.exports = pack;

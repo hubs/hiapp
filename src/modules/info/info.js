@@ -4,7 +4,6 @@ var appFunc = require('../utils/appFunc'),
     template = require('./info.tpl.html');
 
 var id;
-var type_info   =   1;
 var infoModule  = {
     init: function(query){
         id = query.id;
@@ -16,7 +15,7 @@ var infoModule  = {
         this.getData();
 
         // init comment module
-        commentModule.init({id:id,type:type_info});
+        commentModule.init({id:id,type:1});
     },
     getData: function(){
         var item = {

@@ -56,6 +56,7 @@ var pack = {
 
         renderData.id   = params.id||comment_params.id;
         renderData.type = params.comment_type||comment_params.type;
+        renderData.pid  = params.id||0;
 
         var output = appFunc.renderTpl(popupTpl, renderData);
         hiApp.popup(output);
@@ -86,13 +87,13 @@ var pack = {
 
         var _id         = $$('#id').val();
         var _type       = $$('#type').val();
-
-
+        var _pid        = $$("#pid").val();
         socket.info_set_comment({
             mark_id         :   _id,
             username        :   store.getValue("username"),
             content         :   text,
-            type            :   _type
+            type            :   _type,
+            pid             :   _pid
         },function(info){
             hiApp.hidePreloader();
             appFunc.hiAlert(info);
