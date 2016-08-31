@@ -7,7 +7,7 @@ Template7.registerHelper('format_how_long', function (create_time){
     return appFunc.format_how_long(create_time);
 });
 Template7.registerHelper('matchUrl', function (content){
-    return appFunc.matchUrl(content);
+    return (appFunc.matchUrl(appFunc.replace_smile(content)));
 });
 
 Template7.registerHelper('img_tag', function (imgs){

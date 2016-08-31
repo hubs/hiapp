@@ -1,6 +1,5 @@
 var appFunc = require('../utils/appFunc'),
-    networkStatus = require('./networkStatus'),
-    fileTransfer = require('./fileTransfer');
+    networkStatus = require('./networkStatus');
 
 var camera = {
     getPicture: function(){
@@ -41,7 +40,12 @@ var camera = {
     },
 
     cameraSuccess: function(fileUrl){
-        $$('#uploadPicPreview>img').attr('src',fileUrl);
+        console.log("log image count = "+$$('#uploadPicPreview>img').length);
+        if($$('#uploadPicPreview>img').length>9){
+            appFunc.hiAlert("最多可上传9张图片.");
+            return false;
+        }
+        $$('#uploadPicPreview').append('<img src="'+fileUrl+'">');
         $$('#uploadPicPreview').show();
 
     },
@@ -56,10 +60,6 @@ var camera = {
 
     clearCache: function(){
         navigator.camera.cleanup();
-    },
-
-    startUpload: function(url){
-        fileTransfer.startUpload(url);
     }
 };
 

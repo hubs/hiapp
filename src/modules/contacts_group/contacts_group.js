@@ -78,6 +78,7 @@ module.exports = {
 
 
     },
+
     bindEvents: function(){
         var bindings = [{
             element: '#contactView',

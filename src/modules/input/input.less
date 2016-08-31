@@ -116,7 +116,7 @@
   .upload-pic-preview{
     position:relative;
     overflow: hidden;
-    width:120px;
+    width:100%;
     padding:2px;
     margin: 10px;
     border:1px solid #ddd;
@@ -127,7 +127,6 @@
     > img{
       border-radius:5px;
       height: auto;
-      display:block;
       width:100%;
     }
 
@@ -174,5 +173,40 @@
     height: 5px;
     background-color: #ff9630;
     display: block;
+  }
+}
+
+//iPhone 5 竖屏
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : portrait) {
+  .upload-pic-preview{
+    > img{
+      width:90px;
+    }
+  }
+}
+//ipone 6
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 627px)
+and (orientation : portrait) {
+  .upload-pic-preview{
+    > img{
+      width:110px;
+    }
+  }
+}
+
+//iphone 6s
+@media only screen
+and (min-device-width : 412px)
+and (max-device-width : 736px)
+and (orientation : portrait) {
+  .upload-pic-preview{
+    > img{
+      width: 120px;
+    }
   }
 }

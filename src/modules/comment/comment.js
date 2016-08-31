@@ -3,11 +3,13 @@ var appFunc     = require('../utils/appFunc'),
     template    = require('./comment.tpl.html'),
     popupTpl    = require('./commentPopup.tpl.html'),
     socket      = require("../socket/socket"),
-    store       = require("../utils/localStore")
+    store       = require("../utils/localStore"),
+    face        = require("../faces/face")
+
     ;
 
 var comment_params;
-var commentModule = {
+var pack = {
 
     /**
      * @param id : comment 表的mark_id
@@ -35,6 +37,8 @@ var commentModule = {
         });
     },
 
+
+
     //弹出评论窗
     commentPopup: function(params){
         console.log(params);
@@ -59,14 +63,18 @@ var commentModule = {
         var bindings = [{
             element:'#commentBtn',
             event: 'click',
-            handler: commentModule.sendComment
+            handler: pack.sendComment
+        },{
+            element:".icon-emotion",
+            event: 'click',
+            handler: face.renderFace
         }];
 
         appFunc.bindEvents(bindings);
     },
     //发送评论
     sendComment: function(){
-        var text = $$('#commentText').val();
+        var text = $$('#contentText').val();
 
 
         if(appFunc.getCharLength(text) < 4){
@@ -102,7 +110,7 @@ var commentModule = {
                 text: i18n.comment.reply_comment,
                 bold: true,
                 onClick:function(){
-                    commentModule.commentPopup({id:_id,type:_type,name:replyName});
+                    pack.commentPopup({id:_id,type:_type,name:replyName});
                 }
             }
 
@@ -119,4 +127,4 @@ var commentModule = {
     }
 };
 
-module.exports = commentModule;
+module.exports = pack;

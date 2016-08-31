@@ -1,0 +1,88 @@
+.bar-actions
+{
+  margin-top: 20px;
+  margin-left:20px;
+}
+.bar-action
+{
+  float        : left;
+  width        : 50px;
+  color        : #636669;
+  .action-icon,
+  .action-text
+  {
+    display : block;
+  }
+  .action-icon
+  {
+    border-radius : 5px;
+    margin        : auto;
+    width         : 48px;
+    height        : 48px;
+    line-height   : 48px;
+    font-size     : 36px;
+    text-align    : center;
+  }
+  .action-text
+  {
+    padding-top : 5px;
+    font-size   : 12px;
+    text-align  : center;
+    line-height : 20px;
+  }
+}
+
+.bar-aface{
+  height: 50px;
+}
+
+.toolbar-inner{
+  a{
+    color:#636669 ;
+  }
+}
+.button {
+  border: 1px solid #636669;
+}
+
+
+.swiper-wrapper {
+  margin-bottom: 20px;
+}
+
+
+//iPhone 5 竖屏
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : portrait) {
+  .bar-action{
+    margin-right : 0px;
+  }
+}
+//ipone 6
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 627px)
+and (orientation : portrait) {
+  .bar-action{
+    margin-right : 8px;
+  }
+}
+
+//iphone 6s
+@media only screen
+and (min-device-width : 412px)
+and (max-device-width : 736px)
+and (orientation : portrait) {
+  .bar-action{
+    margin-right : 15px;
+  }
+}
+
+.show{
+  display: block;
+}
+.hide{
+  display: none;
+}

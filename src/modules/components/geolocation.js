@@ -24,6 +24,7 @@ var geolocation = {
     showPosition: function(position){
         var lat = position.coords.latitude;
         var long = position.coords.longitude;
+        console.log(position.coords);
 
         $$('#geoInfo .location>i').removeClass('preloader').addClass('location-outline');
         $$('#geoInfo .location>span').html(( Math.round(lat * 10000)/10000) + '/' + ( Math.round(long * 10000)/10000) );

@@ -1,0 +1,14 @@
+
+<div class="swiper-wrapper">
+{{#each faces}}
+    <div class="swiper-slide">
+        {{#each this}}
+            <div class="bar-action bar-aface">
+                <img src="{{img}}" data-name="{{name}}" data-img="{{img}}"/>
+            </div>
+        {{/each}}
+    </div>
+{{/each}}
+</div>
+<div class="swiper-pagination"></div>
+
