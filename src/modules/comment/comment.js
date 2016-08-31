@@ -1,7 +1,10 @@
-var appFunc = require('../utils/appFunc'),
-    service = require('./service'),
-    template = require('./comment.tpl.html'),
-    popupTpl = require('./commentPopup.tpl.html');
+var appFunc     = require('../utils/appFunc'),
+    service     = require('./service'),
+    template    = require('./comment.tpl.html'),
+    popupTpl    = require('./commentPopup.tpl.html'),
+    socket      = require("../socket/socket"),
+    store       = require("../utils/localStore")
+    ;
 
 var comment_params;
 var commentModule = {
@@ -76,14 +79,18 @@ var commentModule = {
         var _id         = $$('#id').val();
         var _type       = $$('#type').val();
 
-        console.log("id = "+_id+" and type = "+_type);
 
-        setTimeout(function(){
+        socket.info_set_comment({
+            mark_id         :   _id,
+            username        :   store.getValue("username"),
+            content         :   text,
+            type            :   _type
+        },function(info){
             hiApp.hidePreloader();
+            appFunc.hiAlert(info);
             hiApp.closeModal('.comment-popup');
 
-            //Refresh comment content
-        },1500);
+        });
     },
     //底部弹出
     createActionSheet: function(){

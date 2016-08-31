@@ -1,5 +1,5 @@
 var db  =   require("./db");
-const TABLE_DEMO    =   "chat";
+const TABLE_DEMO    =   "comments";
 db.init();
 
 db.dbCount(TABLE_DEMO,'',function(err,res){

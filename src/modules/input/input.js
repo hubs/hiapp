@@ -56,7 +56,7 @@ var inputModule = {
 
             //imgs              :  "" //这里以后应该需要单图片上传后获取URL返回的地址，然后再提交到服务器
             socket.talk({
-                add_username      :  store.getValue("username"),
+                username          :  store.getValue("username"),
                 content           :  text,
             },function(data){
                 hiApp.hidePreloader();

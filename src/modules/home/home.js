@@ -4,8 +4,10 @@ var service         = require('./service'),
     appFunc         = require('../utils/appFunc'),
     template        = require('./home.tpl.html'),
     commentModule   = require('../comment/comment'),
-    inputModule     = require('../input/input');
-var type_info       =   2;
+    inputModule     = require('../input/input'),
+    socket          = require("../socket/socket"),
+    content         = require("../app/content")
+    ;
 
 var pack = {
     init: function(){
@@ -174,12 +176,17 @@ var pack = {
 
     //点赞
     coolItem:function(){
-        console.log($$(this).data('id'));
+        socket.info_collect({
+            mark_id : $$(this).data('id'),
+            type    : content.COLLECT_TALK_COOL
+        },function(info){
+            appFunc.hiAlert(info);
+        });
     },
     //评论
     commentItem:function(){
         console.log($$(this).data("id"));
-        commentModule.commentPopup({id:$$(this).data('id'),comment_type:type_info});
+        commentModule.commentPopup({id:$$(this).data('id'),comment_type:2});
     },
     bindEvent: function(){
         //上拉刷新

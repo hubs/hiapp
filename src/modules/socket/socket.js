@@ -11,7 +11,9 @@ var pack = {
 
     init:function(){
         this._isLogging = false;
-        this.socket     = socket_io(Content.SERVER_URL);
+        this.socket     = socket_io(Content.SERVER_URL,{
+            "transports":['websocket', 'polling']
+        });
         this.setLogging(true);
         this._init();
         this._checkIsLogin();
@@ -73,6 +75,24 @@ var pack = {
            console.log("err=>"+res);
         });
 
+        //ping
+        pack.socket.on("ping",function(){
+            console.log("ping server!!");
+
+            pack.socket.emit("pong",function(){
+               console.log("receive server!!");
+            });
+        });
+
+        //超时
+        this.socket.on("connect_timeout",function(){
+           console.log("connect_timeout");
+        });
+        //链接错误
+        this.socket.on("connect_error",function(res){
+            console.log("connect_error"+res);
+        });
+
 
         //客户端接收消息
         this.socket.on(Content.EVENT_BASE_CLIENT_RECEIVE,function(type,res){
@@ -84,8 +104,10 @@ var pack = {
                     db.dbInsert(table.T_CHAT,res);
                     break;
                 case Content.EVENT_TYPE_NEW_COMMENT://有新的评论，通知发布者
+                    db.dbInsert(table.T_COMMENTS,res);
                     break;
                 case Content.EVENT_TYPE_NEW_COOL:   //有新的赞
+                    db.dbInsert(table.T_MEMBER_COLLECT,res);
                     break;
                 case Content.EVENT_TYPE_GROUP_INVATE://群邀请
                     break;
@@ -377,15 +399,15 @@ var pack = {
      * 评论：
      * @param params = {
      *   mark_id        : '',
-     *   add_username   : ''
+     *   username       : ''
      *   content        : ''
      *   type           :  '',1:资讯评论，２:说说评论
      *   token          : ''
      *   fromUid        : '',
      * }
      */
-    info_get_comment:function(params){
-        pack._get_comm(params,Content.EVENT_INFO_COMMENT);
+    info_set_comment:function(params,fn){
+        pack._get_comm(params,Content.EVENT_INFO_COMMENT,fn);
     },
 
     /**
@@ -397,8 +419,8 @@ var pack = {
      *   fromUid        : '',
      * }
      */
-    info_collect:function(params){
-        pack._get_comm(params,Content.EVENT_INFO_COLLECT);
+    info_collect:function(params,fn){
+        pack._get_comm(params,Content.EVENT_INFO_COLLECT,fn);
     },
 
     /**
@@ -433,7 +455,7 @@ var pack = {
      * 获取最新的投票结果 ：
      * @param params = {
      *   mark_id             : '',//
-     *   add_username        : '',//
+     *   username            : '',//
      *   status              : '',//1:参加,0:取消
      *   token               : ''
      *   fromUid             : '',
@@ -552,7 +574,7 @@ var pack = {
     /**
      * 发表说说 ：
      * @param params = {
-     *   add_username        : '',//发布者姓名
+     *   username            : '',//发布者姓名
      *   content             : '',//内容
      *   imgs                : '',//图片
      *   token               : ''
@@ -566,9 +588,9 @@ var pack = {
 
     //---------------------------------------------------------------------系统模块开始
     /**
-     *反馈(未实现)
+     *反馈
      * @param params = {
-     *   add_username    : ""
+     *   username       : ""
      *   content         : ""
      *   token           : ''
      *   fromUid         : '',

@@ -61,8 +61,14 @@ var CONTENT = {
     EVENT_TYPE_NEW_COMMENT      :   3,//有新的评论，通知发布者
     EVENT_TYPE_NEW_COOL         :   4,//有新的赞
     EVENT_TYPE_GROUP_INVATE     :   5,//群邀请
-    EVENT_TYPE_GROUP_ADD_INFO   :   6//群邀请发送 xx邀请xx
+    EVENT_TYPE_GROUP_ADD_INFO   :   6,//群邀请发送 xx邀请xx
 
+
+    //收藏点赞
+    COLLECT_INFO                :   1,//资讯收藏
+    COLLECT_INFO_COOL           :   2,//资讯点赞
+    COLLECT_TALK                :   3,//说说收藏
+    COLLECT_TALK_COOL           :   4,//说说点赞
 
 };
 
