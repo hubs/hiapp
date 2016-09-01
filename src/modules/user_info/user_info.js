@@ -42,6 +42,7 @@ var pack = {
         },function(info){
             hiApp.hidePreloader();
             appFunc.hiAlert(info);
+            store.setValue("update_time",appFunc.now_time());
         });
     },
 

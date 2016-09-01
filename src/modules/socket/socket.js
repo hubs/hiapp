@@ -122,13 +122,13 @@ var pack = {
         //A->B,这里是推荐给B,B收到后返回一个ack
         this.socket.on(Content.EVENT_CHAT_USER,function(type,res){
             pack.print(type,"type");
-            pack.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_USER+"]");
+            pack.print(res,"这里是推荐给B,B收到后返回一个ack [ "+Content.EVENT_CHAT_USER+"]");
         });
 
         //A->G(群),推荐给所有在线的群友
         this.socket.on(Content.EVENT_CHAT_GROUP,function(type,res){
             pack.print(type,"type");
-            pack.print(res,"客户端接收消息 [ "+Content.EVENT_CHAT_GROUP+"]");
+            pack.print(res,"推荐给所有在线的群友 [ "+Content.EVENT_CHAT_GROUP+"]");
         });
 
     },
@@ -254,9 +254,7 @@ var pack = {
             pack.setLoginStatus(true);
 
             db.dbUpdate(table.T_MEMBER,{id:store.getIntValue("uid")},res,function(err,doc){
-                console.log("doc = "+doc);
                if(doc==0){
-                   console.log("HAHHA");
                    db.dbInsert(table.T_MEMBER,res,function(err,docs){
                        pack.print(docs,"写入用户成功");
                    });
@@ -266,8 +264,7 @@ var pack = {
             });
 
 
-
-           // pack.base_get_offline_msg();//获取离线消息
+            pack.base_get_offline_msg();//获取离线消息
             appFunc.hideLogin();
             (typeof(fn) === 'function') ? fn(res) : '';
 
@@ -286,8 +283,8 @@ var pack = {
     base_get_offline_msg:function(){
         var params  =   {
             last_article_id     :   store.getValue("article_id"),//最后资讯ID
-            last_vote_id        :   store.getValue("vote_id"),//最后投票ID
-            last_activity_id    :   store.getValue("activity_id"),//最后活动ID
+            last_vote_id        :   store.getValue("vote_id"),//最后投票ID (暂时没有)
+            last_activity_id    :   store.getValue("activity_id"),//最后活动ID(暂时没有)
             last_talk_id        :   store.getValue("talk_id"),//最后说说ID
             last_comment_id     :   store.getValue("comment_id"),//最后评论ID
             last_member_id      :   store.getValue("member_id"),//最后会员ID
@@ -303,6 +300,83 @@ var pack = {
             if(status==Content.SEND_REPLY){
                 pack.base_login();
             }else if(status==Content.SEND_SUCCESS){
+
+                var _json = JSON.parse(res);
+                var _data = _json.data;
+
+                //多表数据开始
+                //群组
+                var _chat_group_num = parseInt(_data.xx_chat_group_num);//群组数量
+                if(_chat_group_num>0){//如果有值,则获取它的数据
+                    var _chat_group_data = _data.xx_chat_group_data;
+                    var _chat_member_num = _data.xx_chat_group_member_num;//会员数量
+                    var _chat_member_data= _data.xx_chat_group_member_data;//会员数据
+                }
+
+                //投票
+                var _vote_num = parseInt(_data.xx_vote_num);//投票数量
+                if(_vote_num>0){//如果有值,则获取它的数据
+                    var _vote_data        = _data.xx_vote_data;//投票数据
+                    var _vote_member_num  = _data.xx_vote_member_num;//投票人数量
+                    var _vote_member_data = _data.xx_vote_member_data;//投票人数据　
+                }
+
+                //活动
+                var _activity_num = parseInt(_data.xx_activity_num);//活动数量
+                if(_activity_num>0){//如果有值,则获取它的数据
+                    var _activity_data        = _data.xx_activity_data;//数据
+                    var _activity_details_num = _data.xx_activity_details_num;//数量
+                    var _activity_details_data= _data.xx_activity_details_data;//数据　
+                }
+                //多表数据结束
+
+                //单表开始
+                //会员数据
+                var _member_num    =  parseInt(_data.EMember_num);
+                if(_member_num>0){
+                    $$.each(_data.EMember_data,function(index,res){
+
+                    });
+                }
+
+                //评论
+                var _comments_num   = parseInt(_data.EComments_num);
+                if(_comments_num>0){
+                    var _comments       =  _data.EComments_data;
+                    $$.each(_comments,function(index,res){
+
+                    });
+                }
+
+
+                //说说
+                var _talks_num      = parseInt(_data.ETalk_num);
+                if(_talks_num>0){
+                    var _talks          =  _data.ETalk_data;
+                    $$.each(_talks,function(index,res){
+
+                    });
+                }
+
+
+                //聊天
+                var _chat_num       =  parseInt(_data.EChat_num);
+                if(_chat_num>0){
+                    var _chats          =  _data.EChat_data;
+                    $$.each(_chats,function(index,res){
+
+                    });
+                }
+
+
+                //文章
+                var _article_num     =  parseInt(_data.EArticle_num);
+                if(_article_num>0){
+                    var _articles        =  _data.EArticle_data;
+                    $$.each(_articles,function(index,res){
+
+                    });
+                }
                 pack.print(res,"获取离线信息成功");
             }
         });
