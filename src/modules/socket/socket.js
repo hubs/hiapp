@@ -153,6 +153,7 @@ var pack = {
             }
         }else{
             if (!pack.getLoginStatus() ) {
+                hiApp.hidePreloader();
                 appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
                 return false;
             }
@@ -160,10 +161,12 @@ var pack = {
 
         if(!pack.getConnectStatus()){
             console.log(params);
+            hiApp.hidePreloader();
             appFunc.hiAlert('当前未连接到服务器.' );
             return false;
         }
         if(params&&!appFunc.checkParamsHasNull(params)){
+            hiApp.hidePreloader();
             appFunc.hiAlert("有参数为空.");
             return false;
         }
@@ -311,6 +314,11 @@ var pack = {
                     var _chat_group_data = _data.xx_chat_group_data;
                     var _chat_member_num = _data.xx_chat_group_member_num;//会员数量
                     var _chat_member_data= _data.xx_chat_group_member_data;//会员数据
+                    db.dbInsert(table.T_CHAT_GROUP,_chat_group_data);
+                    db.dbInsert(table.T_chat_group_member,_chat_member_data);
+
+                    var _lastChatGroup         =  _chat_group_data.pop();
+                    store.setValue("chat_group_id",_lastChatGroup.id);
                 }
 
                 //投票
@@ -319,6 +327,13 @@ var pack = {
                     var _vote_data        = _data.xx_vote_data;//投票数据
                     var _vote_member_num  = _data.xx_vote_member_num;//投票人数量
                     var _vote_member_data = _data.xx_vote_member_data;//投票人数据　
+
+                    db.dbInsert(table.T_VOTE,_vote_data);
+                    db.dbInsert(table.T_VOTE_MEMBER,_vote_member_num);
+                    db.dbInsert(table.T_VOTE_DETAILS,_vote_member_data);
+
+                    var _lastVote         =  _vote_data.pop();
+                    store.setValue("vote_id",_lastVote.id);
                 }
 
                 //活动
@@ -327,6 +342,12 @@ var pack = {
                     var _activity_data        = _data.xx_activity_data;//数据
                     var _activity_details_num = _data.xx_activity_details_num;//数量
                     var _activity_details_data= _data.xx_activity_details_data;//数据　
+
+                    db.dbInsert(table.T_ACTIVITY,_activity_data);
+                    db.dbInsert(table.T_ACTIVITY_DETAILS,_activity_details_data);
+
+                    var _lastActivity         =  _activity_data.pop();
+                    store.setValue("activity_id",_lastActivity.id);
                 }
                 //多表数据结束
 
@@ -334,9 +355,20 @@ var pack = {
                 //会员数据
                 var _member_num    =  parseInt(_data.EMember_num);
                 if(_member_num>0){
-                    $$.each(_data.EMember_data,function(index,res){
-
+                    var _members       =  _data.EMember_data;
+                    $$.each(_members,function(index,res){
+                        //排除自己
+                       if(res.id!=store.getIntValue("uid")){
+                           /*db.dbUpdate(table.T_MEMBER,{id:res.getIntValue("id")},res,function(err,doc){
+                               if(doc==0){
+                                   db.dbInsert(table.T_MEMBER,res);
+                               }
+                           });*/
+                           db.dbInsert(table.T_MEMBER,res);
+                       }
                     });
+                    var _lastMember =   _members.pop();
+                    store.setValue("member_id",_lastMember.id);
                 }
 
                 //评论
@@ -344,8 +376,10 @@ var pack = {
                 if(_comments_num>0){
                     var _comments       =  _data.EComments_data;
                     $$.each(_comments,function(index,res){
-
+                        db.dbInsert(table.T_COMMENTS,res);
                     });
+                    var _last =   _comments.pop();
+                    store.setValue("comment_id",_last.id);
                 }
 
 
@@ -354,8 +388,10 @@ var pack = {
                 if(_talks_num>0){
                     var _talks          =  _data.ETalk_data;
                     $$.each(_talks,function(index,res){
-
+                        db.dbInsert(table.T_TALK,res);
                     });
+                    var _lastTalk =   _talks.pop();
+                    store.setValue("talk_id",_lastTalk.id);
                 }
 
 
@@ -364,18 +400,29 @@ var pack = {
                 if(_chat_num>0){
                     var _chats          =  _data.EChat_data;
                     $$.each(_chats,function(index,res){
-
+                        db.dbInsert(table.T_CHAT,res);
                     });
+                    var _lastChat =   _chats.pop();
+                    store.setValue("chat_id",_lastChat.id);
                 }
 
 
                 //文章
-                var _article_num     =  parseInt(_data.EArticle_num);
+                var _article_num         =  parseInt(_data.EArticle_num);
                 if(_article_num>0){
                     var _articles        =  _data.EArticle_data;
                     $$.each(_articles,function(index,res){
-
+                        db.dbInsert(table.T_ARTICLE,res);
                     });
+                    var _lastArticle     =   _articles.pop();
+                    store.setValue("article_id",_lastArticle.id);
+                }
+
+                //更新自己..
+                var _member_self         =       _data.member_data;
+                if(_member_self>0){
+                    db.dbUpdate(table.T_MEMBER,{id:_member_self.getIntValue("id")},_member_self);
+                    store.setValue("update_time",_member_self.update_time);
                 }
                 pack.print(res,"获取离线信息成功");
             }
