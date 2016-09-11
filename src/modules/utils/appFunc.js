@@ -313,9 +313,9 @@ module.exports = {
         $$("#loginView").addClass("modal-in");
         clear = clear || false;
         if(clear){
-            store.setValue("password","");
-            store.setValue("uid","");
-            store.setValue("token","");
+            store.setStorageValue("password","");
+            store.setStorageValue("uid","");
+            store.setStorageValue("token","");
         }
     },
     //隐藏登录界面

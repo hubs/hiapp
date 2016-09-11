@@ -24,8 +24,8 @@ var pack = {
 
     _checkIsLogin:function(){
         if(!pack.getLoginStatus()){
-            var _username = store.getValue("tel");
-            var _password = store.getValue("password");
+            var _username = store.getStorageValue("tel");
+            var _password = store.getStorageValue("password");
             if(!_username&&!_password){
                 pack.setLoginStatus(false);
                 appFunc.showLogin();
@@ -178,8 +178,8 @@ var pack = {
             return;
         }
 
-        params.token    =   store.getValue("token");
-        params.fromUid  =   store.getValue("uid");
+        params.token    =   store.getStorageValue("token");
+        params.fromUid  =   store.getStorageValue("uid");
 
         if(this._isLogging){
             console.log(params);
@@ -215,7 +215,7 @@ var pack = {
         if(!this._checkIsPassNoLogin(params,false)){
             return;
         }
-        params  =   params||{username:store.getValue("tel"),password:appFunc.decrypt(store.getValue("password"))};
+        params  =   params||{username:store.getStorageValue("tel"),password:appFunc.decrypt(store.getStorageValue("password"))};
         var _username = params.username;
         var _password = params.password;
 
@@ -247,16 +247,10 @@ var pack = {
 
         this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
             pack.print(res,"登录成功");
-            store.setValue("username",res.username);
-            store.setValue("tel",res.tel);
-            store.setValue("password",appFunc.encrypt(res.password));
-            store.setValue("uid",res.id);
-            store.setValue("token",res.token);
-            store.setValue("update_time",res.update_time);
-            store.setValue("filename",Content.IMAGE_URL+res.filename);
+            pack._updateMemberStore(res);
             pack.setLoginStatus(true);
 
-            db.dbUpdate(table.T_MEMBER,{id:store.getIntValue("uid")},res,function(err,doc){
+            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,doc){
                if(doc==0){
                    db.dbInsert(table.T_MEMBER,res,function(err,docs){
                        pack.print(docs,"写入用户成功");
@@ -273,6 +267,15 @@ var pack = {
 
         });
     },
+    _updateMemberStore:function(res){
+        store.setStorageValue("username",res.username);
+        store.setStorageValue("tel",res.tel);
+        store.setStorageValue("password",appFunc.encrypt(res.password));
+        store.setStorageValue("uid",res.id);
+        store.setStorageValue("token",res.token);
+        store.setStorageValue("update_time",res.update_time);
+        store.setStorageValue("filename",Content.IMAGE_URL+res.filename);
+    },
     base_logut:function(){
         //发送给服务器
         pack.socket.emit(Content.EVENT_BASE_LOGOUT);
@@ -285,17 +288,17 @@ var pack = {
      */
     base_get_offline_msg:function(){
         var params  =   {
-            last_article_id     :   store.getValue("article_id"),//最后资讯ID
-            last_vote_id        :   store.getValue("vote_id"),//最后投票ID (暂时没有)
-            last_activity_id    :   store.getValue("activity_id"),//最后活动ID(暂时没有)
-            last_talk_id        :   store.getValue("talk_id"),//最后说说ID
-            last_comment_id     :   store.getValue("comment_id"),//最后评论ID
-            last_member_id      :   store.getValue("member_id"),//最后会员ID
-            last_chat_id        :   store.getValue("chat_id"),//最后聊天ID
-            last_chat_group_id  :   store.getValue("chat_group_id"),//群组ID
-            last_update_time    :   store.getValue("update_time"),//最后更改个人信息时间
-            token               :   store.getValue("token"),
-            fromUid             :   store.getValue("uid")
+            last_article_id     :   store.getStorageValue("article_id"),//最后资讯ID
+            last_vote_id        :   store.getStorageValue("vote_id"),//最后投票ID (暂时没有)
+            last_activity_id    :   store.getStorageValue("activity_id"),//最后活动ID(暂时没有)
+            last_talk_id        :   store.getStorageValue("talk_id"),//最后说说ID
+            last_comment_id     :   store.getStorageValue("comment_id"),//最后评论ID
+            last_member_id      :   store.getStorageValue("member_id"),//最后会员ID
+            last_chat_id        :   store.getStorageValue("chat_id"),//最后聊天ID
+            last_chat_group_id  :   store.getStorageValue("chat_group_id"),//群组ID
+            last_update_time    :   store.getStorageValue("update_time"),//最后更改个人信息时间
+            token               :   store.getStorageValue("token"),
+            fromUid             :   store.getStorageValue("uid")
         };
 
         //发送给服务器
@@ -318,7 +321,7 @@ var pack = {
                     db.dbInsert(table.T_chat_group_member,_chat_member_data);
 
                     var _lastChatGroup         =  _chat_group_data.pop();
-                    store.setValue("chat_group_id",_lastChatGroup.id);
+                    store.setStorageValue("chat_group_id",_lastChatGroup.id);
                 }
 
                 //投票
@@ -333,7 +336,7 @@ var pack = {
                     db.dbInsert(table.T_VOTE_DETAILS,_vote_member_data);
 
                     var _lastVote         =  _vote_data.pop();
-                    store.setValue("vote_id",_lastVote.id);
+                    store.setStorageValue("vote_id",_lastVote.id);
                 }
 
                 //活动
@@ -347,7 +350,7 @@ var pack = {
                     db.dbInsert(table.T_ACTIVITY_DETAILS,_activity_details_data);
 
                     var _lastActivity         =  _activity_data.pop();
-                    store.setValue("activity_id",_lastActivity.id);
+                    store.setStorageValue("activity_id",_lastActivity.id);
                 }
                 //多表数据结束
 
@@ -358,7 +361,7 @@ var pack = {
                     var _members       =  _data.EMember_data;
                     $$.each(_members,function(index,res){
                         //排除自己
-                       if(res.id!=store.getIntValue("uid")){
+                       if(res.id!=store.getStorageIntVal("uid")){
                            /*db.dbUpdate(table.T_MEMBER,{id:res.getIntValue("id")},res,function(err,doc){
                                if(doc==0){
                                    db.dbInsert(table.T_MEMBER,res);
@@ -368,7 +371,7 @@ var pack = {
                        }
                     });
                     var _lastMember =   _members.pop();
-                    store.setValue("member_id",_lastMember.id);
+                    store.setStorageValue("member_id",_lastMember.id);
                 }
 
                 //评论
@@ -379,7 +382,7 @@ var pack = {
                         db.dbInsert(table.T_COMMENTS,res);
                     });
                     var _last =   _comments.pop();
-                    store.setValue("comment_id",_last.id);
+                    store.setStorageValue("comment_id",_last.id);
                 }
 
 
@@ -391,7 +394,7 @@ var pack = {
                         db.dbInsert(table.T_TALK,res);
                     });
                     var _lastTalk =   _talks.pop();
-                    store.setValue("talk_id",_lastTalk.id);
+                    store.setStorageValue("talk_id",_lastTalk.id);
                 }
 
 
@@ -403,7 +406,7 @@ var pack = {
                         db.dbInsert(table.T_CHAT,res);
                     });
                     var _lastChat =   _chats.pop();
-                    store.setValue("chat_id",_lastChat.id);
+                    store.setStorageValue("chat_id",_lastChat.id);
                 }
 
 
@@ -415,14 +418,15 @@ var pack = {
                         db.dbInsert(table.T_ARTICLE,res);
                     });
                     var _lastArticle     =   _articles.pop();
-                    store.setValue("article_id",_lastArticle.id);
+                    store.setStorageValue("article_id",_lastArticle.id);
                 }
 
                 //更新自己..
                 var _member_self         =       _data.member_data;
                 if(_member_self>0){
-                    db.dbUpdate(table.T_MEMBER,{id:_member_self.getIntValue("id")},_member_self);
-                    store.setValue("update_time",_member_self.update_time);
+                    db.dbUpdate(table.T_MEMBER,{id:_member_self.id},_member_self);
+                    store.setStorageValue("update_time",_member_self.update_time);
+                    pack._updateMemberStore(_member_self);
                 }
                 pack.print(res,"获取离线信息成功");
             }
@@ -760,10 +764,10 @@ var pack = {
         //从服务器接收数据
         this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
             pack.print(res,"sys_edit_member　更新成功");
-            store.setValue("username",res.username);
-            store.setValue("tel",res.tel);
+            store.setStorageValue("username",res.username);
+            store.setStorageValue("tel",res.tel);
             res.password="";
-            db.dbUpdate(table.T_MEMBER,{id:store.getIntValue("uid")},res,function(err,docs){
+            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,docs){
                 if(err){
                     pack.print(err,"err");
                 }else{

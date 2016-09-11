@@ -12,7 +12,7 @@ module.exports = {
     sendFeedback: function(){
         hiApp.showPreloader(i18n.index.sending);
         socket.sys_feedBack({
-            username        : store.getValue("username"),
+            username        : store.getStorageValue("username"),
             content         : $$("#feedbackMessageText").val()
         },function(info){
             hiApp.hidePreloader();

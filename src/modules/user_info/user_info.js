@@ -12,7 +12,7 @@ var pack = {
     init: function(){
         appFunc.hideToolbar();
 
-        db.dbFindOne(table.T_MEMBER,{id:store.getIntValue("uid")},function(err,doc){
+        db.dbFindOne(table.T_MEMBER,{id:store.getStorageIntVal("uid")},function(err,doc){
            　if(err){
                appFunc.hiAlert(err);
                return;
@@ -20,8 +20,8 @@ var pack = {
             console.log(doc);
             doc.filename = Content.IMAGE_URL+doc.filename;
             var output = appFunc.renderTpl(template, {obj:doc});
-            if(store.getValue("tel")=="undefined"){
-               store.setValue("tel",doc.tel);
+            if(store.getStorageValue("tel")=="undefined"){
+               store.setStorageValue("tel",doc.tel);
             }
             $$('#user-info-content').html(output);
             pack.bindEvents();
@@ -42,7 +42,7 @@ var pack = {
         },function(info){
             hiApp.hidePreloader();
             appFunc.hiAlert(info);
-            store.setValue("update_time",appFunc.now_time());
+            store.setStorageValue("update_time",appFunc.now_time());
         });
     },
 
@@ -65,7 +65,7 @@ var pack = {
                     type    :   1, //1:头像,2:背影
                     msg_ext :   appFunc.fileExt(file.name) //后辍名
                 },function(url){
-                    store.setValue("filename",url);
+                    store.setStorageValue("filename",url);
                 });
             };
 

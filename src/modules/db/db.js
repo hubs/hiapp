@@ -1,5 +1,7 @@
 var Datastore   = require('nedb');
 var appFunc     = require('../utils/appFunc');
+var localforage = require('localforage');
+var store       = require("../utils/localStore");
 
 //NND web sql默认路径:/home/hubs/.config/chromium/Default/databases/http_localhost_3000
 db = {};
@@ -41,6 +43,11 @@ var nedbDb={
         db.vote_details.loadDatabase();
         db.vote_member.loadDatabase();
         db.demo.loadDatabase();
+
+
+        //由于有二种驱动保存前辍
+        store.setValue("storage",localforage.driver());
+
     },
     _getDbTable:function(table){
         return eval("db."+table);

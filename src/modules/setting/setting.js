@@ -16,10 +16,12 @@ var settingView = {
         hiApp.showIndicator();
 
         var renderData = {
-            filename    : store.getValue("filename"),
-            username    : store.getValue("username"),
-            chat_name   : store.getValue("tel")
+            filename    : store.getStorageValue("filename"),
+            username    : store.getStorageValue("username"),
+            chat_name   : store.getStorageValue("tel")
         };
+
+        console.log(renderData);
 
         var output = appFunc.renderTpl(template, renderData);
         $$('#settingView .page[data-page="setting"]').html(output);

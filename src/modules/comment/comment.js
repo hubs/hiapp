@@ -90,7 +90,7 @@ var pack = {
         var _pid        = $$("#pid").val();
         socket.info_set_comment({
             mark_id         :   _id,
-            username        :   store.getValue("username"),
+            username        :   store.getStorageValue("username"),
             content         :   text,
             type            :   _type,
             pid             :   _pid

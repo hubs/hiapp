@@ -60,7 +60,7 @@ var pack = {
         }
 
         var params =   {
-            username          :  store.getValue("username"),
+            username          :  store.getStorageValue("username"),
             content           :  text
         };
 
