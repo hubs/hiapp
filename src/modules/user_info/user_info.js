@@ -66,9 +66,9 @@ var pack = {
                     msg_ext :   appFunc.fileExt(file.name) //后辍名
                 },function(url){
                     store.setStorageValue("filename",url);
+                    $$(".user_filename").attr("src",url);
                 });
             };
-
             reader.readAsArrayBuffer(file);
         });
     },

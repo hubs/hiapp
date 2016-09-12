@@ -20,6 +20,7 @@ module.exports = {
         settingView.init();
         chatView.init();
         loginView.init();
+        appFunc.checkIsChangeDb();
     },
 
     i18next: function(content){

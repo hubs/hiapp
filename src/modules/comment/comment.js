@@ -21,19 +21,21 @@ var pack = {
     },
     //详情列表显示
     getComments: function(params){
-        service.getComments(function(c){
-            var random = Math.floor(Math.random()*2);
-            if(!random) c = null;
-            setTimeout(function(){
+        service.getComments(params,function(res){
+            if(res.status){
                 var renderData = {
-                    comments: c,
+                    comments: res.msg,
                     rtime: function(){
                         return appFunc.timeFormat(this.time);
                     }
                 };
                 var output = appFunc.renderTpl(template, renderData);
+                console.log("getComments");
+                console.table(res);
                 $$('#commentContent').html(output);
-            },1500);
+            }else {
+                appFunc.hiAlert(res.msg);
+            }
         });
     },
 

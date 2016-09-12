@@ -281,7 +281,19 @@ var pack = {
         pack.socket.emit(Content.EVENT_BASE_LOGOUT);
         appFunc.showLogin(true);
         pack.setLoginStatus(false);
+    },
 
+    _pri_update_data:function(tableName,res){
+        if(!res){
+            return;
+        }
+        db.dbUpdate(tableName,{id:res.id},res,function(err,doc){
+            if(doc==0){
+                db.dbInsert(tableName,res);
+            }else{
+                db.dbUpdate(tableName,{id:res.id},res);
+            }
+        });
     },
     /**
      * 登录成功后,同步消息
@@ -317,9 +329,16 @@ var pack = {
                     var _chat_group_data = _data.xx_chat_group_data;
                     var _chat_member_num = _data.xx_chat_group_member_num;//会员数量
                     var _chat_member_data= _data.xx_chat_group_member_data;//会员数据
-                    db.dbInsert(table.T_CHAT_GROUP,_chat_group_data);
-                    db.dbInsert(table.T_chat_group_member,_chat_member_data);
 
+                    $$.each(_chat_group_data,function(index,res){
+                        pack._pri_update_data(table.T_CHAT_GROUP,res);
+                    });
+
+                    if(_chat_member_num){
+                        $$.each(_chat_member_data,function(index,res){
+                            pack._pri_update_data(table.T_CHAT_GROUP_MEMBER,res);
+                        });
+                    }
                     var _lastChatGroup         =  _chat_group_data.pop();
                     store.setStorageValue("chat_group_id",_lastChatGroup.id);
                 }
@@ -331,9 +350,14 @@ var pack = {
                     var _vote_member_num  = _data.xx_vote_member_num;//投票人数量
                     var _vote_member_data = _data.xx_vote_member_data;//投票人数据　
 
-                    db.dbInsert(table.T_VOTE,_vote_data);
-                    db.dbInsert(table.T_VOTE_MEMBER,_vote_member_num);
-                    db.dbInsert(table.T_VOTE_DETAILS,_vote_member_data);
+                    $$.each(_vote_data,function(index,res){
+                        pack._pri_update_data(table.T_VOTE,res);
+                    });
+                    if(_vote_member_num){
+                        $$.each(_vote_member_data,function(index,res){
+                            pack._pri_update_data(table.T_VOTE_DETAILS,res);
+                        });
+                    }
 
                     var _lastVote         =  _vote_data.pop();
                     store.setStorageValue("vote_id",_lastVote.id);
@@ -346,8 +370,14 @@ var pack = {
                     var _activity_details_num = _data.xx_activity_details_num;//数量
                     var _activity_details_data= _data.xx_activity_details_data;//数据　
 
-                    db.dbInsert(table.T_ACTIVITY,_activity_data);
-                    db.dbInsert(table.T_ACTIVITY_DETAILS,_activity_details_data);
+                    $$.each(_activity_data,function(index,res){
+                        pack._pri_update_data(table.T_ACTIVITY,res);
+                    });
+                    if(_activity_details_num){
+                        $$.each(_activity_details_data,function(index,res){
+                            pack._pri_update_data(table.T_ACTIVITY_DETAILS,res);
+                        });
+                    }
 
                     var _lastActivity         =  _activity_data.pop();
                     store.setStorageValue("activity_id",_lastActivity.id);
@@ -362,12 +392,7 @@ var pack = {
                     $$.each(_members,function(index,res){
                         //排除自己
                        if(res.id!=store.getStorageIntVal("uid")){
-                           /*db.dbUpdate(table.T_MEMBER,{id:res.getIntValue("id")},res,function(err,doc){
-                               if(doc==0){
-                                   db.dbInsert(table.T_MEMBER,res);
-                               }
-                           });*/
-                           db.dbInsert(table.T_MEMBER,res);
+                           pack._pri_update_data(table.T_MEMBER,res);
                        }
                     });
                     var _lastMember =   _members.pop();
@@ -379,7 +404,7 @@ var pack = {
                 if(_comments_num>0){
                     var _comments       =  _data.EComments_data;
                     $$.each(_comments,function(index,res){
-                        db.dbInsert(table.T_COMMENTS,res);
+                        pack._pri_update_data(table.T_COMMENTS,res);
                     });
                     var _last =   _comments.pop();
                     store.setStorageValue("comment_id",_last.id);
@@ -391,7 +416,7 @@ var pack = {
                 if(_talks_num>0){
                     var _talks          =  _data.ETalk_data;
                     $$.each(_talks,function(index,res){
-                        db.dbInsert(table.T_TALK,res);
+                        pack._pri_update_data(table.T_TALK,res);
                     });
                     var _lastTalk =   _talks.pop();
                     store.setStorageValue("talk_id",_lastTalk.id);
@@ -403,7 +428,7 @@ var pack = {
                 if(_chat_num>0){
                     var _chats          =  _data.EChat_data;
                     $$.each(_chats,function(index,res){
-                        db.dbInsert(table.T_CHAT,res);
+                        pack._pri_update_data(table.T_CHAT,res);
                     });
                     var _lastChat =   _chats.pop();
                     store.setStorageValue("chat_id",_lastChat.id);
@@ -415,7 +440,7 @@ var pack = {
                 if(_article_num>0){
                     var _articles        =  _data.EArticle_data;
                     $$.each(_articles,function(index,res){
-                        db.dbInsert(table.T_ARTICLE,res);
+                        pack._pri_update_data(table.T_ARTICLE,res);
                     });
                     var _lastArticle     =   _articles.pop();
                     store.setStorageValue("article_id",_lastArticle.id);
@@ -432,6 +457,8 @@ var pack = {
             }
         });
     },
+
+
 
     /**注册
      * params = {

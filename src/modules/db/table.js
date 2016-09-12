@@ -5,7 +5,7 @@ var TABLE = {
     T_CHAT              :   'chat',                 //聊天表
     T_CHAT_GROUP        :   'chat_group',           //群聊表
     T_CHAT_GROUP_DENY   :   'chat_group_deny',      //消息免打扰表
-    T_chat_group_member :   'chat_group_member',    //群会员表
+    T_CHAT_GROUP_MEMBER :   'chat_group_member',    //群会员表
     T_COMMENTS          :   'comments',             //评论表
     T_MEMBER            :   'member',               //会员表
     T_MEMBER_COLLECT    :   'member_collect',       //会员点赞集合表

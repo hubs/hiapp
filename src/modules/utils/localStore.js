@@ -7,7 +7,6 @@ var localStore = {
 
 
     getValue:function(key){
-        console.log("get -key = "+key+" and valu e = "+localStorage.getItem(key));
         return localStorage.getItem(key);
     },
 

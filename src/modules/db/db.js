@@ -97,10 +97,10 @@ var nedbDb={
      *      注意这里如果where={a:1},则field不能设置 {a:0}
      *
      */
-    dbFind:function(table,where,fn,field,sort,skip,limit){
+    dbFind:function(table,where,fn,field,skip,sort,limit){
         field   =   field||{_id: 0};
         sort    =   sort||{id:-1};
-        limit   =   limit||20;
+        limit   =   limit||10;
         skip    =   skip||0;
         return this._getDbTable(table).find(where,field).sort(sort).skip(skip).limit(limit).exec(fn);
     },
@@ -113,7 +113,7 @@ var nedbDb={
      * 获取最后一条数据
      */
     dbGetLastDoc:function(table,where,fn){
-        return this.dbFind(table,where,fn,'','',0,1);
+        return this.dbFind(table,where,fn,'',0,'',1);
     },
 
 

@@ -9,8 +9,13 @@ var infos = {
     },
     getDatas: function(){
         var that = this;
+        hiApp.showIndicator();
         service.getDatas(function(tl){
-            that.renderDatas(tl);
+            if(tl.status){
+                that.renderDatas(tl.msg);
+            }else{
+                appFunc.hiAlert(tl.msg);
+            }
             hiApp.hideIndicator();
         });
     },
@@ -20,7 +25,7 @@ var infos = {
             datas: tl
         };
         var output = appFunc.renderTpl(template, renderData);
-        //下面是下拉刷新之类的
+        //下面是下拉刷新之类的(没用到)
         if(type === 'prepend'){
             $$('#infosView').find('.home-infos').prepend(output);
         }else if(type === 'append') {

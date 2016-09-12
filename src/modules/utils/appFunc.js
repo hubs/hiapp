@@ -311,6 +311,7 @@ module.exports = {
     //2016-8-26:操作登录界面的显示
     showLogin:function(clear){
         $$("#loginView").addClass("modal-in");
+        store.setValue("is_login",false);
         clear = clear || false;
         if(clear){
             store.setStorageValue("password","");
@@ -338,6 +339,15 @@ module.exports = {
     //获取文件后辍
     fileExt:function(str){
         return str.substring(str.lastIndexOf('.') + 1);
+    },
+
+    //判断是否切换了数据
+    checkIsChangeDb:function(){
+        if(store.getValue("is_login")=='true'){
+            if(!store.getStorageValue("username")){
+               this.showLogin();
+            }
+        }
     }
 
 
