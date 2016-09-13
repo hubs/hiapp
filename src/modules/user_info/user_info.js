@@ -21,7 +21,7 @@ var pack = {
             doc.filename = Content.IMAGE_URL+doc.filename;
             var output = appFunc.renderTpl(template, {obj:doc});
             if(store.getStorageValue("tel")=="undefined"){
-               store.setStorageValue("tel",doc.tel);
+               store.setSyncStorageValue("tel",doc.tel);
             }
             $$('#user-info-content').html(output);
             pack.bindEvents();
@@ -31,8 +31,9 @@ var pack = {
     //更新
     updateUser: function(){
         hiApp.showPreloader(i18n.index.sending);
+        var _username   =   $$("#input_username").val();
         socket.sys_edit_member({
-            username    : $$("#input_username").val(),
+            username    : _username,
             email       : $$("#email").val(),
             hobby       : $$("#hobby").val(),
             duties      : $$("#duties").val(),
@@ -42,7 +43,13 @@ var pack = {
         },function(info){
             hiApp.hidePreloader();
             appFunc.hiAlert(info);
-            store.setStorageValue("update_time",appFunc.now_time());
+            store.setSyncStorageValue("update_time",appFunc.now_time());
+            if(_username!=store.getStorageValue("username")){
+                store.setSyncStorageValue("username",_username);
+                //更改评论名字
+                db.dbUpdate(table.T_COMMENTS,{id:store.getStorageIntVal("uid")},{"add_username":_username});
+            }
+
         });
     },
 
@@ -65,7 +72,7 @@ var pack = {
                     type    :   1, //1:头像,2:背影
                     msg_ext :   appFunc.fileExt(file.name) //后辍名
                 },function(url){
-                    store.setStorageValue("filename",url);
+                    store.setSyncStorageValue("filename",url);
                     $$(".user_filename").attr("src",url);
                 });
             };

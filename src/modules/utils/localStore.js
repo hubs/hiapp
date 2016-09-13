@@ -30,8 +30,13 @@ var localStore = {
     },
     _getStoragePre : function(){
         return localStore.getValue("storage")+"_";
-    }
+    },
 
+    //现在有二种存储方式:webSQLStorage,asyncStorage
+    setSyncStorageValue:function(key,value){
+        localStore.setValue("webSQLStorage_"+key,value);
+        localStore.setValue("asyncStorage_"+key,value);
+    }
 };
 
 module.exports = localStore;

@@ -40,7 +40,7 @@ module.exports = {
             $$("#old-password").val("");
             $$("#new-password").val("");
             $$("#new-ag-password").val("");
-            store.setStorageValue("password",appFunc.encrypt(_new_pass));
+            store.setSyncStorageValue("password",appFunc.encrypt(_new_pass));
         });
     },
     bindEvents: function(){

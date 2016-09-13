@@ -46,7 +46,8 @@
             <div data-page="infosView" class="page no-swipeback">
                 <!-- page-content: 所有的可见的内容，比如列表和表单等，都应该放在这-->
                 <!-- infinite-scroll:无限滚动-->
-                <div data-distance="50" class="page-content infinite-scroll">
+
+                <div data-distance="50" class="page-content pull-to-refresh-content infinite-scroll">
                     <!-- pull-to-refresh-layer:平时隐藏的布局块，包含下拉刷新的可视元素：加载提示符和上/下箭头。-->
 
                     <div class="load-result"></div>
@@ -205,7 +206,7 @@
     <div class="toolbar tabbar tabbar-labels " id="footer">
         <div class="toolbar-inner ">
             <a href="#infosView" class="tab-link active">
-                <i class="icon icon-paper"><span class="badge bg-red">5</span></i>
+                <i class="icon icon-paper"><!--<span class="badge bg-red">5</span>--></i>
                 <span class="tabbar-label i18n" data-i18n="index.infos"></span>
             </a>
             <a href="#chatView" class="tab-link">

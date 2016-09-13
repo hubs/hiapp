@@ -298,7 +298,7 @@ module.exports = {
     checkParamsHasNull:function(params){
         if(params instanceof  Object){
             for(var _param in params){
-                if(!params[_param]){//只要有空值,则返回false
+                if(!params[_param]&&params[_param]!=0){//只要有空值,则返回false
                     return false;
                 }
             }
@@ -314,9 +314,9 @@ module.exports = {
         store.setValue("is_login",false);
         clear = clear || false;
         if(clear){
-            store.setStorageValue("password","");
-            store.setStorageValue("uid","");
-            store.setStorageValue("token","");
+            store.setSyncStorageValue("password","");
+            store.setSyncStorageValue("uid","");
+            store.setSyncStorageValue("token","");
         }
     },
     //隐藏登录界面

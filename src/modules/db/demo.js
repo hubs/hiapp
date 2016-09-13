@@ -2,14 +2,17 @@ var db  =   require("./db");
 const TABLE_DEMO    =   "comments";
 db.init();
 
+
+
 db.dbCount(TABLE_DEMO,'',function(err,res){
     console.log("dbCount ");
     console.log(res);
 });
-db.dbFind(TABLE_DEMO,{type:1,mark_id:1},function(err,res){
+db.dbFind(TABLE_DEMO,{},function(err,res){
     console.log("dbFind ");
     console.log(res);
 });
+
 
 /*
 db.dbCount(TABLE_DEMO,{key:"hello 2"},function(err,count){

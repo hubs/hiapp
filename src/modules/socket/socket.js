@@ -268,13 +268,13 @@ var pack = {
         });
     },
     _updateMemberStore:function(res){
-        store.setStorageValue("username",res.username);
-        store.setStorageValue("tel",res.tel);
-        store.setStorageValue("password",appFunc.encrypt(res.password));
-        store.setStorageValue("uid",res.id);
-        store.setStorageValue("token",res.token);
-        store.setStorageValue("update_time",res.update_time);
-        store.setStorageValue("filename",Content.IMAGE_URL+res.filename);
+        store.setSyncStorageValue("username",res.username);
+        store.setSyncStorageValue("tel",res.tel);
+        store.setSyncStorageValue("password",appFunc.encrypt(res.password));
+        store.setSyncStorageValue("uid",res.id);
+        store.setSyncStorageValue("token",res.token);
+        store.setSyncStorageValue("update_time",res.update_time);
+        store.setSyncStorageValue("filename",Content.IMAGE_URL+res.filename);
     },
     base_logut:function(){
         //发送给服务器
@@ -287,10 +287,17 @@ var pack = {
         if(!res){
             return;
         }
-        db.dbUpdate(tableName,{id:res.id},res,function(err,doc){
+
+        db.dbUpdate(tableName,{id:parseInt(res.id)},res,function(err,doc){
+
+            console.log("last doc = ");
+            console.log(doc);
+            console.log(res);
             if(doc==0){
+                console.log("insert -> ");
                 db.dbInsert(tableName,res);
             }else{
+                console.log("updat!");
                 db.dbUpdate(tableName,{id:res.id},res);
             }
         });
@@ -450,7 +457,7 @@ var pack = {
                 var _member_self         =       _data.member_data;
                 if(_member_self>0){
                     db.dbUpdate(table.T_MEMBER,{id:_member_self.id},_member_self);
-                    store.setStorageValue("update_time",_member_self.update_time);
+                    store.setSyncStorageValue("update_time",_member_self.update_time);
                     pack._updateMemberStore(_member_self);
                 }
                 pack.print(res,"获取离线信息成功");
@@ -543,8 +550,8 @@ var pack = {
      *   fromUid            : '',
      * }
      */
-    info_get_info:function(params){
-        pack._get_comm(params,Content.EVENT_INFO_GET_INFO);
+    info_get_info:function(params,fn){
+        pack._get_comm(params,Content.EVENT_INFO_GET_INFO,fn);
     },
 
     /**
@@ -560,6 +567,12 @@ var pack = {
      */
     info_set_comment:function(params,fn){
         pack._get_comm(params,Content.EVENT_INFO_COMMENT,fn);
+
+        this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
+            console.log("receive info_comment.");
+            console.log(res);
+            pack._pri_update_data(table.T_COMMENTS,res);
+        });
     },
 
     /**
@@ -791,8 +804,8 @@ var pack = {
         //从服务器接收数据
         this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
             pack.print(res,"sys_edit_member　更新成功");
-            store.setStorageValue("username",res.username);
-            store.setStorageValue("tel",res.tel);
+            store.setSyncStorageValue("username",res.username);
+            store.setSyncStorageValue("tel",res.tel);
             res.password="";
             db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,docs){
                 if(err){

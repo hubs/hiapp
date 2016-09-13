@@ -6,40 +6,32 @@ var appFunc     = require('../utils/appFunc'),
     store       = require("../utils/localStore"),
     face        = require("../faces/face")
 
+
     ;
 
 var comment_params;
 var pack = {
-
     /**
      * @param id : comment 表的mark_id
      * @param type : 1:资讯评论，2:说说评论
      */
     init: function(params){
         comment_params  =   params;
-        this.getComments(params);
     },
     //详情列表显示
     getComments: function(params){
         service.getComments(params,function(res){
             if(res.status){
                 var renderData = {
-                    comments: res.msg,
-                    rtime: function(){
-                        return appFunc.timeFormat(this.time);
-                    }
+                    comments: res.msg
                 };
                 var output = appFunc.renderTpl(template, renderData);
-                console.log("getComments");
-                console.table(res);
                 $$('#commentContent').html(output);
             }else {
                 appFunc.hiAlert(res.msg);
             }
         });
     },
-
-
 
     //弹出评论窗
     commentPopup: function(params){
@@ -85,6 +77,7 @@ var pack = {
             return false;
         }
 
+
         hiApp.showPreloader(i18n.comment.commenting);
 
         var _id         = $$('#id').val();
@@ -96,11 +89,20 @@ var pack = {
             content         :   text,
             type            :   _type,
             pid             :   _pid
-        },function(info){
+        },function(_reId){
             hiApp.hidePreloader();
-            appFunc.hiAlert(info);
             hiApp.closeModal('.comment-popup');
+            var _template = '<li class="comment-item">'+
+                            '<div class="comment-detail">'+
+                            '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
+                            '<div class="time">刚刚</div>'+
+                            '<input type="hidden" class="id" value="'+_reId+'">'+
+                            '<input type="hidden" class="type" value="1">'+
+                            '</div>'+
+                        '</li>';
+            $$('#commentContent').prepend(_template);
 
+            appFunc.hiAlert("评论成功.");
         });
     },
     //底部弹出

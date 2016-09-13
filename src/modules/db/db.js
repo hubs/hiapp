@@ -1,53 +1,28 @@
 var Datastore   = require('nedb');
 var appFunc     = require('../utils/appFunc');
-var localforage = require('localforage');
-var store       = require("../utils/localStore");
 
 //NND web sql默认路径:/home/hubs/.config/chromium/Default/databases/http_localhost_3000
 db = {};
 var _baseDir  = '';
 var nedbDb={
     init:function(){
-        db.activity             = new Datastore({filename : _baseDir+'activity'});  //活动表
-        db.activity_details     = new Datastore({filename : _baseDir+'activity_details'});//增加活动数据表
-        db.article              = new Datastore({filename : _baseDir+'article'});//新闻表
-        db.chat                 = new Datastore({filename : _baseDir+'chat'});//聊天表
-        db.chat_group           = new Datastore({filename : _baseDir+'chat_group'});//群聊表
-        db.chat_group_deny      = new Datastore({filename : _baseDir+'chat_group_deny'});//消息免打扰表
-        db.chat_group_member    = new Datastore({filename : _baseDir+'chat_group_member'});//群会员表
-        db.comments             = new Datastore({filename : _baseDir+'comments'});//评论表
-        db.member               = new Datastore({filename : _baseDir+'member'});//会员表
-        db.member_collect       = new Datastore({filename : _baseDir+'member_collect'});//会员点赞集合表
-        db.member_deny          = new Datastore({filename : _baseDir+'member_deny'});//会员拒绝聊天设置表
-        db.talk                 = new Datastore({filename : _baseDir+'talk'});//说说表
-        db.talk_deny            = new Datastore({filename : _baseDir+'talk_deny'});//说说拒绝表
-        db.vote                 = new Datastore({filename : _baseDir+'vote'});//投票表
-        db.vote_details         = new Datastore({filename : _baseDir+'vote_details'});//投票详细表
-        db.vote_member          = new Datastore({filename : _baseDir+'vote_member'});//投票人员统计表
-        db.demo                 = new Datastore({filename : _baseDir+'demo'});//CURD测试表
-
-        db.activity.loadDatabase();
-        db.activity_details.loadDatabase();
-        db.article.loadDatabase();
-        db.chat.loadDatabase();
-        db.chat_group.loadDatabase();
-        db.chat_group_deny.loadDatabase();
-        db.chat_group_member.loadDatabase();
-        db.comments.loadDatabase();
-        db.member.loadDatabase();
-        db.member_collect.loadDatabase();
-        db.member_deny.loadDatabase();
-        db.talk.loadDatabase();
-        db.talk_deny.loadDatabase();
-        db.vote.loadDatabase();
-        db.vote_details.loadDatabase();
-        db.vote_member.loadDatabase();
-        db.demo.loadDatabase();
-
-
-        //由于有二种驱动保存前辍
-        store.setValue("storage",localforage.driver());
-
+        db.activity             = new Datastore({filename : _baseDir+'activity',autoload:true});  //活动表
+        db.activity_details     = new Datastore({filename : _baseDir+'activity_details',autoload:true});//增加活动数据表
+        db.article              = new Datastore({filename : _baseDir+'article',autoload:true});//新闻表
+        db.chat                 = new Datastore({filename : _baseDir+'chat',autoload:true});//聊天表
+        db.chat_group           = new Datastore({filename : _baseDir+'chat_group',autoload:true});//群聊表
+        db.chat_group_deny      = new Datastore({filename : _baseDir+'chat_group_deny',autoload:true});//消息免打扰表
+        db.chat_group_member    = new Datastore({filename : _baseDir+'chat_group_member',autoload:true});//群会员表
+        db.comments             = new Datastore({filename : _baseDir+'comments',autoload:true});//评论表
+        db.member               = new Datastore({filename : _baseDir+'member',autoload:true});//会员表
+        db.member_collect       = new Datastore({filename : _baseDir+'member_collect',autoload:true});//会员点赞集合表
+        db.member_deny          = new Datastore({filename : _baseDir+'member_deny',autoload:true});//会员拒绝聊天设置表
+        db.talk                 = new Datastore({filename : _baseDir+'talk',autoload:true});//说说表
+        db.talk_deny            = new Datastore({filename : _baseDir+'talk_deny',autoload:true});//说说拒绝表
+        db.vote                 = new Datastore({filename : _baseDir+'vote',autoload:true});//投票表
+        db.vote_details         = new Datastore({filename : _baseDir+'vote_details',autoload:true});//投票详细表
+        db.vote_member          = new Datastore({filename : _baseDir+'vote_member',autoload:true});//投票人员统计表
+        db.demo                 = new Datastore({filename : _baseDir+'demo',autoload:true});//CURD测试表
     },
     _getDbTable:function(table){
         return eval("db."+table);

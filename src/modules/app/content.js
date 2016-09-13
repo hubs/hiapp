@@ -70,6 +70,11 @@ var CONTENT = {
     COLLECT_TALK                :   3,//说说收藏
     COLLECT_TALK_COOL           :   4,//说说点赞
 
+
+    //评论类型 1:资讯评论，2:说说评论
+    COMMENT_TYPE_INFO           :  1,//资讯评论
+    COMMENT_TYPE_TALK           :  2,//说说评论
+
 };
 
 module.exports = CONTENT;
