@@ -131,6 +131,50 @@ var pack = {
             pack.print(res,"推荐给所有在线的群友 [ "+Content.EVENT_CHAT_GROUP+"]");
         });
 
+        //监听评论返回数据
+        this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
+            console.log("receive info_comment.");
+            console.log(res);
+            pack._pri_update_data(table.T_COMMENTS,res);
+        });
+
+        //登录后从服务器接收数据
+        this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
+            pack.print(res,"登录成功");
+            pack._updateMemberStore(res);
+            pack.setLoginStatus(true);
+
+            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,doc){
+                if(doc==0){
+                    db.dbInsert(table.T_MEMBER,res,function(err,docs){
+                        pack.print(docs,"写入用户成功");
+                    });
+                }else{
+                    pack.print("更新用户成功.");
+                }
+            });
+
+            pack.base_get_offline_msg();//获取离线消息
+            appFunc.hideLogin();
+            (typeof(fn) === 'function') ? fn(res) : '';
+
+        });
+
+
+        //更新个人信息后接收返回数据
+        this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
+            pack.print(res,"sys_edit_member　更新成功");
+            store.setSyncStorageValue("username",res.username);
+            store.setSyncStorageValue("tel",res.tel);
+            res.password="";
+            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,docs){
+                if(err){
+                    pack.print(err,"err");
+                }else{
+                    pack.print(docs,"更新成功");
+                }
+            });
+        });
     },
 
 
@@ -194,7 +238,7 @@ var pack = {
                 if(info instanceof String){
                     appFunc.hiAlert(info);
                 }
-                pack.print(info,"成功【"+event_name+"】。");
+               // pack.print(info,"成功【"+event_name+"】。");
                 (typeof(callback) === 'function') ? callback(info) : '';
             }else if(status==Content.SEND_INFO){
                 appFunc.hiAlert(info);
@@ -241,30 +285,7 @@ var pack = {
                 hiApp.hidePreloader();
                 appFunc.hiAlert(info);
             }
-        });
-
-        //从服务器接收数据
-
-        this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
-            pack.print(res,"登录成功");
-            pack._updateMemberStore(res);
-            pack.setLoginStatus(true);
-
-            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,doc){
-               if(doc==0){
-                   db.dbInsert(table.T_MEMBER,res,function(err,docs){
-                       pack.print(docs,"写入用户成功");
-                   });
-               }else{
-                   pack.print("更新用户成功.");
-               }
-            });
-
-
-            pack.base_get_offline_msg();//获取离线消息
-            appFunc.hideLogin();
-            (typeof(fn) === 'function') ? fn(res) : '';
-
+            (typeof(fn) === 'function') ? fn(info) : '';
         });
     },
     _updateMemberStore:function(res){
@@ -567,13 +588,8 @@ var pack = {
      */
     info_set_comment:function(params,fn){
         pack._get_comm(params,Content.EVENT_INFO_COMMENT,fn);
-
-        this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
-            console.log("receive info_comment.");
-            console.log(res);
-            pack._pri_update_data(table.T_COMMENTS,res);
-        });
     },
+
 
     /**
      * 赞和收藏：
@@ -800,21 +816,6 @@ var pack = {
      */
     sys_edit_member:function(params,fn){
         pack._get_comm(params,Content.EVENT_SYS_EDIT_MEMBER,fn);
-
-        //从服务器接收数据
-        this.socket.on(Content.EVENT_SYS_EDIT_MEMBER,function(res){
-            pack.print(res,"sys_edit_member　更新成功");
-            store.setSyncStorageValue("username",res.username);
-            store.setSyncStorageValue("tel",res.tel);
-            res.password="";
-            db.dbUpdate(table.T_MEMBER,{id:store.getStorageIntVal("uid")},res,function(err,docs){
-                if(err){
-                    pack.print(err,"err");
-                }else{
-                    pack.print(docs,"更新成功");
-                }
-            });
-        });
     }
     //---------------------------------------------------------------------个人信息模块结束
 };

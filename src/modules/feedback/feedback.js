@@ -10,10 +10,16 @@ module.exports = {
         this.bindEvents();
     },
     sendFeedback: function(){
+        var text  = $$("#feedbackMessageText").val();
+        if(appFunc.getCharLength(text) < 4){
+            hiApp.alert(i18n.index.err_text_too_short);
+            return false;
+        }
+
         hiApp.showPreloader(i18n.index.sending);
         socket.sys_feedBack({
             username        : store.getStorageValue("username"),
-            content         : $$("#feedbackMessageText").val()
+            content         : text
         },function(info){
             hiApp.hidePreloader();
             appFunc.hiAlert(info);

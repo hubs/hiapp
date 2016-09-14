@@ -47,7 +47,9 @@ var pack = {
             if(_username!=store.getStorageValue("username")){
                 store.setSyncStorageValue("username",_username);
                 //更改评论名字
-                db.dbUpdate(table.T_COMMENTS,{id:store.getStorageIntVal("uid")},{"add_username":_username});
+                var _uid = store.getStorageIntVal("uid");
+                db.dbUpdate(table.T_COMMENTS,{id:_uid},{add_username:_username});
+                db.dbUpdate(table.T_TALK,{add_uid:_uid},{add_username:_username});
             }
 
         });

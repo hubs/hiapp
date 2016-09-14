@@ -69,13 +69,18 @@ var pack  = {
     },
 
     bindEvents: function(){
+
+        /**
+         *  {
+                element: '#commentContent',
+                selector: '.comment-item',
+                event: 'click',
+                handler: commentModule.createActionSheet :会员回复,先不弄先，如果加了估计还要加提醒功能
+            },
+
+         */
         //点击弹出回复
         var bindings = [{
-            element: '#commentContent',
-            selector: '.comment-item',
-            event: 'click',
-            handler: commentModule.createActionSheet
-        },{
             element: '#infosView .item-comment-btn',
             event: 'click',
             handler: commentModule.commentPopup

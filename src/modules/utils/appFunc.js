@@ -94,6 +94,10 @@ module.exports = {
     },
 
     matchUrl: function(string){
+        if(string==''||typeof(string) == "undefined"){
+            return string;
+        }
+
         var reg = /((http|ftp|https):\/\/)?[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&;:\/~\+#]*[\w\-\@?^=%&;\/~\+#])?/g;
 
         string = string.replace(reg,function(a){
@@ -233,6 +237,9 @@ module.exports = {
     },
 
     replace_smile:function(str) {
+        if(str==''||typeof(str) == "undefined"){
+            return str;
+        }
         str = str.replace(/\</g, '&lt;');
         str = str.replace(/\>/g, '&gt;');
         str = str.replace(/\n/g, '<br/>');

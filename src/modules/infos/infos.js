@@ -81,7 +81,7 @@ var pack = {
             handler: this.openItemPage
         },{//下拉刷新
             element: '#infosView',
-            selector: '.pull-to-refresh-content',
+            selector: '.infinite-scroll',
             event: 'infinite',//下拉
             handler: this.infiniteTimeline
         },{
