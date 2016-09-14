@@ -133,8 +133,6 @@ var pack = {
 
         //监听评论返回数据
         this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
-            console.log("receive info_comment.");
-            console.log(res);
             pack._pri_update_data(table.T_COMMENTS,res);
         });
 
@@ -174,6 +172,11 @@ var pack = {
                     pack.print(docs,"更新成功");
                 }
             });
+        });
+
+        //点赞
+        this.socket.on(Content.EVENT_INFO_COLLECT,function(res){
+            pack._pri_update_data(table.T_MEMBER_COLLECT,res);
         });
     },
 

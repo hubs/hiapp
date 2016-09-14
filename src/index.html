@@ -45,9 +45,9 @@
             <!-- page: 每一个 Page 都应该放在 Pages 容器中(<div class="pages">)，而 Pages 必须是 View 的子元素-->
             <div data-page="infosView" class="page no-swipeback">
                 <!-- page-content: 所有的可见的内容，比如列表和表单等，都应该放在这-->
-                <!-- infinite-scroll:无限滚动-->
+                <!-- infinite-scroll:无限滚动 pull-to-refresh-content-->
 
-                <div data-distance="50" class="page-content pull-to-refresh-content infinite-scroll">
+                <div data-distance="50" class="page-content  infinite-scroll">
                     <!-- pull-to-refresh-layer:平时隐藏的布局块，包含下拉刷新的可视元素：加载提示符和上/下箭头。-->
 
                     <div class="load-result"></div>
@@ -136,11 +136,11 @@
         <div class="navbar">
             <div class="navbar-inner">
                 <!--左边按钮-->
-                <div class="left">
+               <!-- <div class="left">
                     <a href="#"  class="refresh-click link">
                         <i class="icon icon-reload"></i>
                     </a>
-                </div>
+                </div>-->
 
                 <!--文字描述-->
                 <div class="center sliding i18n" data-i18n="index.tweet">动态</div>
@@ -163,14 +163,14 @@
             <!-- page: 每一个 Page 都应该放在 Pages 容器中(<div class="pages">)，而 Pages 必须是 View 的子元素-->
             <div data-page="homeView" class="page no-swipeback">
                 <!-- page-content: 所有的可见的内容，比如列表和表单等，都应该放在这-->
-                <!-- infinite-scroll:无限滚动-->
-                <div data-distance="50" class="page-content pull-to-refresh-content infinite-scroll">
+                <!-- infinite-scroll:无限滚动　 pull-to-refresh-content-->
+                <div data-distance="50" class="page-content infinite-scroll" data-ptr-distance="5">
                     <!-- pull-to-refresh-layer:平时隐藏的布局块，包含下拉刷新的可视元素：加载提示符和上/下箭头。-->
                     <!-- 默认的下拉刷新层 -->
-                    <div class="pull-to-refresh-layer">
+                    <!--<div class="pull-to-refresh-layer">
                         <div class="preloader"></div>
                         <div class="pull-to-refresh-arrow"></div>
-                    </div>
+                    </div>-->
 
                     <div class="load-result"></div>
                     <!--存入加载的内容-->
