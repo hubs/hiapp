@@ -80,6 +80,14 @@ var nedbDb={
         return this._getDbTable(table).find(where,field).sort(sort).skip(skip).limit(limit).exec(fn);
     },
 
+    /**
+     * 2016-9-15:查询所有.
+     */
+    dbFindAll:function(table,where,fn,sort){
+        sort    =   sort||{id:-1};
+        return this._getDbTable(table).find(where).sort(sort).exec(fn);
+    },
+
     dbFindOne:function(table,where,fn){
         return this._getDbTable(table).findOne(where,fn);
     },

@@ -131,10 +131,7 @@ var pack = {
             pack.print(res,"推荐给所有在线的群友 [ "+Content.EVENT_CHAT_GROUP+"]");
         });
 
-        //监听评论返回数据
-        this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
-            pack._pri_update_data(table.T_COMMENTS,res);
-        });
+
 
         //登录后从服务器接收数据
         this.socket.on(Content.EVENT_BASE_LOGIN,function(res){
@@ -177,6 +174,16 @@ var pack = {
         //点赞
         this.socket.on(Content.EVENT_INFO_COLLECT,function(res){
             pack._pri_update_data(table.T_MEMBER_COLLECT,res);
+        });
+
+        //监听评论返回数据
+        this.socket.on(Content.EVENT_INFO_COMMENT,function(res){
+            pack._pri_update_data(table.T_COMMENTS,res);
+        });
+
+        //新的资讯
+        this.socket.on(Content.EVENT_NEWS_INFO,function(res){
+           pack._pri_update_data(table.T_ARTICLE,res);
         });
     },
 

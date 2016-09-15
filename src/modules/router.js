@@ -76,7 +76,7 @@ module.exports = {
                 passwordModule.init();
                 break;
             case 'contacts_detail':
-                contactsDetailModule.init();
+                contactsDetailModule.init(query);
                 break;
             case 'chat_detail':
                 chatDetailModule.init(query);

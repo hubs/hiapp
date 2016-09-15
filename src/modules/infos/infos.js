@@ -8,6 +8,7 @@ var pack = {
         pack.bindEvent();
     },
     getDatas: function(){
+        console.log("infos get datas");
         var that = this;
         hiApp.showIndicator();
         service.getDatas({},function(tl){

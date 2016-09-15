@@ -26,6 +26,8 @@ var CONTENT = {
     EVENT_INFO_VOTE              :   "info_vote",            //投票
     EVENT_INFO_ACTIVITY          :   "info_activity",        //参加活动
 
+    EVENT_NEWS_INFO              :   "news_info",            //新的资讯
+
     //聊天
     EVENT_CHAT                   :   "chat",                 //会话事件
     EVENT_CHAT_CREATE_GROUP      :   "chat_createGroup",     //创建群事件

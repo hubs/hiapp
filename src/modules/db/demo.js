@@ -4,7 +4,7 @@ db.init();
 
 
 
-db.dbCount(TABLE_DEMO,'',function(err,res){
+/*db.dbCount(TABLE_DEMO,'',function(err,res){
     console.log("dbCount ");
     console.log(res);
 });
@@ -12,6 +12,55 @@ db.dbFind(TABLE_DEMO,{},function(err,res){
     console.log("dbFind ");
     console.log(res);
 });
+ */
+
+var _data = [{add_uid:1},{add_uid:2},{add_uid:10},{add_uid:50}];
+var ReadWriteLock = require('rwlock');
+
+
+var lock = new ReadWriteLock();
+lock.readLock(function (release) {
+    for (var i = 0; i < _data.length; i++) {
+
+
+            var res = db.dbFindOne("member", {add_uid: _data[i].add_uid});
+            res.exec(function (err, doc) {
+                console.log("i = "+i);
+                _data[i].username = 'no';
+            });
+
+    }
+
+});
+    console.log("echo data= ");
+
+
+
+
+/*
+var ReadWriteLock = require('rwlock');
+
+
+var lock = new ReadWriteLock();
+
+
+lock.readLock('lock1', function (release) {
+    console.log('readLock 1...');
+    var _username =     lock.readLock('lock2', function (release) {
+            console.log('readLock 2...');
+            _usename =  db.dbFindOne(TABLE_DEMO,{add_uid:1},function(err,res){
+                console.log("inner username = "+res.add_username);
+                return res.add_username;
+            });
+            release();
+            return _username;
+        });
+    release();
+    console.log('done 1.');
+    console.log("username2 = "+_username);
+});
+*/
+
 
 
 /*

@@ -355,8 +355,6 @@ module.exports = {
                this.showLogin();
             }
         }
-    }
-
-
+    },
 
 };

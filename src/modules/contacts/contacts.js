@@ -1,8 +1,11 @@
 require('./contacts.less');
 
-var appFunc = require('../utils/appFunc'),
-    service = require('./service'),
-    template = require('./contacts.tpl.html');
+var appFunc     = require('../utils/appFunc'),
+    service     = require('./service'),
+    template    = require('./contacts.tpl.html'),
+    store       = require("../utils/localStore"),
+    Content     = require("../app/content")
+    ;
 
 var contacts = {
     init: function(){
@@ -17,28 +20,30 @@ var contacts = {
                 searchIn: '.item-title'
             });
 
-            service.loadContacts(function(c){
-                setTimeout(function(){
+            service.loadContacts({ $not: { id: store.getStorageIntVal("uid")}},function(res){
+                if(res.status){
                     var _spell  =   '';
-                    $$.each(c,function(index,val){
-                        var _val_spell  =   val.spell;
-                        if(_spell!=_val_spell){
-                            _spell  =   _val_spell;
+                    var _datas  =   res.msg;
+                    $$.each(_datas,function(index,val){
+                        var _val_spell   =   val.spell;
+                        if(_spell       !=   _val_spell){
+                            _spell       =   _val_spell;
                         }else{
                             val.spell='';
                         }
+
+                        val.filename    = Content.IMAGE_URL+val.filename;
                     });
                     var renderData = {
-                        contacts: c
+                        contacts: _datas
                     };
                     var output = appFunc.renderTpl(template, renderData);
                     $$('#contactView .contacts-list ul').html(output);
-
-                    hiApp.hideIndicator();
-
                     appFunc.lazyImg();
-
-                },500);
+                }else{
+                    hiApp.hiAlert(res.msg);
+                }
+                hiApp.hideIndicator();
             });
         }
     },
