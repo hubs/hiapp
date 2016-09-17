@@ -1,7 +1,11 @@
 {{#timeline}}
 <div data-id="{{id}}" class="card ks-facebook-card">
     <div class="card-header">
-        <div class="ks-facebook-avatar" data-avatar-id="{{filename}}"><img src="{{filename}}" width="34" height="34"></div>
+        <div class="ks-facebook-avatar" data-avatar-id="{{filename}}">
+            <a href="page/contacts_detail.html?uid={{add_uid}}" class="item-link">
+                <img src="{{filename}}" width="34" height="34" class="filename-{{add_uid}}"/>
+            </a>
+        </div>
         <div class="ks-facebook-name">{{add_username}}</div>
         <div class="ks-facebook-date">{{format_ymd create_time}}</div>
     </div>
@@ -11,6 +15,14 @@
             {{img_tag imgs}}
         </div>
     </div>
-    <div class="card-footer"><a href="#" class="link cool" data-id="{{id}}">{{t i18n="timeline.cool"}}({{cool_num}})</a><a href="#" class="link comment" data-id="{{id}}">{{t i18n="timeline.comment"}}</a></div>
+    <div class="card-footer">
+        <a href="#" class="link cool" data-id="{{id}}">({{cool_num}})</a>
+        <a href="#" class="link comment" data-id="{{id}}">{{t i18n="timeline.comment"}}</a>
+    </div>
+</div>
+<div class="comments-content home-comments-{{id}}" style="display: none;">
+    <ul id="commentContent" class="comments-list">
+        <!--<div class="loading"><i class="preloader"></i></div>-->
+    </ul>
 </div>
 {{/timeline}}

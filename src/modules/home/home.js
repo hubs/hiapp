@@ -6,7 +6,10 @@ var service         = require('./service'),
     commentModule   = require('../comment/comment'),
     inputModule     = require('../input/input'),
     socket          = require("../socket/socket"),
-    content         = require("../app/content")
+    content         = require("../app/content"),
+    store           = require("../utils/localStore"),
+    table           = require("../db/table"),
+    db              = require("../db/db")
     ;
 
 var pack = {
@@ -15,13 +18,13 @@ var pack = {
         this.bindEvent();
     },
     getTimeline: function(){
-        var that = this;
+        console.log("loadTimeLine");
         //获取列表
-        service.getTimeline({},function(tl){
-            if(tl.status){
-                that.renderTimeline(tl.msg);
+        service.getTimeline({},function(res){
+            if(res.status){
+                pack.renderTimeline(res.msg);
             }else{
-                appFunc.hiAlert(tl.msg);
+                appFunc.hiAlert(res.msg);
             }
             hiApp.hideIndicator();
 
@@ -32,15 +35,13 @@ var pack = {
             appFunc.lazyImg();
         });
     },
+    //----------------------------------------------------------------------------(暂不实现开始)
     //下拉刷新(暂不实现)
     refreshTimeline: function(){
         //获取最新的ID
         var newestId = $$('#homeView').find('.home-timeline .card').eq(0).data('id');
 
         service.refreshTimeline(newestId,function(tl){
-            // Find newest msg id in ptrContent;
-            //刷新时间
-           // pack.refreshItemTime();
 
             setTimeout(function () {
                 //显示正在加载
@@ -70,6 +71,28 @@ var pack = {
 
         });
     },
+    //点击左上脚刷新
+    refreshTimelineByClick: function(){
+        //左边在图标在转动
+        setTimeout(function(){
+            $$('#homeView .refresh-click').find('i').addClass('reloading');
+        },350);
+        //下拉300像素
+        $$('#homeView .pull-to-refresh-content').scrollTop(0,300);
+
+        //触发下拉刷新
+        hiApp.pullToRefreshTrigger('#homeView .pull-to-refresh-content');
+    },
+
+    //查看详情(暂时放弃2016-9-17)
+    openItemPage: function(e){
+        if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
+            return false;
+        }
+        var itemId = $$(this).data('id');
+        homeF7View.router.loadPage('page/tweet.html?id=' + itemId);
+    },
+    //----------------------------------------------------------------------------(暂不实现结束)
     //上拉刷新
     infiniteTimeline: function(){
         var $this = $$(this);
@@ -100,18 +123,7 @@ var pack = {
             appFunc.lazyImg();
         });
     },
-    //点击左上脚刷新
-    refreshTimelineByClick: function(){
-        //左边在图标在转动
-        setTimeout(function(){
-            $$('#homeView .refresh-click').find('i').addClass('reloading');
-        },350);
-        //下拉300像素
-        $$('#homeView .pull-to-refresh-content').scrollTop(0,300);
 
-        //触发下拉刷新
-        hiApp.pullToRefreshTrigger('#homeView .pull-to-refresh-content');
-    },
 
     //显示加载结果
     showLoadResult: function(text){
@@ -122,13 +134,6 @@ var pack = {
                 $$('#homeView .load-result').css('opacity','0').transition(1000);
             },2100);
         },400);
-    },
-    //显示刷新时间
-    refreshItemTime:function(){
-        $$('#homeView').find('.card .ks-facebook-date').each(function(){
-            var nowTime = appFunc.timeFormat($$(this).data('time'));
-            $$(this).html(nowTime);
-        });
     },
 
     //查看图片
@@ -150,28 +155,24 @@ var pack = {
     },
 
     //渲染数据
-    renderTimeline: function(tl, type){
+    renderTimeline: function(datas, type){
+        $$.each(datas,function(index,item){
+            item.filename = content.IMAGE_URL+store.getValue("filename_"+item.add_uid);
+
+            db.dbFindAll(table.T_COMMENTS,{mark_id:item.id},function(){
+                console.log("----item ");
+            });
+
+        });
         var renderData = {
-            timeline: tl
+            timeline: datas
         };
+
         var output = appFunc.renderTpl(template, renderData);
-        if(type === 'prepend'){
-            $$('#homeView').find('.home-timeline').prepend(output);
-        }else if(type === 'append') {
-            $$('#homeView').find('.home-timeline').append(output);
-        }else {
-            $$('#homeView').find('.home-timeline').html(output);
-        }
+        console.log("render");
+        $$('#homeView').find('.home-timeline').html(output);
     },
 
-    //查看详情
-    openItemPage: function(e){
-        if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
-            return false;
-        }
-        var itemId = $$(this).data('id');
-        homeF7View.router.loadPage('page/tweet.html?id=' + itemId);
-    },
 
     //点赞
     coolItem:function(){
@@ -201,7 +202,13 @@ var pack = {
                 selector: '.refresh-click',
                 event: 'click',
                 handler: this.refreshTimelineByClick //点击左上角刷新按钮
-            }
+            },
+             {
+                element: '#homeView',
+                selector: '.home-timeline .ks-facebook-card',
+                event: 'click',
+                handler: this.openItemPage  //点击查看详情
+            },
          */
         //上拉刷新
         var bindings = [{
@@ -221,11 +228,6 @@ var pack = {
             handler: inputModule.openSendPopup  //发表新说说
         },{
             element: '#homeView',
-            selector: '.home-timeline .ks-facebook-card',
-            event: 'click',
-            handler: this.openItemPage  //点击查看详情
-        },{
-            element: '#homeView',
             selector:'div.card-footer .cool',
             event: 'click',
             handler: this.coolItem  //点赞
@@ -234,6 +236,10 @@ var pack = {
             selector: 'div.card-footer .comment',
             event: 'click',
             handler:this.commentItem  //评论
+        },{
+            element: '#homeView',
+            event: 'show',
+            handler:pack.getTimeline  //评论
         }];
 
         appFunc.bindEvents(bindings);

@@ -5,16 +5,20 @@ var appFunc     = require('../utils/appFunc'),
     template    = require('./detail.tpl.html'),
     db          = require("../db/db"),
     table       = require("../db/table"),
-    Content     = require("../app/content")
+    Content     = require("../app/content"),
+    socket      = require("../socket/socket"),
+    dbHelper    = require("../utils/dbHelper"),
+    store       = require("../utils/localStore")
 
     ;
 
-var contacts = {
+var pack = {
     init: function(query){
 
         appFunc.hideToolbar();
 
         var _uid    =   parseInt(query.uid);
+
         console.log("uid = "+_uid);
         db.dbFindOne(table.T_MEMBER,{id:_uid},function(err,doc){
             if(err){
@@ -22,16 +26,50 @@ var contacts = {
                 return;
             }
             console.log(doc);
-            doc.filename    = Content.IMAGE_URL+doc.filename;
-            doc.sex         = doc.sex=='1'?'icon-nan':'icon-nv';
-            doc.lastTalk    = db.dbFindOne(table.T_TALK,{add_uid:doc.id},function(err,res){
-                return res.content;
+
+            /**
+             * member_id       : '',//需要查看会员的最新信息
+             *   update_time     : '',//本地会员最后更新的时间
+             *   token           : ''
+             *   fromUid         : '',
+             */
+            socket.chat_get_member({
+                member_id   : _uid,
+                update_time : doc.update_time,//每次都获取最新的算了
+            },function(res){
+                res     =   JSON.parse(res);
+                socket._pri_update_data(table.T_MEMBER,res);
+                pack._get_member_info(res);
+                var output = appFunc.renderTpl(template, {obj:res});
+
+                if(res.username!=doc.username){
+                    dbHelper.dbUpdateUsername(res.username,res.id);
+                }
+
+                if(res.filename!=doc.filename){
+                    store.setValue("filename_"+res.id,res.filename);
+                }
+
+                $$('.contact-detail-page').html(output);
             });
 
+            pack._get_member_info(doc);
             var output = appFunc.renderTpl(template, {obj:doc});
             $$('.contact-detail-page').html(output);
+
+            console.log("redner end");
         });
         this.bindEvents();
+    },
+
+    _get_member_info:function(doc){
+        doc.filename    = Content.IMAGE_URL+doc.filename;
+        doc.sex         = doc.sex=='1'?'icon-nan':'icon-nv';
+        doc.lastTalk    = db.dbFindOne(table.T_TALK,{add_uid:doc.id},function(err,res){
+            console.log("talk = ");
+            console.log(res);
+            return $$(".lastTalk").html(res.content);
+        });
     },
 
     beforeLoadContacts: function(){
@@ -77,4 +115,4 @@ var contacts = {
     }
 };
 
-module.exports = contacts;
+module.exports = pack;

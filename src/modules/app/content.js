@@ -55,6 +55,7 @@ var CONTENT = {
     SEND_INFO       :  2 ,//消息
     SEND_DENY       :  3 ,//被限定
     SEND_REPLY      :  4 ,//需要重新登录
+    SEND_NONE       :  5 ,//直接忽略的信息
 
 
     //客户端接收服务端的信息

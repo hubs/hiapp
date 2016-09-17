@@ -306,6 +306,7 @@ var pack = {
         store.setSyncStorageValue("token",res.token);
         store.setSyncStorageValue("update_time",res.update_time);
         store.setSyncStorageValue("filename",Content.IMAGE_URL+res.filename);
+        store.setValue("filename_"+res.id,res.filename);
     },
     base_logut:function(){
         //发送给服务器
@@ -431,6 +432,7 @@ var pack = {
                         //排除自己
                        if(res.id!=store.getStorageIntVal("uid")){
                            pack._pri_update_data(table.T_MEMBER,res);
+                           store.setValue("filename_"+res.id,res.filename);
                        }
                     });
                     var _lastMember =   _members.pop();
@@ -754,8 +756,8 @@ var pack = {
      *   fromUid         : '',
      * }
      */
-    chat_get_member:function(params){
-        pack._get_comm(params,Content.EVENT_CHAT_GET_MEMBER);
+    chat_get_member:function(params,fn){
+        pack._get_comm(params,Content.EVENT_CHAT_GET_MEMBER,fn);
     },
 
 

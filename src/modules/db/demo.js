@@ -4,7 +4,7 @@ db.init();
 
 
 
-/*db.dbCount(TABLE_DEMO,'',function(err,res){
+db.dbCount(TABLE_DEMO,'',function(err,res){
     console.log("dbCount ");
     console.log(res);
 });
@@ -12,27 +12,6 @@ db.dbFind(TABLE_DEMO,{},function(err,res){
     console.log("dbFind ");
     console.log(res);
 });
- */
-
-var _data = [{add_uid:1},{add_uid:2},{add_uid:10},{add_uid:50}];
-var ReadWriteLock = require('rwlock');
-
-
-var lock = new ReadWriteLock();
-lock.readLock(function (release) {
-    for (var i = 0; i < _data.length; i++) {
-
-
-            var res = db.dbFindOne("member", {add_uid: _data[i].add_uid});
-            res.exec(function (err, doc) {
-                console.log("i = "+i);
-                _data[i].username = 'no';
-            });
-
-    }
-
-});
-    console.log("echo data= ");
 
 
 

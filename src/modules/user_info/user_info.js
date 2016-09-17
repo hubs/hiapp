@@ -5,7 +5,8 @@ var appFunc     = require('../utils/appFunc'),
     db          = require("../db/db"),
     table       = require("../db/table"),
     store       = require("../utils/localStore"),
-    Content     = require("../app/content")
+    Content     = require("../app/content"),
+    dbHelper    = require("../utils/dbHelper")
     ;
 
 var pack = {
@@ -45,11 +46,7 @@ var pack = {
             appFunc.hiAlert(info);
             store.setSyncStorageValue("update_time",appFunc.now_time());
             if(_username!=store.getStorageValue("username")){
-                store.setSyncStorageValue("username",_username);
-                //更改评论名字
-                var _uid = store.getStorageIntVal("uid");
-                db.dbUpdate(table.T_COMMENTS,{id:_uid},{add_username:_username});
-                db.dbUpdate(table.T_TALK,{add_uid:_uid},{add_username:_username});
+                dbHelper.dbUpdateUsername(_username);
             }
 
         });
@@ -74,8 +71,8 @@ var pack = {
                     type    :   1, //1:头像,2:背影
                     msg_ext :   appFunc.fileExt(file.name) //后辍名
                 },function(url){
-                    store.setSyncStorageValue("filename",url);
-                    $$(".user_filename").attr("src",url);
+                    $$(".user_filename").attr("src",Content.IMAGE_URL+url);
+                    dbHelper.dbUpdateFilename(url);
                 });
             };
             reader.readAsArrayBuffer(file);

@@ -4,9 +4,10 @@ var appFunc     = require('../utils/appFunc'),
     service     = require('./service'),
     template    = require('./contacts.tpl.html'),
     store       = require("../utils/localStore"),
-    Content     = require("../app/content")
+    Content     = require("../app/content"),
+    cache       = require('memory-cache')
     ;
-
+var _cache_contacts =   'cache_loadContacts';
 var contacts = {
     init: function(){
         contacts.bindEvents();
@@ -14,6 +15,7 @@ var contacts = {
     },
     loadContacts: function(){
         console.log("loadContacts");
+        hiApp.showIndicator();
         if(contacts.beforeLoadContacts()) {
             hiApp.searchbar('#contactView .searchbar',{
                 searchList: '.contacts-list',
@@ -39,19 +41,21 @@ var contacts = {
                     };
                     var output = appFunc.renderTpl(template, renderData);
                     $$('#contactView .contacts-list ul').html(output);
-                    appFunc.lazyImg();
+
+                    cache.put(_cache_contacts, 'disappear',300000 );//缓存5分钟 300000
                 }else{
                     hiApp.hiAlert(res.msg);
                 }
-                hiApp.hideIndicator();
             });
+
         }
+        appFunc.lazyImg();
+        hiApp.hideIndicator();
     },
     beforeLoadContacts: function(){
-        if($$('#contactView .contacts-list .list-group .contact-item').length > 0) {
+        if($$('#contactView .contacts-list .list-group .contact-item').length > 0&&cache.get(_cache_contacts)) {
             return false;
         }else {
-            hiApp.showIndicator();
             return true;
         }
     },
