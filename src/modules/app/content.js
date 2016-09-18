@@ -65,6 +65,7 @@ var CONTENT = {
     EVENT_TYPE_NEW_COOL         :   4,//有新的赞
     EVENT_TYPE_GROUP_INVATE     :   5,//群邀请
     EVENT_TYPE_GROUP_ADD_INFO   :   6,//群邀请发送 xx邀请xx
+    EVENT_TYPE_NEW_INFO         :   7,//新的资讯
 
 
     //收藏点赞
@@ -77,6 +78,14 @@ var CONTENT = {
     //评论类型 1:资讯评论，2:说说评论
     COMMENT_TYPE_INFO           :  1,//资讯评论
     COMMENT_TYPE_TALK           :  2,//说说评论
+
+
+    //徽章
+    BADGE_TALK       : 'badge_talk',
+    BADGE_INFO       : 'badge_info',
+    BADGE_CHAT       : 'badge_chat',
+    BADGE_MEMBER     : 'badge_member'
+
 
 };
 

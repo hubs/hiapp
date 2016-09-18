@@ -34,6 +34,7 @@ var pack = {
 
             appFunc.lazyImg();
         });
+        appFunc.removeBadge(content.BADGE_TALK);
     },
     //----------------------------------------------------------------------------(暂不实现开始)
     //下拉刷新(暂不实现)
@@ -189,6 +190,8 @@ var pack = {
         console.log($$(this).data("id"));
         commentModule.commentPopup({id:$$(this).data('id'),comment_type:2});
     },
+
+
     bindEvent: function(){
         /**
          * {
