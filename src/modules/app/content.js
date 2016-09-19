@@ -66,6 +66,7 @@ var CONTENT = {
     EVENT_TYPE_GROUP_INVATE     :   5,//群邀请
     EVENT_TYPE_GROUP_ADD_INFO   :   6,//群邀请发送 xx邀请xx
     EVENT_TYPE_NEW_INFO         :   7,//新的资讯
+    EVENT_TYPE_MEMBER           :   8,//新的会员
 
 
     //收藏点赞

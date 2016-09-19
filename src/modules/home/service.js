@@ -11,12 +11,11 @@ module.exports = {
     },
     //newestId:最新的ID
     refreshTimeline: function(newestId,callback){
-        xhr.simpleCall({
-            func:'refresh_timeline'
-        },function(res){
-            callback(res.data);
+        db.dbFind(table.T_TALK,{id: { $gt: newestId }},function(err,docs){
+            return callback(db.returnComm(err,docs));
         });
     },
+
     infiniteTimeline: function(lastId,callback){
         xhr.simpleCall({
             func:'more_timeline'

@@ -118,6 +118,10 @@ var pack = {
                     pack._pri_update_data(table.T_ARTICLE,res);
                     appFunc.addBadge(content.BADGE_INFO,1);
                     break;
+                case content.EVENT_TYPE_MEMBER://新会员
+                    pack._pri_update_data(table.T_MEMBER,res);
+                    appFunc.addBadge(content.BADGE_MEMBER,1);
+                    break;
 
             }
             pack.print(type,"type");

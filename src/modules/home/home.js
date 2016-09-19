@@ -36,42 +36,31 @@ var pack = {
         });
         appFunc.removeBadge(content.BADGE_TALK);
     },
-    //----------------------------------------------------------------------------(暂不实现开始)
+
     //下拉刷新(暂不实现)
     refreshTimeline: function(){
         //获取最新的ID
         var newestId = $$('#homeView').find('.home-timeline .card').eq(0).data('id');
 
-        service.refreshTimeline(newestId,function(tl){
+        service.refreshTimeline(newestId,function(res){
 
-            setTimeout(function () {
-                //显示正在加载
-                $$('#homeView .refresh-click').find('i').removeClass('reloading');
+            //显示正在加载
+            $$('#homeView .refresh-click').find('i').removeClass('reloading');
 
-                //这里表示没有加载到最新数据
-
-                if(tl.length === 0) {
-                    pack.showLoadResult(i18n.index.nothing_loaded);
-                    hiApp.pullToRefreshDone();
-                    return false;
-                }
-
-                var length = tl.length;
-
-                if(length >= 15){
-                    pack.renderTimeline(tl);//如果数据大于15条，则全部更换
-                }else if(length > 0){
-                    pack.renderTimeline(tl, 'prepend');//在前面加上数据
-                }else{
-                    pack.showLoadResult(i18n.index.nothing_loaded);
-                }
-
+            //这里表示没有加载到最新数据
+            if(res.status) {
+                pack.renderTimeline(res.msg, 'prepend');//在前面加上数据
                 hiApp.pullToRefreshDone();
-                appFunc.lazyImg();
-            },1500);
+            }else{
+                pack.showLoadResult(i18n.index.nothing_loaded);
+                hiApp.pullToRefreshDone();
+                return false;
+            }
+            appFunc.lazyImg();
 
         });
     },
+    //----------------------------------------------------------------------------(暂不实现开始)
     //点击左上脚刷新
     refreshTimelineByClick: function(){
         //左边在图标在转动
@@ -168,10 +157,17 @@ var pack = {
         var renderData = {
             timeline: datas
         };
-
         var output = appFunc.renderTpl(template, renderData);
-        console.log("render");
-        $$('#homeView').find('.home-timeline').html(output);
+        if(type === 'prepend'){
+            $$('#homeView').find('.home-timeline').prepend(output);
+        }else if(type === 'append') {
+            $$('#homeView').find('.home-timeline').append(output);
+        }else {
+            console.log("render");
+            $$('#homeView').find('.home-timeline').html(output);
+        }
+
+
     },
 
 
@@ -194,12 +190,7 @@ var pack = {
 
     bindEvent: function(){
         /**
-         * {
-                element: '#homeView',
-                selector: '.pull-to-refresh-content',
-                event: 'refresh',
-                handler: this.refreshTimeline
-            },
+         *
              {
                 element: '#homeView',
                 selector: '.refresh-click',
@@ -215,6 +206,11 @@ var pack = {
          */
         //上拉刷新
         var bindings = [{
+            element: '#homeView',
+            selector: '.pull-to-refresh-content',
+            event: 'refresh',
+            handler: this.refreshTimeline
+        },{
             element: '#homeView',
             selector: '.infinite-scroll',
             event: 'infinite',//下拉
