@@ -1,6 +1,8 @@
-var service = require('./service'),
-    appFunc = require('../utils/appFunc'),
-    template = require('./infos.tpl.html');
+var service     = require('./service'),
+    appFunc     = require('../utils/appFunc'),
+    template    = require('./infos.tpl.html'),
+    content     = require("../app/content")
+    ;
 
 var pack = {
     init: function(){
@@ -19,6 +21,7 @@ var pack = {
             }
             hiApp.hideIndicator();
         });
+        appFunc.removeBadge(content.BADGE_INFO);
     },
 
     renderDatas: function(tl, type){

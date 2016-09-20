@@ -357,4 +357,17 @@ module.exports = {
         }
     },
 
+
+    //判断是否有新数据
+    addBadge:function(key,val){
+        val =   val||1;
+        store.setSyncStorageValue(key,val);
+        $$("#footer i."+key+" span").addClass("badge");
+    },
+
+    removeBadge:function(key){
+        $$("#footer i."+key+" span").removeClass("badge");
+        store.setSyncStorageValue(key,0);
+    }
+
 };

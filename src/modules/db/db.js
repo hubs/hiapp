@@ -28,7 +28,7 @@ var nedbDb={
         return eval("db."+table);
     },
     returnComm:function(err,docs){
-        if(err){
+        if(err||docs.length<1){
             return appFunc.error(err);
         }
         return appFunc.success(docs);
