@@ -4,7 +4,7 @@ var appFunc     = require('../utils/appFunc'),
     service     = require('./service'),
     template    = require('./contacts.tpl.html'),
     store       = require("../utils/localStore"),
-    Content     = require("../app/content"),
+    content     = require("../app/content"),
     cache       = require('memory-cache')
     ;
 var _cache_contacts =   'cache_loadContacts';
@@ -34,7 +34,7 @@ var contacts = {
                             val.spell='';
                         }
 
-                        val.filename    = Content.IMAGE_URL+val.filename;
+                        val.filename    = content.IMAGE_URL+val.filename;
                     });
                     var renderData = {
                         contacts: _datas
@@ -51,6 +51,7 @@ var contacts = {
         }
         appFunc.lazyImg();
         hiApp.hideIndicator();
+        appFunc.removeBadge(content.BADGE_MEMBER);
     },
     beforeLoadContacts: function(){
         if($$('#contactView .contacts-list .list-group .contact-item').length > 0&&cache.get(_cache_contacts)) {

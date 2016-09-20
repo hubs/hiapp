@@ -9,11 +9,13 @@ var appFunc     = require('../utils/appFunc'),
     face        = require("../faces/face"),
     atTemplate  = require("./contacts_checkbox.tpl.html"),
     atService   = require('../contacts/service'),
-    contacts    = require("../contacts_group/contacts_group")
-    ;
+    contacts    = require("../contacts_group/contacts_group"),
+    home        = require("../home/home")
 
+    ;
+var fn_method;
 var pack = {
-    openSendPopup: function(){
+    openSendPopup: function(fn){
 
         var output = appFunc.renderTpl(template, {
             send_placeholder: i18n.index.send_placeholder
@@ -45,6 +47,8 @@ var pack = {
             event:'click',
             handler:pack.openAtPopup
         }];
+
+        fn_method   =   fn;
 
         appFunc.bindEvents(bindings);
     },
@@ -80,7 +84,9 @@ var pack = {
         socket.talk(params,function(data){
             hiApp.hidePreloader();
             hiApp.closeModal('.send-popup');
-            console.log(data);
+            appFunc.hiAlert(data);
+
+            (typeof(fn_method) === 'function') ? fn_method(data) : '';
         });
     },
 

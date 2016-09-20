@@ -368,6 +368,20 @@ module.exports = {
     removeBadge:function(key){
         $$("#footer i."+key+" span").removeClass("badge");
         store.setSyncStorageValue(key,0);
-    }
+    },
+
+    //获取头像和姓名
+    getFilenameByUid:function(uid){
+        return store.getValue("filename_"+uid);
+    },
+    setFilenameByUid:function(uid,filename){
+        store.setValue("filename_"+uid,filename);
+    },
+    getUsernameByUid:function(uid){
+        return store.getValue("username_"+uid);
+    },
+    setUsernameByUid:function(uid,username){
+        store.setValue("username_"+uid,username);
+    },
 
 };

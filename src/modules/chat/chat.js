@@ -1,8 +1,11 @@
 require('./chat.less');
 
-var appFunc = require('../utils/appFunc'),
-    service = require('./service'),
-    template = require('./chat.tpl.html');
+var appFunc     = require('../utils/appFunc'),
+    service     = require('./service'),
+    template    = require('./chat.tpl.html'),
+    content     = require("../app/content")
+
+    ;
 var pack = {
     init: function(){
         console.log("chat module init");
@@ -14,6 +17,7 @@ var pack = {
         service.loadChatHistory(function(tl){
             that.renderDatas(tl);
         });
+        appFunc.removeBadge(content.BADGE_CHAT);
     },
     renderDatas: function(tl){
         $$.each(tl,function(index,val){

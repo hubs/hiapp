@@ -3,6 +3,7 @@ require('./home.less');
 var service         = require('./service'),
     appFunc         = require('../utils/appFunc'),
     template        = require('./home.tpl.html'),
+    template_comment= require('../comment/comment.tpl.html'),
     commentModule   = require('../comment/comment'),
     inputModule     = require('../input/input'),
     socket          = require("../socket/socket"),
@@ -43,9 +44,13 @@ var pack = {
         var newestId = $$('#homeView').find('.home-timeline .card').eq(0).data('id');
 
         service.refreshTimeline(newestId,function(res){
-
             //显示正在加载
-            $$('#homeView .refresh-click').find('i').removeClass('reloading');
+            setTimeout(function(){
+                $$('#homeView .refresh-click').find('i').addClass('reloading');
+            },350);
+
+            //下拉300像素
+            $$('#homeView .pull-to-refresh-content').scrollTop(0,300);
 
             //这里表示没有加载到最新数据
             if(res.status) {
@@ -59,6 +64,7 @@ var pack = {
             appFunc.lazyImg();
 
         });
+        appFunc.removeBadge(content.BADGE_TALK);
     },
     //----------------------------------------------------------------------------(暂不实现开始)
     //点击左上脚刷新
@@ -146,13 +152,44 @@ var pack = {
 
     //渲染数据
     renderTimeline: function(datas, type){
+        var _uid    =   store.getStorageIntVal("uid");
         $$.each(datas,function(index,item){
-            item.filename = content.IMAGE_URL+store.getValue("filename_"+item.add_uid);
-
-            db.dbFindAll(table.T_COMMENTS,{mark_id:item.id},function(){
-                console.log("----item ");
+            var _add_uid        =   item.add_uid;
+            item.filename       =   content.IMAGE_URL+appFunc.getFilenameByUid(_add_uid);
+            /**
+             * 需要判断
+             *  1:是否已点赞
+             *  2:评论数据
+             *  3:获取当前点赞的姓名显示
+             */
+            db.dbFindOne(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,uid:_uid,status:1},function(err,res){
+                if(res!=null){
+                    $$(".home-timeline i.cool-"+item.id).addClass("cool-ok");
+                }
             });
+            //获取评论
+            db.dbFindAll(table.T_COMMENTS,{type:content.COMMENT_TYPE_TALK,add_uid:_uid,mark_id:item.id},function(err,res){
 
+                if(res!=null){
+                    var renderData = {
+                        comments: res
+                    };
+                    var output = appFunc.renderTpl(template_comment, renderData);
+                    $$('.home-timeline .comments-content-'+item.id).html(output);
+                }
+            },{id:1});
+
+            //获取点赞人群
+            db.dbFindAll(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,status:1},function(err,res){
+                if(res!=null){
+                    console.log("点赞人群 : err = "+err+" and res = "+res);
+                    var _output = '<i class="icon icon-heart"></i>';
+                    $$.each(res,function(index,item){
+                        _output += ' <a href="page/contacts_detail.html?uid='+item.uid+'" class="item-link">'+appFunc.getUsernameByUid(item.add_uid)+'</a> ,';
+                    });
+                    $$('.home-timeline .content-block-inner-'+item.id).html(_output.replace(/,+$/,''));
+                }
+            },{id:1});
         });
         var renderData = {
             timeline: datas
@@ -166,27 +203,43 @@ var pack = {
             console.log("render");
             $$('#homeView').find('.home-timeline').html(output);
         }
-
-
     },
 
 
     //点赞
     coolItem:function(){
+        var _that   =   $$(this);
         socket.info_collect({
-            mark_id : $$(this).data('id'),
+            mark_id : _that.data('id'),
             type    : content.COLLECT_TALK_COOL
         },function(info){
-
-            appFunc.hiAlert(info);
+            //appFunc.hiAlert(info);
+            _that.find(".icon-zan").addClass("cool-ok");
         });
     },
     //评论
     commentItem:function(){
-        console.log($$(this).data("id"));
-        commentModule.commentPopup({id:$$(this).data('id'),comment_type:2});
+        var _id = $$(this).data("id");
+        commentModule.commentPopup({id:_id,comment_type:content.COMMENT_TYPE_TALK},function(text,id){
+            var _template = '<li class="comment-item">'+
+                '<div class="comment-detail">'+
+                '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
+                '<div class="time">刚刚</div>'+
+                '<input type="hidden" class="id" value="'+id+'">'+
+                '<input type="hidden" class="type" value="1">'+
+                '</div>'+
+                '</li>';
+            $$('.home-timeline .comments-content-'+_id).append(_template);
+        });
     },
 
+    //发表新评论
+    popCommentItem:function(){
+        inputModule.openSendPopup(function(info){
+            console.log("发表新的评论: "+info);
+            pack.refreshTimelineByClick();
+        });
+    },
 
     bindEvent: function(){
         /**
@@ -224,7 +277,7 @@ var pack = {
             element: '#homeView',
             selector: 'a.open-send-popup',
             event: 'click',
-            handler: inputModule.openSendPopup  //发表新说说
+            handler:this.popCommentItem   //发表新说说
         },{
             element: '#homeView',
             selector:'div.card-footer .cool',
@@ -238,7 +291,7 @@ var pack = {
         },{
             element: '#homeView',
             event: 'show',
-            handler:pack.getTimeline  //评论
+            handler:pack.getTimeline  // 获取最新数据
         }];
 
         appFunc.bindEvents(bindings);

@@ -5,7 +5,8 @@ var appFunc         = require('../utils/appFunc'),
     db              = require("../db/db"),
     table           = require("../db/table"),
     socket          = require("../socket/socket"),
-    content         = require("../app/content")
+    content         = require("../app/content"),
+    store           = require("../utils/localStore")
     ;
 
 var pack  = {
@@ -67,6 +68,20 @@ var pack  = {
         });
 
     },
+    //评论
+    commentItem:function(){
+        commentModule.commentPopup({},function(text,id){
+            var _template = '<li class="comment-item">'+
+                    '<div class="comment-detail">'+
+                    '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
+                    '<div class="time">刚刚</div>'+
+                    '<input type="hidden" class="id" value="'+id+'">'+
+                    '<input type="hidden" class="type" value="1">'+
+                    '</div>'+
+                '</li>';
+            $$('#info-page-list #commentContent').prepend(_template);
+        });
+    },
 
     bindEvents: function(){
 
@@ -83,7 +98,7 @@ var pack  = {
         var bindings = [{
             element: '#infosView .item-comment-btn',
             event: 'click',
-            handler: commentModule.commentPopup
+            handler: this.commentItem
         }];
 
         appFunc.bindEvents(bindings);

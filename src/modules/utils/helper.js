@@ -38,3 +38,11 @@ Template7.registerHelper('format_chat_time', function (create_time,options){
 Template7.registerHelper('face_text', function (text){
    return appFunc.replace_smile(text);
 });
+//获取用户名
+Template7.registerHelper('get_username', function (uid){
+    return appFunc.getUsernameByUid(uid);
+});
+//获取头像
+Template7.registerHelper('get_filename', function (uid){
+    return content.IMAGE_URL+appFunc.getFilenameByUid(uid);
+});

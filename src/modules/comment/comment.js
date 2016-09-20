@@ -10,6 +10,7 @@ var appFunc     = require('../utils/appFunc'),
     ;
 
 var comment_params;
+var fn_method;
 var pack = {
     /**
      * @param id : comment 表的mark_id
@@ -34,7 +35,7 @@ var pack = {
     },
 
     //弹出评论窗
-    commentPopup: function(params){
+    commentPopup: function(params,fn){
         console.log(params);
         var renderData = {
             comment: i18n.timeline.comment
@@ -52,6 +53,8 @@ var pack = {
         renderData.type = params.comment_type||comment_params.type;
         renderData.pid  = params.id||0;
 
+        fn_method = fn;
+
         var output = appFunc.renderTpl(popupTpl, renderData);
         hiApp.popup(output);
 
@@ -67,19 +70,16 @@ var pack = {
 
         appFunc.bindEvents(bindings);
     },
+
     //发送评论
     sendComment: function(){
         var text = $$('#contentText').val();
-
-
         if(appFunc.getCharLength(text) < 4){
             hiApp.alert(i18n.index.err_text_too_short);
             return false;
         }
 
-
         hiApp.showPreloader(i18n.comment.commenting);
-
         var _id         = $$('#id').val();
         var _type       = $$('#type').val();
         var _pid        = $$("#pid").val();
@@ -92,16 +92,7 @@ var pack = {
         },function(_reId){
             hiApp.hidePreloader();
             hiApp.closeModal('.comment-popup');
-            var _template = '<li class="comment-item">'+
-                            '<div class="comment-detail">'+
-                            '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
-                            '<div class="time">刚刚</div>'+
-                            '<input type="hidden" class="id" value="'+_reId+'">'+
-                            '<input type="hidden" class="type" value="1">'+
-                            '</div>'+
-                        '</li>';
-            $$('#commentContent').prepend(_template);
-
+            (typeof(fn_method) === 'function') ? fn_method(text,_reId) : '';
             appFunc.hiAlert("评论成功.");
         });
     },

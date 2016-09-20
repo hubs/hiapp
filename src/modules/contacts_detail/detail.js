@@ -47,7 +47,7 @@ var pack = {
                 }
 
                 if(res.filename!=doc.filename){
-                    store.setValue("filename_"+res.id,res.filename);
+                    appFunc.setFilenameByUid(res.id,res.filename);
                 }
 
                 $$('.contact-detail-page').html(output);

@@ -5,7 +5,7 @@
                 <div class="row item-inner">
                     {{#each filenames}}
                         <div class="col-25">
-                            <img data-src="{{filename}}" class="lazy chat-to-member" data-id="{{uid}}">
+                            <img data-src="{{get_filename uid}}" class="lazy chat-to-member" data-id="{{uid}}">
                             <span class="badge-seat" data-id="{{uid}}"></span>
                             <div class="item-text ng-binding">{{username}}</div>
                         </div>

@@ -120,6 +120,7 @@ var pack = {
                     break;
                 case content.EVENT_TYPE_MEMBER://新会员
                     pack._pri_update_data(table.T_MEMBER,res);
+                    appFunc.setUsernameByUid(res.id,res.username);
                     appFunc.addBadge(content.BADGE_MEMBER,1);
                     break;
 
@@ -315,7 +316,8 @@ var pack = {
         store.setSyncStorageValue("token",res.token);
         store.setSyncStorageValue("update_time",res.update_time);
         store.setSyncStorageValue("filename",content.IMAGE_URL+res.filename);
-        store.setValue("filename_"+res.id,res.filename);
+        appFunc.setFilenameByUid(res.id,res.filename);
+        appFunc.setUsernameByUid(res.id,res.username);
     },
     base_logut:function(){
         //发送给服务器
@@ -328,12 +330,7 @@ var pack = {
         if(!res){
             return;
         }
-
         db.dbUpdate(tableName,{id:parseInt(res.id)},res,function(err,doc){
-
-            console.log("last doc = ");
-            console.log(doc);
-            console.log(res);
             if(doc==0){
                 console.log("insert -> ");
                 db.dbInsert(tableName,res);
@@ -441,11 +438,13 @@ var pack = {
                         //排除自己
                        if(res.id!=store.getStorageIntVal("uid")){
                            pack._pri_update_data(table.T_MEMBER,res);
-                           store.setValue("filename_"+res.id,res.filename);
+                           appFunc.setFilenameByUid(res.id,res.filename);
+                           appFunc.setUsernameByUid(res.id,res.username);
                        }
                     });
                     var _lastMember =   _members.pop();
                     store.setStorageValue("member_id",_lastMember.id);
+                    appFunc.addBadge(content.BADGE_MEMBER,1);
                 }
 
                 //评论
@@ -469,6 +468,7 @@ var pack = {
                     });
                     var _lastTalk =   _talks.pop();
                     store.setStorageValue("talk_id",_lastTalk.id);
+                    appFunc.addBadge(content.BADGE_TALK,1);
                 }
 
 
@@ -481,6 +481,7 @@ var pack = {
                     });
                     var _lastChat =   _chats.pop();
                     store.setStorageValue("chat_id",_lastChat.id);
+                    appFunc.addBadge(content.BADGE_CHAT,1);
                 }
 
 
@@ -493,6 +494,7 @@ var pack = {
                     });
                     var _lastArticle     =   _articles.pop();
                     store.setStorageValue("article_id",_lastArticle.id);
+                    appFunc.addBadge(content.BADGE_INFO,1);
                 }
 
                 //更新自己..
