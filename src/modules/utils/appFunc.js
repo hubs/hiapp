@@ -1,6 +1,7 @@
 require('framework7');
 var store       = require("../utils/localStore");
 var CryptoJS    = require("crypto-js");
+var content     = require("../app/content");
 module.exports = {
 
     isPhonegap: function() {
@@ -374,7 +375,11 @@ module.exports = {
 
     //获取头像和姓名
     getFilenameByUid:function(uid){
-        return store.getValue("filename_"+uid);
+        var _filename = store.getValue("filename_"+uid);
+        return _filename?content.IMAGE_URL+_filename:_filename;
+    },
+    getFilenameByUidForUrl:function(uid){
+        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img src="'+this.getFilenameByUid(uid)+'" alt="" width="35" height="35"></a>';
     },
     setFilenameByUid:function(uid,filename){
         store.setValue("filename_"+uid,filename);
@@ -382,6 +387,10 @@ module.exports = {
     getUsernameByUid:function(uid){
         return store.getValue("username_"+uid);
     },
+    getUsernameByUidForUrl:function(uid){
+        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link">'+this.getUsernameByUid(uid)+'</a>';
+    },
+
     setUsernameByUid:function(uid,username){
         store.setValue("username_"+uid,username);
     },

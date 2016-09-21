@@ -1,7 +1,9 @@
 var socket          = require("./socket/socket"),
     db              = require("./db/db"),
     localforage     = require('localforage'),
-    store           = require("./utils/localStore");
+    store           = require("./utils/localStore"),
+    infoView        = require("./infos/infos")
+    ;
 //初始化页面
 module.exports = {
     init: function () {
@@ -35,6 +37,7 @@ module.exports = {
                 store.setStorageValue("welcome_skip",true);
                 $$("#welcome-page").hide();
                 $$("#footer").show();
+                infoView.init();
             });
         }
     }

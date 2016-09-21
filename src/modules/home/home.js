@@ -163,14 +163,15 @@ var pack = {
              *  3:获取当前点赞的姓名显示
              */
             db.dbFindOne(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,uid:_uid,status:1},function(err,res){
+                console.log("是否点赞" +res);
                 if(res!=null){
                     $$(".home-timeline i.cool-"+item.id).addClass("cool-ok");
                 }
             });
             //获取评论
             db.dbFindAll(table.T_COMMENTS,{type:content.COMMENT_TYPE_TALK,add_uid:_uid,mark_id:item.id},function(err,res){
-
-                if(res!=null){
+                if(res!=null&&res.length>0){
+                    console.log(" 获取评论: "+res);
                     var renderData = {
                         comments: res
                     };
@@ -181,13 +182,14 @@ var pack = {
 
             //获取点赞人群
             db.dbFindAll(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,status:1},function(err,res){
-                if(res!=null){
+                if(res!=null&&res.length>0){
                     console.log("点赞人群 : err = "+err+" and res = "+res);
+                    console.log(res);
                     var _output = '<i class="icon icon-heart"></i>';
                     $$.each(res,function(index,item){
-                        _output += ' <a href="page/contacts_detail.html?uid='+item.uid+'" class="item-link">'+appFunc.getUsernameByUid(item.add_uid)+'</a> ,';
+                        _output += " "+appFunc.getUsernameByUidForUrl(item.uid)+' , ';
                     });
-                    $$('.home-timeline .content-block-inner-'+item.id).html(_output.replace(/,+$/,''));
+                    $$('.home-timeline .content-block-inner-'+item.id).html(_output.replace(/,+\s+$/,''));
                 }
             },{id:1});
         });
@@ -209,11 +211,19 @@ var pack = {
     //点赞
     coolItem:function(){
         var _that   =   $$(this);
+        var _id     =   _that.data('id');
         socket.info_collect({
             mark_id : _that.data('id'),
             type    : content.COLLECT_TALK_COOL
-        },function(info){
-            //appFunc.hiAlert(info);
+        },function(reId){
+            var _cool_icon  = $$('.home-timeline .content-block-inner-'+_id);
+            var _uid        =   store.getStorageValue("uid");
+            if(_cool_icon.find(".icon-heart").length>0){
+                _cool_icon.append(' , '+appFunc.getUsernameByUidForUrl(_uid));
+            }else{
+                  _output = '<i class="icon icon-heart"></i> '+appFunc.getUsernameByUidForUrl(_uid)+' , ';
+                _cool_icon.html(_output.replace(/,+\s+$/,''));
+            }
             _that.find(".icon-zan").addClass("cool-ok");
         });
     },

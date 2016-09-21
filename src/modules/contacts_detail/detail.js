@@ -7,8 +7,7 @@ var appFunc     = require('../utils/appFunc'),
     table       = require("../db/table"),
     Content     = require("../app/content"),
     socket      = require("../socket/socket"),
-    dbHelper    = require("../utils/dbHelper"),
-    store       = require("../utils/localStore")
+    dbHelper    = require("../utils/dbHelper")
 
     ;
 
@@ -18,11 +17,13 @@ var pack = {
         appFunc.hideToolbar();
 
         var _uid    =   parseInt(query.uid);
-
-        console.log("uid = "+_uid);
+        console.log("_uid = "+_uid);
         db.dbFindOne(table.T_MEMBER,{id:_uid},function(err,doc){
             if(err){
                 appFunc.hiAlert(err);
+                return;
+            }
+            if(doc==null){
                 return;
             }
             console.log(doc);
@@ -68,7 +69,9 @@ var pack = {
         doc.lastTalk    = db.dbFindOne(table.T_TALK,{add_uid:doc.id},function(err,res){
             console.log("talk = ");
             console.log(res);
-            return $$(".lastTalk").html(res.content);
+            if(res!=null) {
+                return $$(".lastTalk").html(res.content);
+            }
         });
     },
 
@@ -102,10 +105,12 @@ var pack = {
         ];
         var groups = [buttons1, buttons2];
         hiApp.actions(groups);
+        console.log("call tel");
     },
     bindEvents: function(){
         var bindings = [{
-            element: '.detail-tel',
+            element: '.contact-detail-page',
+            selector: '.detail-tel',
             event: 'click',
             handler: this.showTelAction
 

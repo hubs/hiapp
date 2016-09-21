@@ -2,11 +2,9 @@
 <div data-id="{{id}}" class="card ks-facebook-card">
     <div class="card-header">
         <div class="ks-facebook-avatar" data-avatar-id="{{filename}}">
-            <a href="page/contacts_detail.html?uid={{add_uid}}" class="item-link">
-                <img src="{{filename}}" width="34" height="34" class="filename-{{add_uid}}"/>
-            </a>
+            {{url_filename add_uid}}
         </div>
-        <div class="ks-facebook-name">{{get_username add_username}}</div>
+        <div class="ks-facebook-name">{{url_username add_uid}}</div>
         <div class="ks-facebook-date">{{format_ymd create_time}}</div>
     </div>
     <div class="card-content">

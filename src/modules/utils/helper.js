@@ -1,5 +1,4 @@
 var appFunc = require('../utils/appFunc');
-var content = require("../app/content");
 
 Template7.registerHelper('format_ymd', function (create_time){
     return appFunc.format_ymd(create_time);
@@ -39,9 +38,10 @@ Template7.registerHelper('format_chat_time', function (create_time,options){
 Template7.registerHelper('face_text', function (text){
    return appFunc.replace_smile(text);
 });
+
 //获取用户名
-Template7.registerHelper('a_username', function (uid){
-    return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link">'+appFunc.getUsernameByUid(uid)+'</a>';
+Template7.registerHelper('url_username', function (uid){
+    return appFunc.getUsernameByUidForUrl(uid);
 });
 
 Template7.registerHelper('get_username', function (uid){
@@ -49,8 +49,8 @@ Template7.registerHelper('get_username', function (uid){
 });
 //获取头像
 Template7.registerHelper('get_filename', function (uid){
-    return content.IMAGE_URL+appFunc.getFilenameByUid(uid);
+    return appFunc.getFilenameByUid(uid);
 });
-Template7.registerHelper('a_avatar', function (uid){
-    return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img src="'+content.IMAGE_URL+appFunc.getFilenameByUid(uid)+'" alt=""></a>';
+Template7.registerHelper('url_filename', function (uid){
+    return appFunc.getFilenameByUidForUrl(uid);
 });
