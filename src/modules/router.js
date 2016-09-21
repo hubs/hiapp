@@ -9,8 +9,9 @@ var
     passwordModule          = require('./password/password'),//密码
     contactsDetailModule    = require('./contacts_detail/detail'),//点击查看用户详情
     chatDetailModule        = require("./chat_detail/chat_detail"),//聊天操作界面
-    chatView                = require('./chat/chat'),
     infoModule              = require('./info/info'),
+    chatView                = require('./chat/chat'),
+    infoViews               = require("./infos/infos"),
     contactGroupModule      = require('./contacts_group/contacts_group'),//创建群
     socket                  = require("./socket/socket")
     ;
@@ -40,6 +41,9 @@ module.exports = {
                 }
                 if(name==='chatView'){
                     chatView.init();
+                }
+                if(name==='infosView'){
+                    infoViews.init();
                 }
                 appFunc.showToolbar();
             }

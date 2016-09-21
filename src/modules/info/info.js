@@ -71,9 +71,11 @@ var pack  = {
     //评论
     commentItem:function(){
         commentModule.commentPopup({},function(text,id){
+            var _uid  = store.getStorageIntVal("uid");
             var _template = '<li class="comment-item">'+
+                    '<div class="avatar"><a href="page/contacts_detail.html?uid='+_uid+'" class="item-link"><img src="'+content.IMAGE_URL+appFunc.getFilenameByUid(_uid)+'" alt=""></a></div>'+
                     '<div class="comment-detail">'+
-                    '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
+                    '<div class="text"><a href="page/contacts_detail.html?uid='+_uid+'" class="item-link">'+appFunc.getUsernameByUid(_uid)+'</a>'+':'+appFunc.replace_smile(text)+'</div>'+
                     '<div class="time">刚刚</div>'+
                     '<input type="hidden" class="id" value="'+id+'">'+
                     '<input type="hidden" class="type" value="1">'+

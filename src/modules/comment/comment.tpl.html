@@ -1,10 +1,10 @@
 {{#each comments}}
 <li class="comment-item">
     <div class="avatar">
-        <img src="{{get_filename add_uid}}" alt="">
+        {{a_avatar add_uid}}
     </div>
     <div class="comment-detail">
-        <div class="text">{{get_username add_username}}: {{matchUrl add_content}}</div>
+        <div class="text">{{a_username add_uid}}: {{matchUrl add_content}}</div>
         <div class="time">{{format_how_long create_time}}</div>
 
         <input type="hidden" class="id" value="{{id}}"/>

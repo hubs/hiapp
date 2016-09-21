@@ -40,10 +40,17 @@ Template7.registerHelper('face_text', function (text){
    return appFunc.replace_smile(text);
 });
 //获取用户名
+Template7.registerHelper('a_username', function (uid){
+    return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link">'+appFunc.getUsernameByUid(uid)+'</a>';
+});
+
 Template7.registerHelper('get_username', function (uid){
     return appFunc.getUsernameByUid(uid);
 });
 //获取头像
 Template7.registerHelper('get_filename', function (uid){
     return content.IMAGE_URL+appFunc.getFilenameByUid(uid);
+});
+Template7.registerHelper('a_avatar', function (uid){
+    return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img src="'+content.IMAGE_URL+appFunc.getFilenameByUid(uid)+'" alt=""></a>';
 });

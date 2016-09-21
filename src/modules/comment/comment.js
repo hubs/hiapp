@@ -22,15 +22,11 @@ var pack = {
     //详情列表显示
     getComments: function(params){
         service.getComments(params,function(res){
-            if(res.status){
-                var renderData = {
-                    comments: res.msg
-                };
-                var output = appFunc.renderTpl(template, renderData);
-                $$('#commentContent').html(output);
-            }else {
-                appFunc.hiAlert(res.msg);
-            }
+            var renderData = {
+                comments: res.msg
+            };
+            var output = appFunc.renderTpl(template, renderData);
+            $$('#commentContent').html(output);
         });
     },
 

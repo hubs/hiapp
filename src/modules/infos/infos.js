@@ -6,6 +6,7 @@ var service     = require('./service'),
 
 var pack = {
     init: function(){
+        console.log("info init");
         pack.getDatas();
         pack.bindEvent();
     },

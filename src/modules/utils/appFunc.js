@@ -295,7 +295,7 @@ module.exports = {
     },
 
     hiAlert :function(message){
-        if(message){
+        if(message&&message!=0){
             hiApp.alert(message,function(){
                 hiApp.hideIndicator();
                 hiApp.hidePreloader();

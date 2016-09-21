@@ -33,8 +33,6 @@ var contacts = {
                         }else{
                             val.spell='';
                         }
-
-                        val.filename    = content.IMAGE_URL+val.filename;
                     });
                     var renderData = {
                         contacts: _datas
