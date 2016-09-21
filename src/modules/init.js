@@ -18,6 +18,24 @@ module.exports = {
                 socket.base_get_offline_msg();
             }
         }
+        //增加欢迎界面
+        this._check_show_welcome();
 
     },
+    _check_show_welcome:function(){
+        if(store.getStorageValue("welcome_skip")=='true') {
+            $$("#footer").show();
+        }else{
+            $$("#welcome-page").show();
+            hiApp.swiper('.swiper-container', {
+                pagination:'.swiper-pagination'
+            });
+            $$(".welcomescreen-closebtn").click(function(){
+                console.log("skip!");
+                store.setStorageValue("welcome_skip",true);
+                $$("#welcome-page").hide();
+                $$("#footer").show();
+            });
+        }
+    }
 };

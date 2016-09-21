@@ -1,4 +1,5 @@
 var appFunc = require('../utils/appFunc');
+var content = require("../app/content");
 
 Template7.registerHelper('format_ymd', function (create_time){
     return appFunc.format_ymd(create_time);

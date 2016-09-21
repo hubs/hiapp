@@ -284,7 +284,6 @@ var pack = {
         var _password = params.password;
 
         if(!_username||!_password||_username=='undefined'){
-            pack.setLoginStatus(false);
             appFunc.showLogin();
             return;
         }

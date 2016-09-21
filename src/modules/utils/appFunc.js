@@ -295,10 +295,12 @@ module.exports = {
     },
 
     hiAlert :function(message){
-        hiApp.alert(message,function(){
-            hiApp.hideIndicator();
-            hiApp.hidePreloader();
-        });
+        if(message){
+            hiApp.alert(message,function(){
+                hiApp.hideIndicator();
+                hiApp.hidePreloader();
+            });
+        }
     },
 
     //2016-8-25:判断对象的是否有空值
