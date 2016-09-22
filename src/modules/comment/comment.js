@@ -45,9 +45,9 @@ var pack = {
             renderData.placeholder = i18n.comment.placeholder;
         }
 
-        renderData.id   = params.id||comment_params.id;
-        renderData.type = params.comment_type||comment_params.type;
-        renderData.pid  = params.id||0;
+        renderData.mark_id  = params.mark_id||comment_params.mark_id;
+        renderData.type     = params.comment_type||comment_params.type;
+        renderData.pid      = params.uid||0;
 
         fn_method = fn;
 
@@ -76,11 +76,11 @@ var pack = {
         }
 
         hiApp.showPreloader(i18n.comment.commenting);
-        var _id         = $$('#id').val();
+        var _mark_id    = $$('#mark_id').val();
         var _type       = $$('#type').val();
         var _pid        = $$("#pid").val();
         socket.info_set_comment({
-            mark_id         :   _id,
+            mark_id         :   _mark_id,
             username        :   store.getStorageValue("username"),
             content         :   text,
             type            :   _type,
@@ -88,21 +88,23 @@ var pack = {
         },function(_reId){
             hiApp.hidePreloader();
             hiApp.closeModal('.comment-popup');
-            (typeof(fn_method) === 'function') ? fn_method(text,_reId) : '';
+            console.log("fn_method = > "+fn_method);
+            (typeof(fn_method) === 'function') ? fn_method(text,_reId,_pid) : '';
             appFunc.hiAlert("评论成功.");
         });
     },
     //底部弹出
-    createActionSheet: function(){
-        var replyName = $$(this).find('.comment-detail .name').html();
-        var _id       = $$(this).find('.comment-detail .id').val();
-        var _type     = $$(this).find('.comment-detail .type').val();
+    createActionSheet: function(_this,fn){
+        var replyName = _this.find('.comment-detail .name').html();
+        var _uid      = _this.find('.comment-detail .uid').val();
+        var _type     = _this.find('.comment-detail .type').val();
+        var _mark_id  = _this.find(".comment-detail .mark_id").val();
         var buttons1 = [
             {
                 text: i18n.comment.reply_comment,
                 bold: true,
                 onClick:function(){
-                    pack.commentPopup({id:_id,type:_type,name:replyName});
+                    pack.commentPopup({uid:_uid,type:_type,name:replyName,mark_id:_mark_id},fn);
                 }
             }
 
@@ -113,7 +115,6 @@ var pack = {
                 color: 'red'
             }
         ];
-
         var groups = [buttons1, buttons2];
         hiApp.actions(groups);
     }

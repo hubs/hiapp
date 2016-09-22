@@ -54,3 +54,8 @@ Template7.registerHelper('get_filename', function (uid){
 Template7.registerHelper('url_filename', function (uid){
     return appFunc.getFilenameByUidForUrl(uid);
 });
+
+Template7.registerHelper('at', function (uid){
+    return appFunc.atUser(uid);
+});
+

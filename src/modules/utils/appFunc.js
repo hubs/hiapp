@@ -387,12 +387,17 @@ module.exports = {
     getUsernameByUid:function(uid){
         return store.getValue("username_"+uid);
     },
-    getUsernameByUidForUrl:function(uid){
-        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link">'+this.getUsernameByUid(uid)+'</a>';
+    getUsernameByUidForUrl:function(uid,append){
+        append  =   append||'';
+        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link name">'+append+this.getUsernameByUid(uid)+'</a>';
     },
 
     setUsernameByUid:function(uid,username){
         store.setValue("username_"+uid,username);
     },
+
+    atUser:function(uid){
+        return uid&&uid>0?this.getUsernameByUidForUrl(uid,"@"):'';
+    }
 
 };

@@ -434,12 +434,9 @@ var pack = {
                 if(_member_num>0){
                     var _members       =  _data.EMember_data;
                     $$.each(_members,function(index,res){
-                        //排除自己
-                       if(res.id!=store.getStorageIntVal("uid")){
-                           pack._pri_update_data(table.T_MEMBER,res);
-                           appFunc.setFilenameByUid(res.id,res.filename);
-                           appFunc.setUsernameByUid(res.id,res.username);
-                       }
+                       pack._pri_update_data(table.T_MEMBER,res);
+                       appFunc.setFilenameByUid(res.id,res.filename);
+                       appFunc.setUsernameByUid(res.id,res.username);
                     });
                     var _lastMember =   _members.pop();
                     store.setStorageValue("member_id",_lastMember.id);

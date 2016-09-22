@@ -20,7 +20,7 @@ var pack  = {
         this.getData(_id);
 
         //初始化评论
-        commentModule.init({id:_id,type:content.COMMENT_TYPE_INFO});
+        commentModule.init({mark_id:_id,type:content.COMMENT_TYPE_INFO});
     },
     //每次加载从服务端获取最新数据
     getCommentFromServer:function(_params){
@@ -42,13 +42,12 @@ var pack  = {
                 }
                 if(_appends){
                     $$.each(_appends,function(index,res){
-                        console.log("append!!");
                         socket._pri_update_data(table.T_COMMENTS,res);
                     });
                 }
 
                 //获取评论
-                commentModule.getComments({id:_params.mark_id,type:content.COMMENT_TYPE_INFO});
+                commentModule.getComments({mark_id:_params.mark_id,type:content.COMMENT_TYPE_INFO});
             }
         );
 
@@ -70,37 +69,44 @@ var pack  = {
     },
     //评论
     commentItem:function(){
-        commentModule.commentPopup({},function(text,id){
-            var _uid  = store.getStorageIntVal("uid");
-            var _template = '<li class="comment-item">'+
-                    '<div class="avatar">'+appFunc.getFilenameByUidForUrl(_uid)+'</div>'+
-                    '<div class="comment-detail">'+
-                    '<div class="text">'+appFunc.getUsernameByUidForUrl(_uid)+':'+appFunc.replace_smile(text)+'</div>'+
-                    '<div class="time">刚刚</div>'+
-                    '<input type="hidden" class="id" value="'+id+'">'+
-                    '<input type="hidden" class="type" value="1">'+
-                    '</div>'+
-                '</li>';
-            $$('#info-page-list #commentContent').prepend(_template);
-        });
+        commentModule.commentPopup({},function(text,mark_id){pack._rederComment(text,mark_id,pid)});
+    },
+    //追加!
+    _rederComment:function(text,mark_id,pid){
+        var _uid  = store.getStorageIntVal("uid");
+        var _template = '<li class="comment-item">'+
+            '<div class="avatar">'+appFunc.getFilenameByUidForUrl(_uid)+'</div>'+
+            '<div class="comment-detail">'+
+            '<div class="text">'+appFunc.getUsernameByUidForUrl(_uid)+': '+appFunc.atUser(pid)+appFunc.replace_smile(text)+'</div>'+
+            '<div class="time">刚刚</div>'+
+            '<input type="hidden" class="mark_id" value="'+mark_id+'">'+
+            '<input type="hidden" class="type" value="1">'+
+            '<input type="hidden" class="uid" value="'+_uid+'">'+
+            '</div>'+
+            '</li>';
+        $$('#info-page-list #commentContent').prepend(_template);
+        $$("#info-page-list #commentContent .none-comment").hide();
+    },
+    //jump comment page
+    jumpCommentPage:function(e){
+        if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
+            return false;
+        }
+        commentModule.createActionSheet($$(this),function(text,mark_id){pack._rederComment(text,mark_id,pid)});
     },
 
     bindEvents: function(){
 
-        /**
-         *  {
-                element: '#commentContent',
-                selector: '.comment-item',
-                event: 'click',
-                handler: commentModule.createActionSheet :会员回复,先不弄先，如果加了估计还要加提醒功能
-            },
-
-         */
         //点击弹出回复
         var bindings = [{
             element: '#infosView .item-comment-btn',
             event: 'click',
             handler: this.commentItem
+        },{
+            element: '#commentContent',
+            selector: '.comment-item',
+            event: 'click',
+            handler: this.jumpCommentPage //:会员回复,先不弄先，如果加了估计还要加提醒功能
         }];
 
         appFunc.bindEvents(bindings);
