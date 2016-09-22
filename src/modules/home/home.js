@@ -163,8 +163,9 @@ var pack = {
              *  3:获取当前点赞的姓名显示
              */
             db.dbFindOne(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,uid:_uid,status:1},function(err,res){
-                console.log("是否点赞" +res);
+
                 if(res!=null){
+                    console.log("是否点赞" +res);
                     $$(".home-timeline i.cool-"+item.id).addClass("cool-ok");
                 }
             });
@@ -189,7 +190,9 @@ var pack = {
                     $$.each(res,function(index,item){
                         _output += " "+appFunc.getUsernameByUidForUrl(item.uid)+' , ';
                     });
-                    $$('.home-timeline .content-block-inner-'+item.id).html(_output.replace(/,+\s+$/,''));
+                    var _cool_str   =   $$('.home-timeline .content-block-inner-'+item.id);
+                    _cool_str.html(_output.replace(/,+\s+$/,''));
+                    _cool_str.show();
                 }
             },{id:1});
         });
@@ -223,6 +226,7 @@ var pack = {
             }else{
                   _output = '<i class="icon icon-heart"></i> '+appFunc.getUsernameByUidForUrl(_uid)+' , ';
                 _cool_icon.html(_output.replace(/,+\s+$/,''));
+                _cool_icon.show();
             }
             _that.find(".icon-zan").addClass("cool-ok");
         });
