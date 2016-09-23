@@ -46,7 +46,7 @@ var pack = {
         }
 
         renderData.mark_id  = params.mark_id||comment_params.mark_id;
-        renderData.type     = params.comment_type||comment_params.type;
+        renderData.type     = params.type||comment_params.type;
         renderData.pid      = params.uid||0;
 
         fn_method = fn;

@@ -389,7 +389,7 @@ module.exports = {
     },
     getUsernameByUidForUrl:function(uid,append){
         append  =   append||'';
-        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link name">'+append+this.getUsernameByUid(uid)+'</a>';
+        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link name" data-id="'+uid+'">'+append+this.getUsernameByUid(uid)+'</a>';
     },
 
     setUsernameByUid:function(uid,username){
@@ -398,6 +398,19 @@ module.exports = {
 
     atUser:function(uid){
         return uid&&uid>0?this.getUsernameByUidForUrl(uid,"@"):'';
+    },
+    //判断是否在数组中
+    rm_array:function (arr, val,isDel) {
+        isDel   =   isDel||false;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == val) {
+                if(isDel){
+                    arr.splice(i,1)
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 };

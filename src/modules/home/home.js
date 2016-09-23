@@ -214,39 +214,65 @@ var pack = {
     //点赞
     coolItem:function(){
         var _that   =   $$(this);
+        var _isCool =   _that.find("i.cool-ok").length;//1:表示已取，点击则取消赞,0:表示点赞
         var _id     =   _that.data('id');
         socket.info_collect({
             mark_id : _that.data('id'),
             type    : content.COLLECT_TALK_COOL
         },function(reId){
             var _cool_icon  = $$('.home-timeline .content-block-inner-'+_id);
-            var _uid        =   store.getStorageValue("uid");
-            if(_cool_icon.find(".icon-heart").length>0){
-                _cool_icon.append(' , '+appFunc.getUsernameByUidForUrl(_uid));
-            }else{
-                  _output = '<i class="icon icon-heart"></i> '+appFunc.getUsernameByUidForUrl(_uid)+' , ';
+            var _uid        = store.getStorageValue("uid");
+            var _cool_arr   = [];
+            var _len        = _cool_icon.find(".icon-heart").length;
+            if(_len>0){
+                _cool_icon.find("a.item-link").each(function(){
+                    _cool_arr.push($$(this).data("id"));
+                });
+            }
+            if(_isCool==1){//取消点赞
+                appFunc.rm_array(_cool_arr,_uid,true);//删除自己
+            }else{//这里是点赞操作
+                _cool_arr.push(_uid);//写入自己
+            }
+
+            if(_cool_arr.length>0){
+                var _output = '<i class="icon icon-heart"></i> ';
+                for (var i = 0; i < _cool_arr.length; i++) {
+                    _output +=appFunc.getUsernameByUidForUrl(_cool_arr[i])+' , ';
+                }
                 _cool_icon.html(_output.replace(/,+\s+$/,''));
                 _cool_icon.show();
+                _that.find(".icon-zan").addClass("cool-ok");
+            }else{
+                _cool_icon.html("");
+                _cool_icon.hide();
+                _that.find(".icon-zan").removeClass("cool-ok");
             }
-            _that.find(".icon-zan").addClass("cool-ok");
+
+
         });
     },
     //评论
     commentItem:function(){
-        var _id = $$(this).data("id");
-        commentModule.commentPopup({id:_id,comment_type:content.COMMENT_TYPE_TALK},function(text,id){
-            var _template = '<li class="comment-item">'+
-                '<div class="comment-detail">'+
-                '<div class="text">'+store.getStorageValue("username")+':'+appFunc.replace_smile(text)+'</div>'+
-                '<div class="time">刚刚</div>'+
-                '<input type="hidden" class="id" value="'+id+'">'+
-                '<input type="hidden" class="type" value="1">'+
-                '</div>'+
-                '</li>';
-            $$('.home-timeline .comments-content-'+_id).append(_template);
-        });
+        var _mark_id = $$(this).data("id");
+        commentModule.commentPopup({mark_id:_mark_id,type:content.COMMENT_TYPE_TALK},function(text,mark_id,pid){pack._rederComment(text,mark_id,pid,_mark_id)});
     },
 
+    //追加!
+    _rederComment:function(text,mark_id,pid,_target_id){
+        var _uid  = store.getStorageIntVal("uid");
+        var _template = '<li class="comment-item">'+
+            '<div class="avatar">'+appFunc.getFilenameByUidForUrl(_uid)+'</div>'+
+            '<div class="comment-detail">'+
+            '<div class="text">'+appFunc.getUsernameByUidForUrl(_uid)+': '+appFunc.atUser(pid)+appFunc.replace_smile(text)+'</div>'+
+            '<div class="time">刚刚</div>'+
+            '<input type="hidden" class="mark_id" value="'+_target_id+'">'+
+            '<input type="hidden" class="type" value="2">'+
+            '<input type="hidden" class="uid" value="'+_uid+'">'+
+            '</div>'+
+            '</li>';
+        $$('.home-timeline .comments-content-'+_target_id).append(_template);
+    },
     //发表新评论
     popCommentItem:function(){
         inputModule.openSendPopup(function(info){
@@ -254,7 +280,13 @@ var pack = {
             pack.refreshTimelineByClick();
         });
     },
-
+    jumpCommentPage:function(e){
+        if(e.target.nodeName === 'A' || e.target.nodeName === 'IMG'){
+            return false;
+        }
+        var _target_id  =   $$(this).find(".comment-detail .mark_id").val();
+        commentModule.createActionSheet($$(this),function(text,mark_id,pid){pack._rederComment(text,mark_id,pid,_target_id)});
+    },
     bindEvent: function(){
         /**
          *
@@ -306,6 +338,11 @@ var pack = {
             element: '#homeView',
             event: 'show',
             handler:pack.getTimeline  // 获取最新数据
+        },{
+            element: '.home-timeline',
+            selector: '.comment-item',
+            event: 'click',
+            handler: this.jumpCommentPage //:会员回复,先不弄先，如果加了估计还要加提醒功能
         }];
 
         appFunc.bindEvents(bindings);
