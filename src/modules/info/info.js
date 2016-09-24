@@ -5,13 +5,13 @@ var appFunc         = require('../utils/appFunc'),
     db              = require("../db/db"),
     table           = require("../db/table"),
     socket          = require("../socket/socket"),
-    content         = require("../app/content"),
+    content         = require("../utils/content"),
     store           = require("../utils/localStore")
     ;
 
 var pack  = {
     init: function(query){
-        var _id = parseInt(query.id);
+        var _id = appFunc.parseInt(query.id);
         appFunc.hideToolbar();
 
         this.bindEvents();
@@ -32,7 +32,7 @@ var pack  = {
         socket.info_get_info(
             _params,
             function(row){
-                var _res        =  JSON.parse(row);
+                var _res        =  appFunc.parseJson(row);
                 var _obj        =  _res.data.obj;
                 var _appends    =  _res.data.appends;
 

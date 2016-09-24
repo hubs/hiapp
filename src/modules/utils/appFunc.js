@@ -1,7 +1,8 @@
 require('framework7');
 var store       = require("../utils/localStore");
 var CryptoJS    = require("crypto-js");
-var content     = require("../app/content");
+var content     = require("../utils/content");
+var appFunc     = require("../utils/appFunc");
 module.exports = {
 
     isPhonegap: function() {
@@ -411,6 +412,17 @@ module.exports = {
             }
         }
         return false;
+    },
+
+    parseJson:function (str) {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+        }
+        return str;
+    },
+    parseInt:function(str){
+        return parseInt(str||0);
     }
 
 };

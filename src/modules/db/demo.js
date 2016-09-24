@@ -1,5 +1,5 @@
 var db  =   require("./db");
-const TABLE_DEMO    =   "comments";
+const TABLE_DEMO    =   "talk";
 db.init();
 
 

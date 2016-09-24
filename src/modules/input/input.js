@@ -68,6 +68,7 @@ var pack = {
             content           :  text
         };
 
+
         var _imgs  =  [];
         if($$("#uploadPicPreview >img").length>0){
             $$("#uploadPicPreview >img").each(function(index,item){
@@ -84,8 +85,6 @@ var pack = {
         socket.talk(params,function(data){
             hiApp.hidePreloader();
             hiApp.closeModal('.send-popup');
-            appFunc.hiAlert(data);
-
             (typeof(fn_method) === 'function') ? fn_method(data) : '';
         });
     },

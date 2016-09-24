@@ -15,6 +15,17 @@ var TABLE = {
     T_VOTE              :   'vote',                 //投票表
     T_VOTE_DETAILS      :   'vote_details',         //投票详细表
     T_VOTE_MEMBER       :   'vote_member',          //投票人员统计表
-    T_DEMO              :   'demo'                  //CURD测试表
+    T_DEMO              :   'demo',                  //CURD测试表
+    T_CHAT_PANEL        :   'chat_panel'           //2016-9-24 add ,会员面板表
 };
 module.exports = TABLE;
+
+/**
+ chat_panel:表结构  1:add_uid:
+   2:mark_id  :群或个人ID
+   3:type  类型:1:个人,2:群聊
+   4:num   聊天数
+   5,date  时间
+   6,isTop 显否置顶.
+    7,status :0 隐藏 .1.显示
+ */

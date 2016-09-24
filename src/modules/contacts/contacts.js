@@ -4,7 +4,7 @@ var appFunc     = require('../utils/appFunc'),
     service     = require('./service'),
     template    = require('./contacts.tpl.html'),
     store       = require("../utils/localStore"),
-    content     = require("../app/content"),
+    content     = require("../utils/content"),
     cache       = require('memory-cache')
     ;
 var _cache_contacts =   'cache_loadContacts';

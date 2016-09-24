@@ -5,7 +5,7 @@ var appFunc     = require('../utils/appFunc'),
     template    = require('./detail.tpl.html'),
     db          = require("../db/db"),
     table       = require("../db/table"),
-    Content     = require("../app/content"),
+    Content     = require("../utils/content"),
     socket      = require("../socket/socket"),
     dbHelper    = require("../utils/dbHelper")
 
@@ -16,7 +16,7 @@ var pack = {
 
         appFunc.hideToolbar();
 
-        var _uid    =   parseInt(query.uid);
+        var _uid    =   appFunc.parseInt(query.uid);
         console.log("_uid = "+_uid);
         db.dbFindOne(table.T_MEMBER,{id:_uid},function(err,doc){
             if(err){
@@ -38,7 +38,7 @@ var pack = {
                 member_id   : _uid,
                 update_time : doc.update_time,//每次都获取最新的算了
             },function(res){
-                res     =   JSON.parse(res);
+                res     =   appFunc.parseJson(res);
                 socket._pri_update_data(table.T_MEMBER,res);
                 pack._get_member_info(res);
                 var output = appFunc.renderTpl(template, {obj:res});

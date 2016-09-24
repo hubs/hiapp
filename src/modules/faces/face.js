@@ -37,7 +37,8 @@ var pack = {
     },
 
     renderFace:function(){
-        if($$(".swiper-container").hasClass("swiper-container-horizontal")){
+        console.log("renderFace");
+        if($$(".small-swiper").hasClass("swiper-container-horizontal")){
             var _bar_actions  =     $$(".bar-actions");
             if(_bar_actions.hasClass("hide")){
                 _bar_actions.removeClass("hide").addClass("show");

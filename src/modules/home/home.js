@@ -1,5 +1,4 @@
 require('./home.less');
-
 var service         = require('./service'),
     appFunc         = require('../utils/appFunc'),
     template        = require('./home.tpl.html'),
@@ -7,7 +6,7 @@ var service         = require('./service'),
     commentModule   = require('../comment/comment'),
     inputModule     = require('../input/input'),
     socket          = require("../socket/socket"),
-    content         = require("../app/content"),
+    content         = require("../utils/content"),
     store           = require("../utils/localStore"),
     table           = require("../db/table"),
     db              = require("../db/db")
@@ -19,6 +18,7 @@ var pack = {
         this.bindEvent();
     },
     getTimeline: function(){
+        hiApp.showIndicator();
         console.log("loadTimeLine");
         //获取列表
         service.getTimeline({},function(res){
@@ -38,12 +38,14 @@ var pack = {
         appFunc.removeBadge(content.BADGE_TALK);
     },
 
-    //下拉刷新(暂不实现)
+    //下拉刷新
     refreshTimeline: function(){
         //获取最新的ID
         var newestId = $$('#homeView').find('.home-timeline .card').eq(0).data('id');
 
         service.refreshTimeline(newestId,function(res){
+            console.log("lastNewsId = "+newestId);
+            console.log(res);
             //显示正在加载
             setTimeout(function(){
                 $$('#homeView .refresh-click').find('i').addClass('reloading');
@@ -98,8 +100,9 @@ var pack = {
         //获取最后一条数据的ID
         var items = $this.find('.home-timeline .card');
         var length = items.length;
-        var _lastId = parseInt(items.eq(length - 1).data('id'));
+        var _lastId = appFunc.parseInt(items.eq(length - 1).data('id'));
         service.getTimeline({id:{$lt:_lastId}},function(res){
+
             //如果是正在滚动，则直接返回
             var status = $this.data('scrollLoading');
             if (status === 'loading') return;
@@ -182,7 +185,7 @@ var pack = {
             },{id:1});
 
             //获取点赞人群
-            db.dbFindAll(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:item.id,status:1},function(err,res){
+            db.dbFindAll(table.T_MEMBER_COLLECT,{type:content.COLLECT_TALK_COOL,mark_id:appFunc.parseInt(item.id),status:appFunc.parseInt(1)},function(err,res){
                 if(res!=null&&res.length>0){
                     console.log("点赞人群 : err = "+err+" and res = "+res);
                     console.log(res);
@@ -275,9 +278,11 @@ var pack = {
     },
     //发表新评论
     popCommentItem:function(){
-        inputModule.openSendPopup(function(info){
-            console.log("发表新的评论: "+info);
-            pack.refreshTimelineByClick();
+        inputModule.openSendPopup(function(res){
+            socket._pri_update_data(table.T_TALK,res,function(){
+                console.log("refresh!!");
+                pack.refreshTimelineByClick();
+            });
         });
     },
     jumpCommentPage:function(e){

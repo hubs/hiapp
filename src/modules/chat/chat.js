@@ -3,7 +3,7 @@ require('./chat.less');
 var appFunc     = require('../utils/appFunc'),
     service     = require('./service'),
     template    = require('./chat.tpl.html'),
-    content     = require("../app/content")
+    content     = require("../utils/content")
 
     ;
 var pack = {

@@ -49,6 +49,7 @@ var app = {
         }
 
     },
+    //https://framework7.io/docs/init-app.html
     initFramework7: function(){
 
         //Register custom Template7 helpers
@@ -130,7 +131,7 @@ var app = {
                     contact_group   :   i18n.message.contact_group
                 },
                 'page:register':{
-                    name    : '注册',
+                    name    : '注册'
                 }
             }
         });

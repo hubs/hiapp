@@ -24,6 +24,9 @@ var nedbDb={
         db.vote_member          = new Datastore({filename : _baseDir+'vote_member',autoload:true});//投票人员统计表
         db.demo                 = new Datastore({filename : _baseDir+'demo',autoload:true});//CURD测试表
     },
+    reloadDb:function(table){
+        this._getDbTable(table).loadDatabase();
+    },
     _getDbTable:function(table){
         return eval("db."+table);
     },

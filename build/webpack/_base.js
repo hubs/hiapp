@@ -84,9 +84,9 @@ module.exports = {
 
   //http://webpack.github.io/docs/configuration.html#node
   node: {
-    fs: "empty",
+/*    fs: "empty",
     net: "empty",
     tls: "empty",
-    child_process: 'empty'
+    child_process: 'empty'*/
   }
 };

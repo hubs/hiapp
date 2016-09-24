@@ -3,7 +3,7 @@
  */
 var appFunc     = require("../utils/appFunc");
 var store       = require("../utils/localStore");
-var content     = require("../app/content");
+var content     = require("../utils/content");
 var db          = require("../db/db");
 var table       = require("../db/table");
 var socket_io   = require("socket.io-client");
@@ -146,6 +146,7 @@ var pack = {
         //登录后从服务器接收数据
         this.socket.on(content.EVENT_BASE_LOGIN,function(res){
             pack.print(res,"登录成功");
+            res     =   appFunc.parseJson(res);
             pack._updateMemberStore(res);
             pack.setLoginStatus(true);
 
@@ -306,6 +307,7 @@ var pack = {
             }
             (typeof(fn) === 'function') ? fn(info) : '';
         });
+
     },
     _updateMemberStore:function(res){
         store.setSyncStorageValue("username",res.username);
@@ -325,18 +327,22 @@ var pack = {
         pack.setLoginStatus(false);
     },
 
-    _pri_update_data:function(tableName,res){
+    _pri_update_data:function(tableName,res,fn){
         if(!res){
             return;
         }
-        db.dbUpdate(tableName,{id:parseInt(res.id)},res,function(err,doc){
+        res =   appFunc.parseJson(res);
+        db.dbUpdate(tableName,{id:appFunc.parseInt(res.id)},res,function(err,doc){
             if(doc==0){
-                console.log("insert -> ");
+                console.log("insert!!!!");
+                console.log(res);
                 db.dbInsert(tableName,res);
             }else{
                 console.log("updat!");
                 db.dbUpdate(tableName,{id:res.id},res);
             }
+
+            (typeof(fn) === 'function') ? fn(res) : '';
         });
     },
     /**
@@ -357,18 +363,21 @@ var pack = {
             fromUid             :   store.getStorageValue("uid")
         };
 
+        console.log("base_get_offline_msg");
+        //hiApp.showPreloader();
         //发送给服务器
         this.socket.emit(content.EVENT_BASE_OFFLINE_MSG,params,function(status,res){
+            console.log(res);
             if(status==content.SEND_REPLY){
                 pack.base_login();
             }else if(status==content.SEND_SUCCESS){
 
-                var _json = JSON.parse(res);
+                var _json = appFunc.parseJson(res);
                 var _data = _json.data;
 
                 //多表数据开始
                 //群组
-                var _chat_group_num = parseInt(_data.xx_chat_group_num);//群组数量
+                var _chat_group_num = appFunc.parseInt(_data.xx_chat_group_num||0);//群组数量
                 if(_chat_group_num>0){//如果有值,则获取它的数据
                     var _chat_group_data = _data.xx_chat_group_data;
                     var _chat_member_num = _data.xx_chat_group_member_num;//会员数量
@@ -388,7 +397,7 @@ var pack = {
                 }
 
                 //投票
-                var _vote_num = parseInt(_data.xx_vote_num);//投票数量
+                var _vote_num = appFunc.parseInt(_data.xx_vote_num||0);//投票数量
                 if(_vote_num>0){//如果有值,则获取它的数据
                     var _vote_data        = _data.xx_vote_data;//投票数据
                     var _vote_member_num  = _data.xx_vote_member_num;//投票人数量
@@ -408,7 +417,7 @@ var pack = {
                 }
 
                 //活动
-                var _activity_num = parseInt(_data.xx_activity_num);//活动数量
+                var _activity_num = appFunc.parseInt(_data.xx_activity_num||0);//活动数量
                 if(_activity_num>0){//如果有值,则获取它的数据
                     var _activity_data        = _data.xx_activity_data;//数据
                     var _activity_details_num = _data.xx_activity_details_num;//数量
@@ -430,7 +439,7 @@ var pack = {
 
                 //单表开始
                 //会员数据
-                var _member_num    =  parseInt(_data.EMember_num);
+                var _member_num    =  appFunc.parseInt(_data.EMember_num||0);
                 if(_member_num>0){
                     var _members       =  _data.EMember_data;
                     $$.each(_members,function(index,res){
@@ -444,7 +453,7 @@ var pack = {
                 }
 
                 //评论
-                var _comments_num   = parseInt(_data.EComments_num);
+                var _comments_num   = appFunc.parseInt(_data.EComments_num||0);
                 if(_comments_num>0){
                     var _comments       =  _data.EComments_data;
                     $$.each(_comments,function(index,res){
@@ -456,7 +465,7 @@ var pack = {
 
 
                 //说说
-                var _talks_num      = parseInt(_data.ETalk_num);
+                var _talks_num      = appFunc.parseInt(_data.ETalk_num);
                 if(_talks_num>0){
                     var _talks          =  _data.ETalk_data;
                     $$.each(_talks,function(index,res){
@@ -469,7 +478,7 @@ var pack = {
 
 
                 //聊天
-                var _chat_num       =  parseInt(_data.EChat_num);
+                var _chat_num       =  appFunc.parseInt(_data.EChat_num);
                 if(_chat_num>0){
                     var _chats          =  _data.EChat_data;
                     $$.each(_chats,function(index,res){
@@ -482,7 +491,7 @@ var pack = {
 
 
                 //文章
-                var _article_num         =  parseInt(_data.EArticle_num);
+                var _article_num         =  appFunc.parseInt(_data.EArticle_num);
                 if(_article_num>0){
                     var _articles        =  _data.EArticle_data;
                     $$.each(_articles,function(index,res){
@@ -501,6 +510,7 @@ var pack = {
                     pack._updateMemberStore(_member_self);
                 }
                 pack.print(res,"获取离线信息成功");
+
             }
         });
     },

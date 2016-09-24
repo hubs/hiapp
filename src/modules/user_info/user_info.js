@@ -5,7 +5,7 @@ var appFunc     = require('../utils/appFunc'),
     db          = require("../db/db"),
     table       = require("../db/table"),
     store       = require("../utils/localStore"),
-    Content     = require("../app/content"),
+    Content     = require("../utils/content"),
     dbHelper    = require("../utils/dbHelper")
     ;
 

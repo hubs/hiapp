@@ -58,7 +58,7 @@ module.exports = {
             method: options.method,
             data: options.data,
             success:function(data){
-                data = data ? JSON.parse(data) : '';
+                data = data ? appFunc.parseJson(data) : '';
 
                 var codes = [
                     {code:10000, message:'Your session is invalid, please login again',path:'/'},
@@ -125,7 +125,7 @@ module.exports = {
 
             },
             success:function(data){
-                data = data ? JSON.parse(data) : '';
+                data = data ? appFunc.parseJson(data) : '';
                 if(data.status==0){
                     (typeof(failCallback) === 'function') ? failCallback(data) : '';
                 }else{

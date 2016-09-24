@@ -1,7 +1,7 @@
 var service     = require('./service'),
     appFunc     = require('../utils/appFunc'),
     template    = require('./infos.tpl.html'),
-    content     = require("../app/content")
+    content     = require("../utils/content")
     ;
 
 var pack = {
@@ -58,7 +58,7 @@ var pack = {
         //获取最后一条数据的ID
         var items    = $this.find('.home-infos .card');
         var length   = items.length;
-        var _last_id = parseInt(items.eq(length - 1).data('id'));
+        var _last_id = appFunc.parseInt(items.eq(length - 1).data('id'));
 
         service.getDatas({id:{$lt:_last_id}},function(res){
             //如果是正在滚动，则直接返回
