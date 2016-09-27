@@ -749,7 +749,7 @@ var pack = {
 
     /**
      * 会话聊天 ：
-     * @param params = {
+     *  params = {
      *   to_mark_id      : '',//接收者/群
      *   type            : '',//类型 1:个人,2:群
      *   msg             ： '',//消息(传上来的数据)
@@ -760,13 +760,13 @@ var pack = {
      *   fromUid         : '',
      * }
      */
-    chat:function(params){
-        pack._get_comm(params,content.EVENT_CHAT);
+    chat:function(params,fn){
+        pack._get_comm(params,content.EVENT_CHAT,fn);
     },
 
     /**
      * 加载会员最新信息 ：
-     * @param params = {
+     *  params = {
      *   member_id       : '',//需要查看会员的最新信息
      *   update_time     : '',//本地会员最后更新的时间
      *   token           : ''

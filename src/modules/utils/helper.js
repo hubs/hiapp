@@ -7,7 +7,7 @@ Template7.registerHelper('format_how_long', function (create_time){
     return appFunc.format_how_long(create_time);
 });
 Template7.registerHelper('matchUrl', function (content){
-    return (appFunc.matchUrl(appFunc.replace_smile(content)));
+    return content?(appFunc.matchUrl(appFunc.replace_smile(content))):"";
 });
 
 Template7.registerHelper('img_tag', function (imgs){
@@ -33,7 +33,7 @@ Template7.registerHelper('img_tag', function (imgs){
 });
 
 Template7.registerHelper('format_chat_time', function (create_time,options){
-    return appFunc.format_chat_time(create_time,options.hash.show_time);
+    return create_time?appFunc.format_chat_time(create_time,options.hash.show_time):"";
 });
 Template7.registerHelper('face_text', function (text){
    return appFunc.replace_smile(text);

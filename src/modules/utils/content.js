@@ -85,7 +85,12 @@ var CONTENT = {
     BADGE_TALK       : 'badge_talk',
     BADGE_INFO       : 'badge_info',
     BADGE_CHAT       : 'badge_chat',
-    BADGE_MEMBER     : 'badge_member'
+    BADGE_MEMBER     : 'badge_member',
+
+    //评论类型
+    CHAT_TYPE_TEXT   : 1,//文本
+    CHAT_TYPE_IMG    : 2,//图片
+    CHAT_TYPE_VIDEO  : 3,//语音
 
 
 };

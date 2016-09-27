@@ -180,7 +180,7 @@ module.exports = {
     },
     //聊天时间
     format_chat_time : function(create_time,show_time){
-        var show_time   =   show_time==undefined?true:show_time;
+        show_time       =   show_time===undefined?true:show_time;
         var date        =   new Date(create_time*1000);
 
 
@@ -249,6 +249,9 @@ module.exports = {
         return str;
     },
 
+    text:function(str){
+      return str?this.matchUrl(this.replace_smile(str)):'';
+    },
     now_time    : function(){
         return new Date().getTime();
     },
@@ -399,6 +402,10 @@ module.exports = {
 
     atUser:function(uid){
         return uid&&uid>0?this.getUsernameByUidForUrl(uid,"@"):'';
+    },
+
+    getUserId:function(){
+        return store.getStorageIntVal("uid");
     },
     //判断是否在数组中
     rm_array:function (arr, val,isDel) {

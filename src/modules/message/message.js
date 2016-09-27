@@ -1,42 +1,38 @@
 require('./message.less');
 
-var appFunc = require('../utils/appFunc'),
-    service = require('./service'),
-    template = require('./message.tpl.html'),
-    faceTemplate    =   require("./face.tpl.html"),
-    homeJs = require('../home/home'),
-    camera = require('../components/camera'),
-    geo = require('../components/geolocation');
+var appFunc         = require('../utils/appFunc'),
+    service         = require('./service'),
+    template        = require('./message.tpl.html'),
+    faceTemplate    = require("./face.tpl.html"),
+    homeJs          = require('../home/home'),
+    camera          = require('../components/camera'),
+    geo             = require('../components/geolocation'),
+    socket          = require("../socket/socket"),
+    content         = require("../utils/content"),
+    table           = require("../db/table"),
+    db              = require("../db/db"),
+    store           = require("../utils/localStore")
     ;
 
-var conversationStarted = false,
-    answers = {},
-    answerTimeout,
-    _that   = null,
+var _that   = null,
     messageLayout;
 
-var uid   = 3;
-var _chat_type  =   2;//类型:1:个人，２：群
-module.exports = {
+var _to_uid     = 0;
+var _chat_type  = 0;//类型:1:个人，２：群
+var pack = {
     init: function(query){
-         _that = this;
-
+        _to_uid     =   appFunc.parseInt(query.uid); //跟谁聊天
+        _chat_type  =   appFunc.parseInt(query.type);//聊天类型
+        _that       =   this;
         appFunc.hideToolbar();
 
-        //这里初始化了回复内容
-        service.getAnswers(function(a){
-            answers = a;
-        });
-
         var user = {
-            id          : uid,
-            username    : '王歆',
+            id          :  _to_uid,
+            username    : appFunc.getUsernameByUid(_to_uid),
             type        : _chat_type,
             chat_type   : _chat_type==1?"icon-person":"icon-people"
         };
-
-        var name = user.username;
-        $$('.chat-name').html(name);
+        $$('.chat-name').html(user.username);
         $$('.chat-person').data("type",user.type);
         $$('.chat-person').data("id",user.id);
         $$('.chat-person i').addClass(user.chat_type);
@@ -50,10 +46,9 @@ module.exports = {
             autoLayout:true
         });
 
-        this.bindEvents();
 
         _that.renderFaces();
-
+        this.bindEvents();
     },
     renderFaces:function(){
         service.getFaces(function(res){
@@ -73,7 +68,7 @@ module.exports = {
                 faces: temparray
             };
             var output = appFunc.renderTpl(faceTemplate, renderData);
-            $$('.swiper-container').html(output);
+            $$('.face-swiper-container').html(output);
 
             //笑脸切换
             hiApp.swiper('.swiper', {
@@ -81,40 +76,48 @@ module.exports = {
                 spaceBetween: 5
             });
         });
-
-
-
     },
-
     //初始化聊天记录
     renderMessages: function(message){
         hiApp.showIndicator();
-
-        service.getMessages(function(m){
-            setTimeout(function(){
-
-                $$.each(m,function(index,val){
-                    if(val.from_uid==uid){
-                        val.from    = "sent";
+        service.getMessages({
+            type        :   _chat_type,
+            from_uid    :   appFunc.getUserId(),
+            to_mark_id  :   _to_uid
+        },function(res){
+            var _datas  =   res.msg;
+            if(res.status){
+                var _time   =   '';//去除重复的时间
+                $$.each(_datas,function(index,row){
+                    if(row.from_uid==appFunc.getUserId()){
+                        row.from    = "sent";
                     }else{
-                        val.from    = "received";
+                        row.from    = "received";
                     }
-                    val.image   =  val.msg_type==2;//１：文本，２：图片，３：语音
+                    row.is_image    =  row.msg_type==2;//１：文本，２：图片，３：语音
+
+                    //去除相同时间显示
+                    var _temp_time  = appFunc.format_chat_time(row.create_time,false);
+                    if(_time==_temp_time){
+                        row.create_time = '';
+                        row.show_time = false;
+                    }else{
+                        _time = _temp_time;
+                        row.show_time = true;
+                    }
+
                 });
+            }
 
-                console.table(m);
+            console.table(_datas);
 
-                var renderData = {
-                    message: m
-                };
-                var output = appFunc.renderTpl(template, renderData);
-                $$('.page[data-page="message"] .messages').html(output);
-
-                hiApp.hideIndicator();
-
-              //  appFunc.lazyImg();
-
-            },600);
+            var renderData = {
+                message: _datas
+            };
+            var output = appFunc.renderTpl(template, renderData);
+            $$('.page[data-page="message"] .messages').html(output);
+            hiApp.hideIndicator();
+            appFunc.lazyImg();
         });
     },
 
@@ -129,26 +132,46 @@ module.exports = {
         // Empty input
         input.val('');
 
-        /**
-         *   text	string		消息文本，也可以使用HTML字符串，如果你想要添加图片消息，则应该传递<img src="...">。必选
-         *   name	string		发送者名称。可选
-         *   avatar	string		发送者头像url。可选
-         *   type	string	'sent'	消息类型，'sent'或'received'。可选
-         *   label	string		Message label. Optional
-         *   day	string		日期，例如 - 'Today', 'Monday', 'Yesterday', 'Fri', '22.05.2014'。可选
-         *   time	string		Time string, for example - '22:45', '10:30 AM'. Optional
+        /**params = {
+             *   to_mark_id      : '',//接收者/群
+             *   type            : '',//类型 1:个人,2:群
+             *   msg             ： '',//消息(传上来的数据)
+             *   text_msg         : '',//文字版消息
+             *   msg_type        : '',// 1:文本，2：图片，3：语音
+             *   msg_ext         : '',//文件后辍,只有图片和语音才会有
+             *   token           : ''
+             *   fromUid         : '',
+             * }
          */
-        // Add Message
-        messageLayout.addMessage({
-            text        : appFunc.replace_smile(messageText),
-            avatar      : 'http://lorempixel.com/output/people-q-c-100-100-9.jpg',
-            type        : "sent",
-            time        : appFunc.now_time_hm(),
+        socket.chat({
+            to_mark_id  :   _to_uid,
+            type        :   _chat_type,
+            text_msg    :   messageText,
+            msg_type    :   content.CHAT_TYPE_TEXT
+        },function(res){
+            socket._pri_update_data(table.T_CHAT,res);
+            store.setStorageValue("","");
+            /**
+             *   text	string		消息文本，也可以使用HTML字符串，如果你想要添加图片消息，则应该传递<img src="...">。必选
+             *   name	string		发送者名称。可选
+             *   avatar	string		发送者头像url。可选
+             *   type	string	'sent'	消息类型，'sent'或'received'。可选
+             *   label	string		Message label. Optional
+             *   day	string		日期，例如 - 'Today', 'Monday', 'Yesterday', 'Fri', '22.05.2014'。可选
+             *   time	string		Time string, for example - '22:45', '10:30 AM'. Optional
+             */
+            messageLayout.addMessage({
+                text        : appFunc.text(messageText),
+                avatar      : appFunc.getFilenameByUid(appFunc.getUserId()),
+                type        : "sent",
+                time        : appFunc.now_time_hm()
+            });
+
+            console.log('add_mesg');
         });
-        conversationStarted = true;
 
         // Add answer after timeout
-        if (answerTimeout) clearTimeout(answerTimeout);
+/*      if (answerTimeout) clearTimeout(answerTimeout);
         answerTimeout = setTimeout(function () {
             messageLayout.addMessage({
                 time        : appFunc.now_time_hm(),
@@ -157,6 +180,7 @@ module.exports = {
                 avatar      : 'http://lorempixel.com/output/people-q-c-100-100-9.jpg',
             });
         }, 1000);
+        */
 
         //隐藏提交按钮
         _that._submitHide();
@@ -172,7 +196,7 @@ module.exports = {
         $$(".form-general").hide();
         _that.hideSmile();
         _that.hideBarMain();
-
+        $$(".form-speak .link-more").css("display","flex");
     },
     //显示正常Form
     showKeyboard: function(){
@@ -180,6 +204,7 @@ module.exports = {
         $$(".form-general").show();
         _that.hideSmile();
         _that.hideBarMain();
+        $$(".form-speak .link-more").hide();
     },
 
     //显示笑脸
@@ -236,12 +261,12 @@ module.exports = {
     },
     //隐藏提交按钮
     _submitHide:function(){
-        $$(".link-more").removeAttr("style");
+        $$(".form-general .link-more").removeAttr("style");
         $$("#ks-send-message").hide();
     },
     //显示提交按钮
     _submitShow:function(){
-        $$(".link-more").hide();
+        $$(".form-general .link-more").hide();
         $$("#ks-send-message").show();
     },
 
@@ -261,8 +286,7 @@ module.exports = {
             event: 'click',
             handler: this.triggerSubmit
         },{
-            element: '#chatView',
-            selector:'.message-pic img',
+            element: '.message-pic img',
             event: 'click',
             handler: homeJs.photoBrowser  //点击图片
         },{
@@ -294,8 +318,7 @@ module.exports = {
             event: 'click',
             handler:geo.cleanGeo //坐标
         },{
-            element: '#chatView',
-            selector: '.bar-aface img',
+            element: '.face-swiper-container .bar-aface img',
             event:'click',
             handler:this.addImgFace
         },{
@@ -311,3 +334,4 @@ module.exports = {
         appFunc.bindEvents(bindings);
     }
 };
+module.exports = pack;
