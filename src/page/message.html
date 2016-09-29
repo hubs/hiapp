@@ -10,7 +10,7 @@
         <div class="center chat-name sliding">{{chat}}</div>
 
         <div class="right">
-            <a href="page/chat_detail.html" class="item-link color-black">
+            <a href="#" class="item-link color-black right-chat-detail">
                 <div class="icon-only link chat-person">
                     <i class="icon font-20"></i>
                 </div>
@@ -20,13 +20,12 @@
     </div>
 </div>
 <div class="pages navbar-through">
-    <div data-page="message" class="page no-toolbar toolbar-fixed message-body" >
+    <div data-page="message" class="page no-toolbar toolbar-fixed message-body" id="message-history">
         <div class="toolbar message-toolbar" >
             <form class="ks-messages-form form-general">
                 <div class="toolbar-inner">
                     <a href="#" class="link link-voice"><i class="icon icon-yuyin"></i></a>
 
-                   <!-- <textarea placeholder="{{chatPlaceholder}}" class="ks-messages-input" id="ks-messages-input"></textarea>-->
                     <input type="text" placeholder="{{chatPlaceholder}}" class="ks-messages-input"
                            id="ks-messages-input"/>
 
@@ -66,10 +65,19 @@
             </div>
 
         </div>
-        <div class="page-content messages-content">
+        <div class="page-content messages-content  pull-to-refresh-content" data-ptr-distance="55">
+            <!-- pull-to-refresh-layer:平时隐藏的布局块，包含下拉刷新的可视元素：加载提示符和上/下箭头。-->
+            <!-- 默认的下拉刷新层 -->
+            <div class="pull-to-refresh-layer">
+                <div class="preloader"></div>
+                <div class="pull-to-refresh-arrow"></div>
+            </div>
+
+            <!--存入加载的内容-->
             <div class="messages item-image">
 
             </div>
+
         </div>
     </div>
 </div>

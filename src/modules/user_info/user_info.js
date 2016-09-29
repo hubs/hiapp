@@ -21,7 +21,7 @@ var pack = {
             console.log(doc);
             doc.filename = Content.IMAGE_URL+doc.filename;
             var output = appFunc.renderTpl(template, {obj:doc});
-            if(store.getStorageValue("tel")=="undefined"){
+            if(appFunc.isUndefined(store.getStorageValue("tel"))){
                store.setSyncStorageValue("tel",doc.tel);
             }
             $$('#user-info-content').html(output);

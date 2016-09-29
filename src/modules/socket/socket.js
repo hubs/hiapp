@@ -130,8 +130,32 @@ var pack = {
         });
 
         //A->B,这里是推荐给B,B收到后返回一个ack
-        this.socket.on(content.EVENT_CHAT_USER,function(type,res){
+        this.socket.on(content.EVENT_CHAT_USER,function(type,ackServerCallback,res){
+            if (ackServerCallback) {
+                ackServerCallback(res.id);
+            }
+            pack._pri_update_data(table.T_CHAT,res);
+            appFunc.addBadge(content.BADGE_CHAT,1);
+
+
+            //写入操作表开始---------------------------------------------------
+            res             = appFunc.parseJson(res);
+            res.num         = 1;
+            res.add_date    = appFunc.getYmd();
+            var _where      = {$or:[{add_uid:res.from_uid,mark_id:res.to_mark_id},{add_uid:res.to_mark_id,mark_id:res.from_uid}],type:res.type};
+            db.dbFindOne(table.T_CHAT_SETTING,_where,function(err,doc){
+                if(doc&&!appFunc.isUndefined(doc)){
+                    console.log("insert New Chat ");
+                    db.dbInsert(table.T_CHAT_SETTING,res);
+                }else{
+                    console.log("Update  Chat ");
+                    db.dbUpdate(table.T_CHAT_SETTING,{id:doc.id},{$inc: {num: 1},add_date:appFunc.getYmd()});
+                }
+            });
+            //写入操作表结束---------------------------------------------------
+
             pack.print(type,"type");
+            pack.print(res,"res");
             pack.print(res,"这里是推荐给B,B收到后返回一个ack [ "+content.EVENT_CHAT_USER+"]");
         });
 
@@ -198,36 +222,26 @@ var pack = {
         });
     },
 
-
-    _checkIsPassNoLogin:function(params,showMsg){
-        return pack._checkIsPassComm(params,showMsg,true);
+    _checkIsPassNoLogin:function(params){
+        return pack._checkIsPassComm(params,false);
     },
-    _checkIsPassOkLogin:function(params,showMsg){
-        return pack._checkIsPassComm(params,showMsg,false);
+    //每次刷新都去登录一下,因为每次刷新都会有一个新的session_id,服务端要同步
+    _checkIsPassOkLogin:function(params){
+        return pack._checkIsPassComm(params,true);
     },
-    _checkIsPassComm:function(params,showMsg,checkIsLogin){
-        if(checkIsLogin){
-            console.log("login status = "+pack.getLoginStatus());
-            if (pack.getLoginStatus()) {
-                showMsg = showMsg===false?false:true;
-                if(showMsg){
-                    appFunc.hiAlert('帐号是已登录状态,不能进行操作.' );
-                }
-                console.log("帐号是已登录状态,不能进行操作.");
-                return false;
-            }
-        }else{
-            if (!pack.getLoginStatus() ) {
-                hiApp.hidePreloader();
-                appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
-                return false;
-            }
-        }
 
+
+    _checkIsPassComm:function(params,checkLoginStatus){
         if(!pack.getConnectStatus()){
             console.log(params);
             hiApp.hidePreloader();
             appFunc.hiAlert('当前未连接到服务器.' );
+            return false;
+        }
+
+        if (checkLoginStatus&&!pack.getLoginStatus() ) {
+            hiApp.hidePreloader();
+            appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
             return false;
         }
         if(params&&!appFunc.checkParamsHasNull(params)){
@@ -277,14 +291,14 @@ var pack = {
      *  params = {username:'',password:''}
      */
     base_login:function(params,fn){
-        if(!this._checkIsPassNoLogin(params,false)){
+        if(!this._checkIsPassNoLogin(params)){
             return;
         }
         params  =   params||{username:store.getStorageValue("tel"),password:appFunc.decrypt(store.getStorageValue("password"))};
         var _username = params.username;
         var _password = params.password;
 
-        if(!_username||!_password||_username=='undefined'){
+        if(!_username||!_password||appFunc.isUndefined(_username)){
             appFunc.showLogin();
             return;
         }
@@ -335,7 +349,6 @@ var pack = {
         db.dbUpdate(tableName,{id:appFunc.parseInt(res.id)},res,function(err,doc){
             if(doc==0){
                 console.log("insert!!!!");
-                console.log(res);
                 db.dbInsert(tableName,res);
             }else{
                 console.log("updat!");
@@ -359,6 +372,7 @@ var pack = {
             last_chat_id        :   store.getStorageValue("chat_id"),//最后聊天ID
             last_chat_group_id  :   store.getStorageValue("chat_group_id"),//群组ID
             last_update_time    :   store.getStorageValue("update_time"),//最后更改个人信息时间
+            last_chat_setting_id:   store.getStorageValue("chat_setting_id"),//最后更改个人信息时间
             token               :   store.getStorageValue("token"),
             fromUid             :   store.getStorageValue("uid")
         };
@@ -369,7 +383,8 @@ var pack = {
         this.socket.emit(content.EVENT_BASE_OFFLINE_MSG,params,function(status,res){
             console.log(res);
             if(status==content.SEND_REPLY){
-                pack.base_login();
+                //pack.base_login();//为了避免死循环登录,只要弹出登录界面就行了
+                appFunc.showLogin();
             }else if(status==content.SEND_SUCCESS){
 
                 var _json = appFunc.parseJson(res);
@@ -500,6 +515,17 @@ var pack = {
                     var _lastArticle     =   _articles.pop();
                     store.setStorageValue("article_id",_lastArticle.id);
                     appFunc.addBadge(content.BADGE_INFO,1);
+                }
+
+                //聊天设置
+                var _setting_num      = appFunc.parseInt(_data.EChatSetting_num);
+                if(_setting_num>0){
+                    var _setting      =  _data.EChatSetting_data;
+                    $$.each(_setting,function(index,res){
+                        pack._pri_update_data(table.T_CHAT_SETTING,res);
+                    });
+                    var _lastSetting  =   _setting.pop();
+                    store.setStorageValue("chat_setting_id",_lastSetting.id);
                 }
 
                 //更新自己..

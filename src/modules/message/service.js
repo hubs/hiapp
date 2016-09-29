@@ -1,16 +1,8 @@
-var xhr         = require('../utils/xhr');
 var table       = require("../db/table"),
     db          = require("../db/db"),
     appFunc     = require("../utils/appFunc")
 ;
 module.exports = {
-    getAnswers: function(callback) {
-        xhr.simpleCall({
-            func: 'answers'
-        }, function (res) {
-            callback(res.data);
-        });
-    },
     //获取聊天数据
     /**
      *  params = {
@@ -20,12 +12,17 @@ module.exports = {
      * }
      */
     getMessages: function(params,callback){
-        var _where  =   { $or: [{ from_uid: params.from_uid,to_mark_id:params.to_mark_id }, { from_uid: params.to_mark_id,to_mark_id:params.from_uid }] , status:1,type:params.type};
-        console.log(_where);
+        var _where   =   { $or: [{ from_uid: params.from_uid,to_mark_id:params.to_mark_id }, { from_uid: params.to_mark_id,to_mark_id:params.from_uid }] , status:1,type:params.type};
+        //如果传入了ID,则查询历史数据
+        if(!appFunc.isUndefined(params.id)){
+            _where.id=   {$lt:appFunc.parseInt(params.id)};
+        }
         db.dbFind(table.T_CHAT,_where,function(err,doc){
             return callback(db.returnComm(err,doc));
-        },'','',{id:1});
+        });
     },
+
+
     getFaces:function(callback){
         var _faces  =   [];
 

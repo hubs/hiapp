@@ -5,9 +5,9 @@
                 <div class="row item-inner">
                     {{#each filenames}}
                         <div class="col-25">
-                            <img data-src="{{get_filename uid}}" class="lazy chat-to-member" data-id="{{uid}}">
+                            {{url_filename uid}}
                             <span class="badge-seat" data-id="{{uid}}"></span>
-                            <div class="item-text ng-binding">{{username}}</div>
+                            <div class="item-text ng-binding">{{url_username uid}}</div>
                         </div>
                     {{/each}}
                     {{#if group_admin}}
@@ -60,7 +60,7 @@
                 <div class="item-title label">{{t i18n="message.switch_info"}}</div>
                 <div class="item-input tr">
                     <label class="label-switch ">
-                        <input type="checkbox" {{switch_info}} class="switch-info">
+                        <input type="checkbox" {{switch_info}} class="switch-info" data-id=""/>
                         <div class="checkbox"></div>
                     </label>
                 </div>
@@ -79,7 +79,7 @@
         </div>
     </ul>
 </div>
-<div class="list-block">
+<!--<div class="list-block">
     <ul>
         <li>
             <div class="item-content">
@@ -92,8 +92,7 @@
             </div>
         </li>
     </ul>
-    <!--群信息结束-->
-
-</div>
+    &lt;!&ndash;群信息结束&ndash;&gt;
+</div>-->
 
 <a href="#" class="button button-big  button-fill color-red btn-exit">{{t i18n="message.del_and_exit"}}</a>

@@ -35,10 +35,13 @@ var CONTENT = {
     EVENT_CHAT_GROUP             :   "chat_group",           //A->G(群),推荐给所有在线的群友
     EVENT_CHAT_GROUP_INVITE      :   "chat_group_invite",    //群邀请
     EVENT_CHAT_GROUP_RENAME      :   "chat_group_rename",    //群名更改
-    EVENT_CHAT_GROUP_INGORE      :   "chat_group_ignore",    //群免打扰
     EVENT_CHAT_GET_MEMBER        :   "chat_get_member_info", //点击会员进入详情，此时加载会员最新信息
 
-
+    //2016-9-29 add
+    EVENT_CHAT_SETTING           :   "chat_setting",    //消息免打扰
+    EVENT_GROUP_EXIT             :   "chat_group_exit", //退群操作
+    EVENT_GROUP_DEL_MEM          :   "chat_group_del_member",//删除群员
+    EVENT_GROUP_ADD_MEM          :   "chat_group_add_member",//增加会员
 
     //说说
     EVENT_TALK                   :   "talk",     //发表说说

@@ -10,8 +10,7 @@ var appFunc         = require('../utils/appFunc'),
     socket          = require("../socket/socket"),
     content         = require("../utils/content"),
     table           = require("../db/table"),
-    db              = require("../db/db"),
-    store           = require("../utils/localStore")
+    db              = require("../db/db")
     ;
 
 var _that   = null,
@@ -36,7 +35,7 @@ var pack = {
         $$('.chat-person').data("type",user.type);
         $$('.chat-person').data("id",user.id);
         $$('.chat-person i').addClass(user.chat_type);
-
+        $$('.right-chat-detail').attr("href",'page/chat_detail.html?id=' +_to_uid+"&type="+_chat_type);
 
         // render messages
         _that.renderMessages();
@@ -85,42 +84,49 @@ var pack = {
             from_uid    :   appFunc.getUserId(),
             to_mark_id  :   _to_uid
         },function(res){
-            var _datas  =   res.msg;
-            if(res.status){
-                var _time   =   '';//去除重复的时间
-                $$.each(_datas,function(index,row){
-                    if(row.from_uid==appFunc.getUserId()){
-                        row.from    = "sent";
-                    }else{
-                        row.from    = "received";
-                    }
-                    row.is_image    =  row.msg_type==2;//１：文本，２：图片，３：语音
-
-                    //去除相同时间显示
-                    var _temp_time  = appFunc.format_chat_time(row.create_time,false);
-                    if(_time==_temp_time){
-                        row.create_time = '';
-                        row.show_time = false;
-                    }else{
-                        _time = _temp_time;
-                        row.show_time = true;
-                    }
-
-                });
-            }
-
-            console.table(_datas);
-
-            var renderData = {
-                message: _datas
-            };
-            var output = appFunc.renderTpl(template, renderData);
-            $$('.page[data-page="message"] .messages').html(output);
-            hiApp.hideIndicator();
-            appFunc.lazyImg();
+            pack._renderData(res);
         });
     },
+    _renderData:function(res,type){
+        var _datas  =   res.msg;
+        if(res.status){
+            var _time   =   '';//去除重复的时间
+            _datas  =   _datas.reverse();
+            $$.each(_datas,function(index,row){
+                if(row.from_uid==appFunc.getUserId()){
+                    row.from    = "sent";
+                }else{
+                    row.from    = "received";
+                }
+                row.is_image    =  row.msg_type==2;//１：文本，２：图片，３：语音
 
+                //去除相同时间显示
+                var _temp_time  = appFunc.format_chat_time(row.create_time,false);
+                if(_time==_temp_time){
+                    row.create_time = '';
+                    row.show_time = false;
+                }else{
+                    _time = _temp_time;
+                    row.show_time = true;
+                }
+
+            });
+        }
+        var renderData = {
+            message: _datas
+        };
+        var output = appFunc.renderTpl(template, renderData);
+        console.log(type);
+        if(type === 'prepend'){
+            $$('.page[data-page="message"] .messages').prepend(output);
+        }else if(type === 'append') {
+            $$('.page[data-page="message"] .messages').append(output);
+        }else {
+            $$('.page[data-page="message"] .messages').html(output);
+        }
+        hiApp.hideIndicator();
+        appFunc.lazyImg();
+    },
     //发送消息
     submitMessage: function(e){
 
@@ -149,8 +155,8 @@ var pack = {
             text_msg    :   messageText,
             msg_type    :   content.CHAT_TYPE_TEXT
         },function(res){
-            socket._pri_update_data(table.T_CHAT,res);
-            store.setStorageValue("","");
+            var _res  = appFunc.parseJson(res);
+            socket._pri_update_data(table.T_CHAT,_res);
             /**
              *   text	string		消息文本，也可以使用HTML字符串，如果你想要添加图片消息，则应该传递<img src="...">。必选
              *   name	string		发送者名称。可选
@@ -270,11 +276,34 @@ var pack = {
         $$("#ks-send-message").show();
     },
 
-    //点击右上角小人图
-    jumpChatSetting:function(){
-      console.log($$(this).data("type")+" ok=>and "+$$(this).data("id"));
+    //加载历史数据
+    infiniteTimeline: function(){
+        var $this = $$(this);
+        //显示加载条
+        hiApp.showIndicator();
 
-      chatF7View.router.loadPage('page/chat_detail.html?id=' + $$(this).data("id")+"&type="+$$(this).data("type"));
+        //获取最后一条数据的ID
+        var item = $this.find('#message-history .message-last').eq(0);
+        if(appFunc.isUndefined(item)){
+            $this.data('scrollLoading','unloading');
+        }else{
+            var _last_id    =   item.data("id");
+            service.getMessages({
+                type        :   _chat_type,
+                from_uid    :   appFunc.getUserId(),
+                to_mark_id  :   _to_uid,
+                id          :   _last_id
+            },function(res){
+                 //更新状态
+                 $this.data('scrollLoading','loading');
+                 if(res.status){
+                     $this.data('scrollLoading','unloading');
+                     pack._renderData(res,'prepend');
+                 }
+                 hiApp.hideIndicator();
+                 hiApp.pullToRefreshDone();
+           });
+        }
     },
     bindEvents: function(){
         var bindings = [{
@@ -320,15 +349,16 @@ var pack = {
         },{
             element: '.face-swiper-container .bar-aface img',
             event:'click',
-            handler:this.addImgFace
+            handler:this.addImgFace //增加笑脸
         },{
             element: '#ks-messages-input',
             event: 'keyup',
             handler:this.changeText //文字改变则显示提交按钮
         },{
-            element: '.chat-person',
-            event: 'click',
-            handler:this.jumpChatSetting //点击右上角的小人图
+            element: '#message-history',
+            selector: '.pull-to-refresh-content',
+            event: 'refresh',//下拉
+            handler: this.infiniteTimeline
         }];
 
         appFunc.bindEvents(bindings);
