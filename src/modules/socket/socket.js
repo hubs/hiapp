@@ -98,7 +98,35 @@ var pack = {
         this.socket.on(content.EVENT_BASE_CLIENT_RECEIVE,function(type,res){
             console.log("GO EVENT_BASE_CLIENT_RECEIVE");
             switch (type){
-                case content.EVENT_TYPE_GROUP:  //创建群消息
+                case content.EVENT_TYPE_GROUP:           //创建群消息
+                case content.EVENT_TYPE_GROUP_INVATE:    //群邀请(某某人邀请了你)
+                    //获取创建的群名,同时获取最新的群员数据
+
+                    pack._pri_update_data(table.T_CHAT_GROUP,res);
+
+                    //获取最新的会员数据
+                    pack.chat_get_group_info({
+                        group_id    : res.id,
+                        update_time :   0
+                    });
+                    break;
+
+                case content.EVENT_GROUP_ADD:
+                    //群里来新的小伙伴了
+                    pack._pri_update_data(table.T_CHAT_GROUP_MEMBER,res);
+                    break;
+                case content.EVENT_GROUP_DEL://删除
+                case content.EVENT_GROUP_EXIT://自己退
+                case content.EVENT_GROUP_CLEAR: //管理员关群了
+                    //本地删除数据
+                    var _group_id           = res.mark_id;
+                    var _group_member_id    = res.id;
+                    db.dbDel(table.T_CHAT_GROUP,{id:_group_id});
+                    db.dbDel(table.T_CHAT_GROUP_MEMBER,{id:_group_member_id});
+                    break;
+                case content.EVENT_GROUP_DEL_NOTIFY://删除会员通知
+                case content.EVENT_GROUP_EXIT_NOTIFY://会员退群通知
+                    db.dbDel(table.T_CHAT_GROUP_MEMBER,{id:res.id});
                     break;
                 case content.EVENT_TYPE_TALK:   //创建了新的说说
                     pack._pri_update_data(table.T_CHAT,res);
@@ -110,15 +138,11 @@ var pack = {
                 case content.EVENT_TYPE_NEW_COOL:   //有新的赞
                     pack._pri_update_data(table.T_MEMBER_COLLECT,res);
                     break;
-                case content.EVENT_TYPE_GROUP_INVATE://群邀请
-                    break;
-                case content.EVENT_TYPE_GROUP_ADD_INFO://群邀请发送 xx邀请xx
-                    break;
                 case content.EVENT_TYPE_NEW_INFO://新资讯
                     pack._pri_update_data(table.T_ARTICLE,res);
                     appFunc.addBadge(content.BADGE_INFO,1);
                     break;
-                case content.EVENT_TYPE_MEMBER://新会员
+                case content.EVENT_TYPE_NEW_MEMBER://新会员
                     pack._pri_update_data(table.T_MEMBER,res);
                     appFunc.setUsernameByUid(res.id,res.username);
                     appFunc.addBadge(content.BADGE_MEMBER,1);
@@ -163,6 +187,7 @@ var pack = {
         this.socket.on(content.EVENT_CHAT_GROUP,function(type,res){
             pack.print(type,"type");
             pack.print(res,"推荐给所有在线的群友 [ "+content.EVENT_CHAT_GROUP+"]");
+            pack._pri_update_data(table.T_CHAT,res);
         });
 
 
@@ -273,8 +298,7 @@ var pack = {
                 if(info instanceof String){
                     appFunc.hiAlert(info);
                 }
-               // pack.print(info,"成功【"+event_name+"】。");
-                (typeof(callback) === 'function') ? callback(info) : '';
+                (typeof(callback) === 'function') ? callback(appFunc.parseJson(info)) : '';
             }else if(status==content.SEND_INFO){
                 appFunc.hiAlert(info);
             }else if(status==content.SEND_REPLY){
@@ -735,17 +759,28 @@ var pack = {
     },
 
     /**
-     * 群邀请 ：
+     * 获取最新的群数据
      * @param params = {
-     *   mark_id           : '',//群ID
-     *   uid               : '',//被邀请的UID
-     *   token             : ''
-     *   fromUid           : '',
-     * }
+     *    group_id      : '',//查看会员的最新信息
+     *    update_time   : ''最后更新时间
+     *    token         : ''
+     *    fromUid       : '',
+     *}
+     * @param fn
      */
-    chat_group_invite:function(params){
-        pack._get_comm(params,content.EVENT_CHAT_GROUP_INVITE);
+    chat_get_group_info:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_NEWS,function(r_lst){
+            var _group          = r_lst.group;
+            var _group_member   = r_lst.group_members;
+            pack._pri_update_data(table.T_CHAT_GROUP,_group);
+            if(_group_member&&!appFunc.isUndefined(_group_member)){
+                $$.each(_group_member,function(index,res){
+                    pack._pri_update_data(table.T_CHAT_GROUP_MEMBER,res);
+                });
+            }
+        });
     },
+
 
     /**
      * 群名修改 ：

@@ -10,7 +10,8 @@ var appFunc         = require('../utils/appFunc'),
     socket          = require("../socket/socket"),
     content         = require("../utils/content"),
     table           = require("../db/table"),
-    db              = require("../db/db")
+    db              = require("../db/db"),
+    dbHelper        = require("../utils/dbHelper")
     ;
 
 var _that   = null,
@@ -77,13 +78,60 @@ var pack = {
         });
     },
     //初始化聊天记录
-    renderMessages: function(message){
+    renderMessages: function(){
         hiApp.showIndicator();
+        //加载最新的用户信息
+        if(_chat_type==1){
+            db.dbFindOne(table.T_MEMBER,{id:_to_uid},function(err,doc){
+                var _res = db.returnComm(err,doc);
+                if(_res.status){
+                    var _obj = _res.msg;
+
+                    socket.chat_get_member({
+                        member_id   : _to_uid,
+                        update_time : _obj.update_time//每次都获取最新的算了
+                    },function(res){
+                        res     =   appFunc.parseJson(res);
+                        socket._pri_update_data(table.T_MEMBER,res);
+
+                        if(res.username!=doc.username){
+                            dbHelper.dbUpdateUsername(res.username,res.id);
+                        }
+
+                        if(res.filename!=doc.filename){
+                            appFunc.setFilenameByUid(res.id,res.filename);
+                        }
+
+                        pack._getDbMessage();
+                    });
+                }else{
+                    hiApp.hiAlert("没找到用户信息");
+                }
+            });
+        }else{
+            db.dbFindOne(table.T_CHAT_GROUP,{id:_to_uid},function(err,doc){
+                var _res = db.returnComm(err,doc);
+                if(_res.status){
+                    var _obj = _res.msg;
+                    socket.chat_get_group_info({
+                        group_id    : _to_uid,
+                        update_time : _obj.update_time,//每次都获取最新的算了
+                    });
+                    pack._getDbMessage();
+                }else{
+                    hiApp.hiAlert("没找到群信息");
+                }
+            });
+        }
+    },
+
+    _getDbMessage:function(){
         service.getMessages({
             type        :   _chat_type,
             from_uid    :   appFunc.getUserId(),
             to_mark_id  :   _to_uid
         },function(res){
+            hiApp.hideIndicator();
             pack._renderData(res);
         });
     },
