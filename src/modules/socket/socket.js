@@ -799,13 +799,13 @@ var pack = {
      * 群消息免打扰 ：
      * @param params = {
      *   mark_id           : '',//群ID
-     *   status            : '',//1:开启,0:关闭
-     *   token             : ''
-     *   fromUid           : '',
+     *   type              : '',// 1：个人,2:群聊
+     *   chat_ignore       : ''消息免打扰
+     *   chat_top          : '',置顶聊天
      * }
      */
-    chat_group_ingore:function(params){
-        pack._get_comm(params,content.EVENT_CHAT_GROUP_INGORE);
+    chat_group_setting:function(params,fn){
+        pack._get_comm(params,content.EVENT_CHAT_SETTING,fn);
     },
 
     /**
@@ -838,6 +838,57 @@ var pack = {
         pack._get_comm(params,content.EVENT_CHAT_GET_MEMBER,fn);
     },
 
+    /**
+     * 2016-9-30
+     * 拉会员
+     * @param params = {
+     *    type  : 11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_add:function(params,fn){
+      pack._get_comm(params,content.EVENT_GROUP_ADD,fn);
+    },
+    /**
+     * 2016-9-30:删除会员
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_del:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_DEL,fn);
+    },
+
+    /**
+     * 2016-9-30:退群
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_exit:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_EXIT,fn);
+    },
+
+    /**
+     * 2016-9-30:解散群
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_clear:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_CLEAR,fn);
+    },
 
     //---------------------------------------------------------------------聊天模块结束
 
