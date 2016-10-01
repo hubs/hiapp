@@ -310,10 +310,11 @@ var pack = {
 
     },
     _updateMemberStore:function(res){
+        store.setValue("uid",res.id);
+        store.setSyncStorageValue("uid",res.id,true);
         store.setSyncStorageValue("username",res.username);
         store.setSyncStorageValue("tel",res.tel);
         store.setSyncStorageValue("password",appFunc.encrypt(res.password));
-        store.setSyncStorageValue("uid",res.id);
         store.setSyncStorageValue("token",res.token);
         store.setSyncStorageValue("update_time",res.update_time);
         store.setSyncStorageValue("filename",content.IMAGE_URL+res.filename);

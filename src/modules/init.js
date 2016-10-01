@@ -2,17 +2,16 @@ var socket          = require("./socket/socket"),
     db              = require("./db/db"),
     localforage     = require('localforage'),
     store           = require("./utils/localStore"),
-    infoView        = require("./infos/infos")
+    infoView        = require("./infos/infos"),
+    appFunc         = require("./utils/appFunc")
     ;
 //初始化页面
 module.exports = {
     init: function () {
         db.init();
         socket.init();
-
         //由于有二种驱动保存前辍
         var _driver = localforage.driver();
-
         if(_driver!=store.getValue("storage")){
             store.setValue("storage",_driver);
             //如果是已登录了,则需要同步一下数据
@@ -22,14 +21,14 @@ module.exports = {
         }
         //增加欢迎界面
         this._check_show_welcome();
-
+        return true;
     },
     _check_show_welcome:function(){
         if(store.getStorageValue("welcome_skip")=='true') {
             $$("#footer").show();
         }else{
             $$("#welcome-page").show();
-            hiApp.swiper('.swiper-container', {
+            hiApp.swiper('.welcome-swiper-container', {
                 pagination:'.swiper-pagination'
             });
             $$(".welcomescreen-closebtn").click(function(){

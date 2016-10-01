@@ -1,7 +1,8 @@
 var service     = require('./service'),
     appFunc     = require('../utils/appFunc'),
     template    = require('./infos.tpl.html'),
-    content     = require("../utils/content")
+    content     = require("../utils/content"),
+    store   = require("../utils/localStore")
     ;
 
 var pack = {
@@ -11,6 +12,8 @@ var pack = {
         pack.bindEvent();
     },
     getDatas: function(){
+
+        console.log("UID="+store.getStorageValue("uid")+" token = "+store.getStorageValue("token"));
         console.log("infos get datas");
         var that = this;
         hiApp.showIndicator();

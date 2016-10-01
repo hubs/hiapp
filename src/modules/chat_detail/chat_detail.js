@@ -1,19 +1,19 @@
 require("./chat_detail.less");
-var appFunc = require('../utils/appFunc'),
-    template = require('./chat_detail.tpl.html'),
-    template_group  =   require("./chat_detail_group.tpl.html")
+var appFunc         = require('../utils/appFunc'),
+    template        = require('./chat_detail.tpl.html'),
+    template_group  = require("./chat_detail_group.tpl.html"),
+    content         = require("../utils/content")
     ;
 
-module.exports = {
+var pack = {
     init: function(query){
         appFunc.hideToolbar();
-
-
-        var _id     =   query.id;   //群ID或用户ID
-        var _type   =   query.type; //1:单聊,2:群聊
-        var output  =   null;
-        if(_type==1){
-            var renderData = {
+        var _id         =   query.id;   //群ID或用户ID
+        var _type       =   query.type; //1:单聊,2:群聊
+        var output      =   null;
+        var _renderData =   '';
+        if(_type==content.CHAT_TYPE_PERSON){
+            _renderData = {
                 obj:{
                     id          : _id,
                     filename    : 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
@@ -23,7 +23,7 @@ module.exports = {
             };
             output = appFunc.renderTpl(template, renderData);
         }else{
-            var renderData = {
+            _renderData = {
                 id          : _id,
                 filenames   : [
                     {
@@ -80,7 +80,7 @@ module.exports = {
                 group_username:"哈喽!",
                 group_admin : true //是否是管理员
             };
-            output = appFunc.renderTpl(template_group, renderData);
+            output = appFunc.renderTpl(template_group, _renderData);
             appFunc.lazyImg();
         }
 
@@ -169,3 +169,4 @@ module.exports = {
         appFunc.bindEvents(bindings);
     }
 };
+module.exports = pack;

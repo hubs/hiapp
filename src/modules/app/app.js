@@ -14,13 +14,13 @@ var appFunc         = require('../utils/appFunc'),
 module.exports = {
     init: function(){
         this.i18next('');
+        appFunc.checkIsChangeDb();
+        loginView.init();
         infosView.init();
         homeView.init();
         contactsView.init();
         settingView.init();
         chatView.init();
-        loginView.init();
-        appFunc.checkIsChangeDb();
     },
 
     i18next: function(content){

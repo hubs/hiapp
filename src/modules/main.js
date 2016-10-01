@@ -159,8 +159,8 @@ var app = {
 
         // init app
         init.init();
-        router.init();
         index.init();
+        router.init();
 
     }
 };

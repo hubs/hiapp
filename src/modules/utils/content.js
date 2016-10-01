@@ -80,6 +80,9 @@ var CONTENT = {
     COMMENT_TYPE_INFO           :  1,//资讯评论
     COMMENT_TYPE_TALK           :  2,//说说评论
 
+    CHAT_TYPE_PERSON            :  1,//个人
+    CHAT_TYPE_GROUP             :  2,//群
+
 
     //徽章
     BADGE_TALK       : 'badge_talk',

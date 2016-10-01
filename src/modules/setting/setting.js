@@ -11,7 +11,7 @@ var settingView = {
         settingView.bindEvents();
     },
     renderSetting: function(){
-        if($$('#settingView .page-content')[0]) return;
+        //if($$('#settingView .page-content')[0]) return;
 
         hiApp.showIndicator();
 

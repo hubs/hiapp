@@ -15,7 +15,7 @@ var localStore = {
         if(val){
             return parseInt(val);
         }
-        return val;
+        return 0;
     },
 
     setStorageValue:function(key,value){
@@ -29,13 +29,16 @@ var localStore = {
         return localStore.getIntValue(localStore._getStoragePre()+key);
     },
     _getStoragePre : function(){
-        return localStore.getValue("storage")+"_";
+        return localStore.getValue("uid")+"_"+localStore.getValue("storage")+"_";
     },
 
     //现在有二种存储方式:webSQLStorage,asyncStorage
     setSyncStorageValue:function(key,value){
-        localStore.setValue("webSQLStorage_"+key,value);
-        localStore.setValue("asyncStorage_"+key,value);
+        var _uid  = localStore.getValue("uid");
+        if(_uid){
+            localStore.setValue(_uid+"_webSQLStorage_"+key,value);
+            localStore.setValue(_uid+"_asyncStorage_"+key,value);
+        }
     }
 };
 
