@@ -98,7 +98,35 @@ var pack = {
         this.socket.on(content.EVENT_BASE_CLIENT_RECEIVE,function(type,res){
             console.log("GO EVENT_BASE_CLIENT_RECEIVE");
             switch (type){
-                case content.EVENT_TYPE_GROUP:  //创建群消息
+                case content.EVENT_TYPE_GROUP:           //创建群消息
+                case content.EVENT_TYPE_GROUP_INVATE:    //群邀请(某某人邀请了你)
+                    //获取创建的群名,同时获取最新的群员数据
+
+                    pack._pri_update_data(table.T_CHAT_GROUP,res);
+
+                    //获取最新的会员数据
+                    pack.chat_get_group_info({
+                        group_id    : res.id,
+                        update_time :   0
+                    });
+                    break;
+
+                case content.EVENT_GROUP_ADD:
+                    //群里来新的小伙伴了
+                    pack._pri_update_data(table.T_CHAT_GROUP_MEMBER,res);
+                    break;
+                case content.EVENT_GROUP_DEL://删除
+                case content.EVENT_GROUP_EXIT://自己退
+                case content.EVENT_GROUP_CLEAR: //管理员关群了
+                    //本地删除数据
+                    var _group_id           = res.mark_id;
+                    var _group_member_id    = res.id;
+                    db.dbDel(table.T_CHAT_GROUP,{id:_group_id});
+                    db.dbDel(table.T_CHAT_GROUP_MEMBER,{id:_group_member_id});
+                    break;
+                case content.EVENT_GROUP_DEL_NOTIFY://删除会员通知
+                case content.EVENT_GROUP_EXIT_NOTIFY://会员退群通知
+                    db.dbDel(table.T_CHAT_GROUP_MEMBER,{id:res.id});
                     break;
                 case content.EVENT_TYPE_TALK:   //创建了新的说说
                     pack._pri_update_data(table.T_CHAT,res);
@@ -110,15 +138,11 @@ var pack = {
                 case content.EVENT_TYPE_NEW_COOL:   //有新的赞
                     pack._pri_update_data(table.T_MEMBER_COLLECT,res);
                     break;
-                case content.EVENT_TYPE_GROUP_INVATE://群邀请
-                    break;
-                case content.EVENT_TYPE_GROUP_ADD_INFO://群邀请发送 xx邀请xx
-                    break;
                 case content.EVENT_TYPE_NEW_INFO://新资讯
                     pack._pri_update_data(table.T_ARTICLE,res);
                     appFunc.addBadge(content.BADGE_INFO,1);
                     break;
-                case content.EVENT_TYPE_MEMBER://新会员
+                case content.EVENT_TYPE_NEW_MEMBER://新会员
                     pack._pri_update_data(table.T_MEMBER,res);
                     appFunc.setUsernameByUid(res.id,res.username);
                     appFunc.addBadge(content.BADGE_MEMBER,1);
@@ -130,8 +154,32 @@ var pack = {
         });
 
         //A->B,这里是推荐给B,B收到后返回一个ack
-        this.socket.on(content.EVENT_CHAT_USER,function(type,res){
+        this.socket.on(content.EVENT_CHAT_USER,function(type,ackServerCallback,res){
+            if (ackServerCallback) {
+                ackServerCallback(res.id);
+            }
+            pack._pri_update_data(table.T_CHAT,res);
+            appFunc.addBadge(content.BADGE_CHAT,1);
+
+
+            //写入操作表开始---------------------------------------------------
+            res             = appFunc.parseJson(res);
+            res.num         = 1;
+            res.add_date    = appFunc.getYmd();
+            var _where      = {$or:[{add_uid:res.from_uid,mark_id:res.to_mark_id},{add_uid:res.to_mark_id,mark_id:res.from_uid}],type:res.type};
+            db.dbFindOne(table.T_CHAT_SETTING,_where,function(err,doc){
+                if(doc&&!appFunc.isUndefined(doc)){
+                    console.log("insert New Chat ");
+                    db.dbInsert(table.T_CHAT_SETTING,res);
+                }else{
+                    console.log("Update  Chat ");
+                    db.dbUpdate(table.T_CHAT_SETTING,{id:doc.id},{$inc: {num: 1},add_date:appFunc.getYmd()});
+                }
+            });
+            //写入操作表结束---------------------------------------------------
+
             pack.print(type,"type");
+            pack.print(res,"res");
             pack.print(res,"这里是推荐给B,B收到后返回一个ack [ "+content.EVENT_CHAT_USER+"]");
         });
 
@@ -139,6 +187,7 @@ var pack = {
         this.socket.on(content.EVENT_CHAT_GROUP,function(type,res){
             pack.print(type,"type");
             pack.print(res,"推荐给所有在线的群友 [ "+content.EVENT_CHAT_GROUP+"]");
+            pack._pri_update_data(table.T_CHAT,res);
         });
 
 
@@ -198,36 +247,26 @@ var pack = {
         });
     },
 
-
-    _checkIsPassNoLogin:function(params,showMsg){
-        return pack._checkIsPassComm(params,showMsg,true);
+    _checkIsPassNoLogin:function(params){
+        return pack._checkIsPassComm(params,false);
     },
-    _checkIsPassOkLogin:function(params,showMsg){
-        return pack._checkIsPassComm(params,showMsg,false);
+    //每次刷新都去登录一下,因为每次刷新都会有一个新的session_id,服务端要同步
+    _checkIsPassOkLogin:function(params){
+        return pack._checkIsPassComm(params,true);
     },
-    _checkIsPassComm:function(params,showMsg,checkIsLogin){
-        if(checkIsLogin){
-            console.log("login status = "+pack.getLoginStatus());
-            if (pack.getLoginStatus()) {
-                showMsg = showMsg===false?false:true;
-                if(showMsg){
-                    appFunc.hiAlert('帐号是已登录状态,不能进行操作.' );
-                }
-                console.log("帐号是已登录状态,不能进行操作.");
-                return false;
-            }
-        }else{
-            if (!pack.getLoginStatus() ) {
-                hiApp.hidePreloader();
-                appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
-                return false;
-            }
-        }
 
+
+    _checkIsPassComm:function(params,checkLoginStatus){
         if(!pack.getConnectStatus()){
             console.log(params);
             hiApp.hidePreloader();
             appFunc.hiAlert('当前未连接到服务器.' );
+            return false;
+        }
+
+        if (checkLoginStatus&&!pack.getLoginStatus() ) {
+            hiApp.hidePreloader();
+            appFunc.hiAlert('帐号是未登录状态,不能进行操作.' );
             return false;
         }
         if(params&&!appFunc.checkParamsHasNull(params)){
@@ -259,8 +298,7 @@ var pack = {
                 if(info instanceof String){
                     appFunc.hiAlert(info);
                 }
-               // pack.print(info,"成功【"+event_name+"】。");
-                (typeof(callback) === 'function') ? callback(info) : '';
+                (typeof(callback) === 'function') ? callback(appFunc.parseJson(info)) : '';
             }else if(status==content.SEND_INFO){
                 appFunc.hiAlert(info);
             }else if(status==content.SEND_REPLY){
@@ -277,14 +315,14 @@ var pack = {
      *  params = {username:'',password:''}
      */
     base_login:function(params,fn){
-        if(!this._checkIsPassNoLogin(params,false)){
+        if(!this._checkIsPassNoLogin(params)){
             return;
         }
         params  =   params||{username:store.getStorageValue("tel"),password:appFunc.decrypt(store.getStorageValue("password"))};
         var _username = params.username;
         var _password = params.password;
 
-        if(!_username||!_password||_username=='undefined'){
+        if(!_username||!_password||appFunc.isUndefined(_username)){
             appFunc.showLogin();
             return;
         }
@@ -336,7 +374,6 @@ var pack = {
         db.dbUpdate(tableName,{id:appFunc.parseInt(res.id)},res,function(err,doc){
             if(doc==0){
                 console.log("insert!!!!");
-                console.log(res);
                 db.dbInsert(tableName,res);
             }else{
                 console.log("updat!");
@@ -360,6 +397,7 @@ var pack = {
             last_chat_id        :   store.getStorageValue("chat_id"),//最后聊天ID
             last_chat_group_id  :   store.getStorageValue("chat_group_id"),//群组ID
             last_update_time    :   store.getStorageValue("update_time"),//最后更改个人信息时间
+            last_chat_setting_id:   store.getStorageValue("chat_setting_id"),//最后更改个人信息时间
             token               :   store.getStorageValue("token"),
             fromUid             :   store.getStorageValue("uid")
         };
@@ -370,7 +408,8 @@ var pack = {
         this.socket.emit(content.EVENT_BASE_OFFLINE_MSG,params,function(status,res){
             console.log(res);
             if(status==content.SEND_REPLY){
-                pack.base_login();
+                //pack.base_login();//为了避免死循环登录,只要弹出登录界面就行了
+                appFunc.showLogin();
             }else if(status==content.SEND_SUCCESS){
 
                 var _json = appFunc.parseJson(res);
@@ -501,6 +540,17 @@ var pack = {
                     var _lastArticle     =   _articles.pop();
                     store.setStorageValue("article_id",_lastArticle.id);
                     appFunc.addBadge(content.BADGE_INFO,1);
+                }
+
+                //聊天设置
+                var _setting_num      = appFunc.parseInt(_data.EChatSetting_num);
+                if(_setting_num>0){
+                    var _setting      =  _data.EChatSetting_data;
+                    $$.each(_setting,function(index,res){
+                        pack._pri_update_data(table.T_CHAT_SETTING,res);
+                    });
+                    var _lastSetting  =   _setting.pop();
+                    store.setStorageValue("chat_setting_id",_lastSetting.id);
                 }
 
                 //更新自己..
@@ -710,17 +760,28 @@ var pack = {
     },
 
     /**
-     * 群邀请 ：
+     * 获取最新的群数据
      * @param params = {
-     *   mark_id           : '',//群ID
-     *   uid               : '',//被邀请的UID
-     *   token             : ''
-     *   fromUid           : '',
-     * }
+     *    group_id      : '',//查看会员的最新信息
+     *    update_time   : ''最后更新时间
+     *    token         : ''
+     *    fromUid       : '',
+     *}
+     * @param fn
      */
-    chat_group_invite:function(params){
-        pack._get_comm(params,content.EVENT_CHAT_GROUP_INVITE);
+    chat_get_group_info:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_NEWS,function(r_lst){
+            var _group          = r_lst.group;
+            var _group_member   = r_lst.group_members;
+            pack._pri_update_data(table.T_CHAT_GROUP,_group);
+            if(_group_member&&!appFunc.isUndefined(_group_member)){
+                $$.each(_group_member,function(index,res){
+                    pack._pri_update_data(table.T_CHAT_GROUP_MEMBER,res);
+                });
+            }
+        });
     },
+
 
     /**
      * 群名修改 ：
@@ -739,18 +800,18 @@ var pack = {
      * 群消息免打扰 ：
      * @param params = {
      *   mark_id           : '',//群ID
-     *   status            : '',//1:开启,0:关闭
-     *   token             : ''
-     *   fromUid           : '',
+     *   type              : '',// 1：个人,2:群聊
+     *   chat_ignore       : ''消息免打扰
+     *   chat_top          : '',置顶聊天
      * }
      */
-    chat_group_ingore:function(params){
-        pack._get_comm(params,content.EVENT_CHAT_GROUP_INGORE);
+    chat_group_setting:function(params,fn){
+        pack._get_comm(params,content.EVENT_CHAT_SETTING,fn);
     },
 
     /**
      * 会话聊天 ：
-     * @param params = {
+     *  params = {
      *   to_mark_id      : '',//接收者/群
      *   type            : '',//类型 1:个人,2:群
      *   msg             ： '',//消息(传上来的数据)
@@ -761,13 +822,13 @@ var pack = {
      *   fromUid         : '',
      * }
      */
-    chat:function(params){
-        pack._get_comm(params,content.EVENT_CHAT);
+    chat:function(params,fn){
+        pack._get_comm(params,content.EVENT_CHAT,fn);
     },
 
     /**
      * 加载会员最新信息 ：
-     * @param params = {
+     *  params = {
      *   member_id       : '',//需要查看会员的最新信息
      *   update_time     : '',//本地会员最后更新的时间
      *   token           : ''
@@ -778,6 +839,57 @@ var pack = {
         pack._get_comm(params,content.EVENT_CHAT_GET_MEMBER,fn);
     },
 
+    /**
+     * 2016-9-30
+     * 拉会员
+     * @param params = {
+     *    type  : 11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_add:function(params,fn){
+      pack._get_comm(params,content.EVENT_GROUP_ADD,fn);
+    },
+    /**
+     * 2016-9-30:删除会员
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_del:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_DEL,fn);
+    },
+
+    /**
+     * 2016-9-30:退群
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_exit:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_EXIT,fn);
+    },
+
+    /**
+     * 2016-9-30:解散群
+     * @param params = {
+     *    type  :  11:增加会员,12:删除会员,13: 退群,14:解散
+     *    opt_uid : 被操作的会员iD
+     *    group_id : 群ID
+     * }
+     * @param fn
+     */
+    chat_group_clear:function(params,fn){
+        pack._get_comm(params,content.EVENT_GROUP_CLEAR,fn);
+    },
 
     //---------------------------------------------------------------------聊天模块结束
 

@@ -33,12 +33,12 @@ var CONTENT = {
     EVENT_CHAT_CREATE_GROUP      :   "chat_createGroup",     //创建群事件
     EVENT_CHAT_USER              :   "chat_user",            ////A->B,这里是推荐给B,B收到后返回一个ack
     EVENT_CHAT_GROUP             :   "chat_group",           //A->G(群),推荐给所有在线的群友
-    EVENT_CHAT_GROUP_INVITE      :   "chat_group_invite",    //群邀请
     EVENT_CHAT_GROUP_RENAME      :   "chat_group_rename",    //群名更改
-    EVENT_CHAT_GROUP_INGORE      :   "chat_group_ignore",    //群免打扰
     EVENT_CHAT_GET_MEMBER        :   "chat_get_member_info", //点击会员进入详情，此时加载会员最新信息
 
-
+    //2016-9-29 add
+    EVENT_CHAT_SETTING           :   "chat_setting",    //消息免打扰
+    EVENT_GROUP_OPT_MEM          :   "chat_group_opt_member", //退群操作
 
     //说说
     EVENT_TALK                   :   "talk",     //发表说说
@@ -64,9 +64,10 @@ var CONTENT = {
     EVENT_TYPE_NEW_COMMENT      :   3,//有新的评论，通知发布者
     EVENT_TYPE_NEW_COOL         :   4,//有新的赞
     EVENT_TYPE_GROUP_INVATE     :   5,//群邀请
-    EVENT_TYPE_GROUP_ADD_INFO   :   6,//群邀请发送 xx邀请xx
+
+    //服务端进行推送
     EVENT_TYPE_NEW_INFO         :   7,//新的资讯
-    EVENT_TYPE_MEMBER           :   8,//新的会员
+    EVENT_TYPE_NEW_MEMBER       :   8,//新的会员
 
 
     //收藏点赞
@@ -88,7 +89,23 @@ var CONTENT = {
     BADGE_TALK       : 'badge_talk',
     BADGE_INFO       : 'badge_info',
     BADGE_CHAT       : 'badge_chat',
-    BADGE_MEMBER     : 'badge_member'
+    BADGE_MEMBER     : 'badge_member',
+
+    //评论类型
+    CHAT_TYPE_TEXT   : 1,//文本
+    CHAT_TYPE_IMG    : 2,//图片
+    CHAT_TYPE_VIDEO  : 3,//语音
+
+    //邀请/删除/退群 //1:增加会员,2:删除会员,3: 退群 2016-9-30
+
+    EVENT_GROUP_ADD	 : 11,//增加会员
+    EVENT_GROUP_DEL	 : 12,//删除会员
+    EVENT_GROUP_EXIT : 13,//退群
+    EVENT_GROUP_CLEAR: 14,//解散
+    EVENT_GROUP_DEL_NOTIFY: 15,////删除会员，通知群友
+    EVENT_GROUP_EXIT_NOTIFY:16,//退群，通知群友
+
+    EVENT_GROUP_NEWS : "chat_get_group_news"  //获取最新的群信息
 
 
 };

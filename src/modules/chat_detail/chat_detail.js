@@ -2,89 +2,84 @@ require("./chat_detail.less");
 var appFunc         = require('../utils/appFunc'),
     template        = require('./chat_detail.tpl.html'),
     template_group  = require("./chat_detail_group.tpl.html"),
-    content         = require("../utils/content")
+    socket          = require("../socket/socket"),
+    content         = require("../utils/content"),
+    table           = require("../db/table"),
+    db              = require("../db/db")
     ;
 
-var pack = {
+module.exports = {
     init: function(query){
         appFunc.hideToolbar();
-        var _id         =   query.id;   //群ID或用户ID
+
+        var _to_id      =   query.id;   //群ID或用户ID
         var _type       =   query.type; //1:单聊,2:群聊
         var output      =   null;
-        var _renderData =   '';
-        if(_type==content.CHAT_TYPE_PERSON){
-            _renderData = {
-                obj:{
-                    id          : _id,
-                    filename    : 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                    switch_info : 'checked',
-                    switch_top  : ''
+        if(_type==1){
+            var _from_uid       = appFunc.getUserId();
+            var _where          = {$or:[{add_uid:_from_uid,mark_id:_to_id},{add_uid:_to_id,mark_id:_from_uid}],type:_type};
+            db.dbFindOne(table.T_CHAT_SETTING,_where,function(err,doc){
+                var _switch_info = 'checked';
+                var _switch_top  = '';
+                if(db.returnComm(err,doc).status){
+                    _switch_info = appFunc.parseInt(doc.switch_info)==1?"checked":"";
+                    _switch_top  = appFunc.parseInt(doc.switch_top)==1?"checked":"";
                 }
-            };
-            output = appFunc.renderTpl(template, renderData);
-        }else{
-            _renderData = {
-                id          : _id,
-                filenames   : [
-                    {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
-                    }, {
-                        filename:'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/topnav/zhidao.png?v=md5',
-                        username: 'hubs',
-                        uid     : 5
+                var renderData = {
+                    obj:{
+                        id          : _to_id,
+                        filename    : appFunc.getFilenameByUid(_to_id),
+                        switch_info : _switch_info,
+                        switch_top  : _switch_top
                     }
-                ],
-                group_nums  : 2,
-                group_name  : "无聊群",
-                group_info  : "Hello 大家好,不能乱发垃圾信息,记得啊!!!!!!!",
-                switch_info : 'checked',
-                switch_top  : '',
-                group_username:"哈喽!",
-                group_admin : true //是否是管理员
-            };
-            output = appFunc.renderTpl(template_group, _renderData);
-            appFunc.lazyImg();
-        }
+                };
+                output = appFunc.renderTpl(template, renderData);
+                $$('#chat-detail-page').html(output);
+            });
+        }else{
+            //取得群信息
+            db.dbFindOne(table.T_CHAT_GROUP,{id:_to_id},function(err,doc_group){
+                if(doc_group&&!appFunc.isUndefined(doc_group)){
 
-        $$('#chat-detail-page').html(output);
+                    var renderData = {
+                        id          : _to_id,
+                        group_nums  : doc_group.nums,//群成人数
+                        group_name  : doc_group.title,//群名
+                        group_info  : doc_group.remark,//群描述
+                        group_admin : appFunc.getUserId()==doc_group.create_uid, //是否是管理员
+                        member_uids : [],
+                        group_username:"", //我在本群的名称(暂时不做)
+                        switch_info : '',
+                        switch_top  : ''
+                    };
+
+                    //获取所有的群会员
+                    db.dbFindAll(table.T_CHAT_GROUP_MEMBER,{mark_id:_to_id},function(err,doc_group_members){
+                        var _res  = db.returnComm(err,doc_group_members);
+                        if(_res.status){
+                            $$.each(_res.msg,function(index,row){
+                                renderData.member_uids.push({uid:row.uid});
+                            });
+                        }
+
+                        //获取群设置
+                        db.dbFindOne(table.T_CHAT_SETTING,_where,function(err,doc_setting) {
+                            var _setting_res = db.returnComm(err, doc_setting);
+                            if (_setting_res.status) {
+                                renderData.switch_info = appFunc.parseInt(_setting_res.switch_info) == 1 ? "checked" : "";
+                                renderData.switch_top  = appFunc.parseInt(_setting_res.switch_top)  == 1 ? "checked" : "";
+                            }
+                        });
+
+                        output = appFunc.renderTpl(template_group, renderData);
+                        $$('#chat-detail-page').html(output);
+                        appFunc.lazyImg();
+                    });
+                }else{
+                    appFunc.hiAlert("没有取到数据.");
+                }
+            });
+        }
         this.bindEvents();
     },
 
@@ -103,7 +98,7 @@ var pack = {
         console.log("Exit group!");
     },
 
-    //修改自己在群里的名称
+    //修改自己在群里的名称（暂时不做，2016-9-29）
     changeMyGroupName:function(){
         console.log("chang name "+$$(this).data("name"));
         appFunc.prompt('这会在这个群内显示', '我在本群的昵称',$$(this).data("name"), function (value) {
@@ -120,18 +115,19 @@ var pack = {
         console.log("delGroupMember => "+$$(this).data("id"));
     },
 
-    //点击图片跳转到会员界面
-    jumpToMemberByUid:function(){
-        console.log("jumpToMemberByUid = "+$$(this).data("id"));
-        chatF7View.router.loadPage('page/contacts_detail.html?uid=' + $$(this).data("id"));
-    },
-
     //增加会员进群
     addGroupMember:function(){
         var _group_id   =   $$(this).data("id");
         chatF7View.router.loadPage('page/contacts_group.html?group_id='+_group_id);
     },
     bindEvents: function(){
+        /**
+         * ,{
+         *   element: '.group-my-name',
+         *   event:'click',
+         *   handler:this.changeMyGroupName  //修改自己在群里的名称
+         *   }
+         */
         var bindings = [{
             element: '.switch-info',
             event: 'change',
@@ -145,10 +141,6 @@ var pack = {
             event:'click',
             handler:this.exitGroup      //退出群
         },{
-            element: '.group-my-name',
-            event:'click',
-            handler:this.changeMyGroupName  //修改自己在群里的名称
-        },{
             element: '.col-subtract',
             event:'click',
             handler:this.subtractGroupMember //点击减符号时就可删除会员,只有管理员有权限
@@ -156,10 +148,6 @@ var pack = {
             element: '.badge-seat',
             event:'click',
             handler:this.delGroupMember //删除群员
-        },{
-            element:'.chat-to-member',
-            event:'click',
-            handler:this.jumpToMemberByUid  //点击图片跳转到会员界面
         },{
             element: '.col-jia',
             event:'click',
@@ -169,4 +157,3 @@ var pack = {
         appFunc.bindEvents(bindings);
     }
 };
-module.exports = pack;

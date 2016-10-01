@@ -96,7 +96,7 @@ module.exports = {
     },
 
     matchUrl: function(string){
-        if(string==''||typeof(string) == "undefined"){
+        if(string==''||this.isUndefined(string)){
             return string;
         }
 
@@ -180,7 +180,7 @@ module.exports = {
     },
     //聊天时间
     format_chat_time : function(create_time,show_time){
-        var show_time   =   show_time==undefined?true:show_time;
+        show_time       =   this.isUndefined(show_time)?true:show_time;
         var date        =   new Date(create_time*1000);
 
 
@@ -239,7 +239,7 @@ module.exports = {
     },
 
     replace_smile:function(str) {
-        if(str==''||typeof(str) == "undefined"){
+        if(str==''||this.isUndefined(str)){
             return str;
         }
         str = str.replace(/\</g, '&lt;');
@@ -249,6 +249,9 @@ module.exports = {
         return str;
     },
 
+    text:function(str){
+      return str?this.matchUrl(this.replace_smile(str)):'';
+    },
     now_time    : function(){
         return new Date().getTime();
     },
@@ -379,8 +382,14 @@ module.exports = {
         var _filename = store.getValue("filename_"+uid);
         return _filename?content.IMAGE_URL+_filename:_filename;
     },
-    getFilenameByUidForUrl:function(uid){
-        return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img src="'+this.getFilenameByUid(uid)+'" alt="" width="35" height="35"></a>';
+    getFilenameByUidForUrl:function(uid,lazy){
+        lazy = lazy||false;
+        if(lazy){
+            return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img data-src="'+this.getFilenameByUid(uid)+'" alt="" width="35" height="35" class="lazy"></a>';
+        }else{
+            return '<a href="page/contacts_detail.html?uid='+uid+'" class="item-link"><img src="'+this.getFilenameByUid(uid)+'" alt="" width="35" height="35"></a>';
+        }
+
     },
     setFilenameByUid:function(uid,filename){
         store.setValue("filename_"+uid,filename);
@@ -399,6 +408,10 @@ module.exports = {
 
     atUser:function(uid){
         return uid&&uid>0?this.getUsernameByUidForUrl(uid,"@"):'';
+    },
+
+    getUserId:function(){
+        return store.getStorageIntVal("uid");
     },
     //判断是否在数组中
     rm_array:function (arr, val,isDel) {
@@ -423,6 +436,15 @@ module.exports = {
     },
     parseInt:function(str){
         return parseInt(str||0);
+    },
+
+    isUndefined:function(str){
+        return typeof(str) === 'undefined';
+    },
+
+    getYmd:function(){
+        var s = new Date();
+        return s.getFullYear() + '-' + f(s.getMonth() + 1) + '-' + f(s.getDate());
     }
 
 };

@@ -22,6 +22,7 @@ var nedbDb={
         db.vote                 = new Datastore({filename : _baseDir+'vote',autoload:true});//投票表
         db.vote_details         = new Datastore({filename : _baseDir+'vote_details',autoload:true});//投票详细表
         db.vote_member          = new Datastore({filename : _baseDir+'vote_member',autoload:true});//投票人员统计表
+        db.chat_setting         = new Datastore({filename : _baseDir+'chat_setting',autoload:true});//聊天设置表
         db.demo                 = new Datastore({filename : _baseDir+'demo',autoload:true});//CURD测试表
     },
     reloadDb:function(table){
@@ -31,10 +32,10 @@ var nedbDb={
         return eval("db."+table);
     },
     returnComm:function(err,docs){
-        if(err||docs.length<1){
+        if(err||docs.length<1||appFunc.isUndefined(docs)){
             return appFunc.error(err);
         }
-        return appFunc.success(docs);
+        return appFunc.success(appFunc.parseJson(docs));
     },
 
     dbInsert:function(table,data,fn){

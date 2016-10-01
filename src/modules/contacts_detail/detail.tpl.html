@@ -51,14 +51,14 @@
             </div>
         </li>
 
-        <a href="page/password.html" class="item-link">
+        <a href="page/member_center.html" class="item-link">
             <li class="item-content p_5">
                 <div class="item-inner">
-                    <div class="item-title">{{t i18n="userinfo.member_talk"}} <span class="pl20 lastTalk">{{obj.lastTalk}}</span></div>
+                    <div class="item-title">{{t i18n="userinfo.member_talk"}} <span class="pl20 lastTalk">{{matchUrl obj.lastTalk}}</span></div>
                 </div>
             </li>
         </a>
     </ul>
 
-    <a href="page/message.html?uid={{obj.uid}}" class="button button-big  button-fill color-green send-info">{{t i18n="userinfo.send_info"}}</a>
+    <a href="page/message.html?uid={{obj.id}}&type=1" class="button button-big  button-fill color-green send-info">{{t i18n="userinfo.send_info"}}</a>
 </div>

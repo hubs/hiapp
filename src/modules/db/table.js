@@ -16,7 +16,7 @@ var TABLE = {
     T_VOTE_DETAILS      :   'vote_details',         //投票详细表
     T_VOTE_MEMBER       :   'vote_member',          //投票人员统计表
     T_DEMO              :   'demo',                  //CURD测试表
-    T_CHAT_PANEL        :   'chat_panel'           //2016-9-24 add ,会员面板表
+    T_CHAT_SETTING      :   'chat_setting'           //2016-9-24 add ,会员设置
 };
 module.exports = TABLE;
 
