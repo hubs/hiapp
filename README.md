@@ -5,8 +5,16 @@ HiApp
 后端通过(netty-socket)[https://github.com/mrniko/netty-socketio]搭建
 
 ## 界面
-![](http://www.xiuxiandou.com/Public/home/images/mo/face1.gif)
-
+![](https://github.com/hubs/hiapp/blob/master/res/register.png)
+![](https://github.com/hubs/hiapp/blob/master/res/login.png)
+![](https://github.com/hubs/hiapp/blob/master/res/info.png)
+![](https://github.com/hubs/hiapp/blob/master/res/info-content.png)
+![](https://github.com/hubs/hiapp/blob/master/res/chat.png)
+![](https://github.com/hubs/hiapp/blob/master/res/comment.png)
+![](https://github.com/hubs/hiapp/blob/master/res/peoples.png)
+![](https://github.com/hubs/hiapp/blob/master/res/people-content.png)
+![](https://github.com/hubs/hiapp/blob/master/res/setting.png)
+![](https://github.com/hubs/hiapp/blob/master/res/talk.png)
 ##Requirements
 
 * cordova `^5.0.0`
