@@ -1,23 +1,13 @@
 HiApp
 =====
+此项目想在(HiApp)[https://github.com/BelinChung/HiApp]基础上实现实现聊天功能,感谢HiApp
 
-A simple and interesting Framework7 hybrid app.With PhoneGap you can easily convert it to native iOS app.
+后端通过(netty-socket)[https://github.com/mrniko/netty-socketio]搭建
 
-## React Native
+## 界面
+![](http://www.xiuxiandou.com/Public/home/images/mo/face1.gif)
 
-HiApp is also written in React Native. [BelinChung/react-native-hiapp](https://github.com/BelinChung/react-native-hiapp)
-
-Unlike PhoneGap/Cordova, React Native provides bindings for native UI controls which totally outclass HTML-based hybrid solutions. so it is simple to write high-performance UI by React Native. 
-
-## Build Tools
-
-HiApp use different build tools to build the same project, Hope it will helps you select a suitable build tool.
-
-* `webpack` at origin/master
-* `fis3` at [origin/fis3](https://github.com/BelinChung/HiApp/tree/fis3)
-* `[DEPRECATED] grunt` at [origin/grunt](https://github.com/BelinChung/HiApp/tree/grunt)
-
-## Requirements
+##Requirements
 
 * cordova `^5.0.0`
 * framework7 `^1.4.0`
@@ -29,7 +19,7 @@ HiApp use `npm` to manage third-party packages now.
 Then install all dependencies, in repo's root:
 
 ```
-$ npm install 
+$ npm install
 ```
 
 ## PhoneGap App Guides
@@ -48,17 +38,6 @@ Go to the directory where you maintain your source code, and run a command such 
 $ cordova create hiapp com.hiapp.hiapp HiApp
 ```
 
-### Check out source code
-
-Because the PhoneGap app directory should not already exist, so check out the HiApp source code in this step.
-
-```
-$ cd hiapp  
-$ git init   
-$ git remote add origin git@github.com:BelinChung/HiApp.git  
-$ git pull origin master  
-$ git reset --hard origin/master  
-```
 
 ### Add Platforms
 

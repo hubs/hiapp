@@ -123,6 +123,7 @@ var pack = {
                 }
             });
         }
+        hiApp.hideIndicator();
     },
 
     _getDbMessage:function(){
